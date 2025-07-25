@@ -3,7 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Чехлы на заказ</title>
+  <title>Чехлы на заказ с фото в Кишиневе, Молдова</title>
+  <!-- SEO meta -->
+  <meta name="title" content="Чехлы на заказ в Молдове — MYCASE" />
+  <meta name="description" content="Индивидуальные чехлы с фото, текстом, логотипами и номерами. Печать под вашу модель телефона. Быстрая доставка по Молдове." />
+  <meta name="keywords" content="чехлы на заказ, чехол с фото, чехол с номером, mycase, Кишинёв, Молдова, кастомные чехлы, чехлы с принтом" />
+  <meta name="author" content="MYCASE Team" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mycase.md/" />
+  <meta property="og:title" content="Чехлы на заказ — MyCase Молдова" />
+  <meta property="og:description" content="Создай уникальный чехол: добавь фото, номер, логотип или текст. Поддержка всех моделей. Доставка по всей стране." />
+  <meta property="og:image" content="{{ request.url_for('static', path='assets/preview.jpg') }}" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://mycase.md/" />
+  <meta property="twitter:title" content="Чехлы на заказ — MyCase Молдова" />
+  <meta property="twitter:description" content="Создай уникальный чехол: добавь фото, номер, логотип или текст. Поддержка всех моделей. Доставка по всей стране." />
+  <meta property="twitter:image" content="https://mycase.md/static/assets/og-preview.jpg" />
+  <link rel="icon" type="image/png" href="{{ request.url_for('static', path='assets/favicon.png') }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <script>
@@ -25,7 +45,7 @@
 
       <!-- Иконки в углу -->
       <div class="absolute top-4 right-4 flex items-center space-x-4">
-        <a href="https://t.me/your_channel_or_chat" target="_blank" class="flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition">
+        <a href="https://t.me/mycasemd" target="_blank" class="flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/telegram.svg" alt="Telegram" class="w-5 h-5" />
           <span class="text-sm font-medium">Telegram</span>
         </a>
@@ -77,8 +97,14 @@
         <select id="brand-select" class="border p-2 rounded w-full sm:w-auto">
           <option value="">Марка</option>
           <option value="apple">Apple</option>
-          <option value="samsung">Samsung S</option>
+          <option value="samsungs">Samsung S</option>
+          <option value="samsunga">Samsung A</option>
+          <option value="samsungm">Samsung M</option>
           <option value="xiaomi">Xiaomi</option>
+          <option value="redmi">Redmi</option>
+          <option value="oppo">Oppo</option>
+          <option value="poco">Poco</option>
+
         </select>
 
         <select id="model-select" class="border p-2 rounded w-full sm:w-auto">
