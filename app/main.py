@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import List
 import os
 import telegram
-from fastapi import FastAPI, Request, Form, UploadFile, File, Depends
+from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response
 import uvicorn
-from starlette.responses import HTMLResponse, JSONResponse
+from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from app.models import OrderModel
@@ -17,6 +17,15 @@ load_dotenv()
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+MAX_REQUEST_SIZE = 50 * 1024 * 1024  # 50 MB
+
+@app.middleware("http")
+async def limit_request_size(request: Request, call_next):
+    body = await request.body()
+    if len(body) > MAX_REQUEST_SIZE:
+        return Response("Request too large", status_code=413)
+    return await call_next(request)
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
