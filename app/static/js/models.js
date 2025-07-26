@@ -35,22 +35,22 @@ export const models = {
     "m13", "m12", "m11"
   ],
   redmi: [
-  // Redmi Note серия
-  "redmi_note_14_pro_4g", "redmi_note_14_4g", "redmi_note_14_pro_5g", "redmi_note_14_5g", "redmi_note_14s",
+  // Redmi Note серия 25
+  "redmi_note_14_pro_4g", "redmi_note_14_4g", "redmi_note_14_pro_5g", "redmi_note_14_5g", "redmi_note_14s", "redmi_note_14_pro_plus_5g",
   "redmi_note_13_pro_plus_5g", "redmi_note_13_pro_4g", "redmi_note_13_4g", "redmi_note_13_pro_5g", "redmi_note_13_5g",
   "redmi_note_12S", "redmi_note_12_pro_4g", "redmi_note_12_4g", "redmi_note_12_pro_5g", "redmi_note_12_5g",
-  "redmi_note_11_pro", "redmi_note_11s", "redmi_note_11",
-  "redmi_note_10_pro", "redmi_note_10s", "redmi_note_10", "redmi_note_10_pro_5g",
+  "redmi_note_11_pro", "redmi_note_11_11s",
+  "redmi_note_10_pro", "redmi_note_10_10s", "redmi_note_10_5g",
   "redmi_note_9_pro", "redmi_note_9s", "redmi_note_9",
   "redmi_note_8",
 
-  // Обычные Redmi
-  "redmi_14c", "redmi_14",
+  // Обычные Redmi 13
+  "redmi_14c",
   "redmi_13c", "redmi_13",
   "redmi_12c", "redmi_12",
-  "redmi_11c", "redmi_11",
+  "redmi_11c",
   "redmi_10c", "redmi_10",
-  "redmi_9c", "redmi_9",
+  "redmi_9c", "redmi_9", "redmi_9t", "redmi_9a",
   "redmi_8"
 ]
 
