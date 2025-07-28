@@ -32,7 +32,7 @@ export const models = {
     "m55", "m54", "m53", "m52", "m51",
     "m35", "m34", "m33", "m32",
     "m23", "m22",
-    "m13", "m12", "m11"
+    "m15", "m13", "m12", "m11"
   ],
   redmi: [
   // Redmi Note серия 25
@@ -46,12 +46,32 @@ export const models = {
 
   // Обычные Redmi 13
   "redmi_14c",
+  "redmi_a4", "redmi_a3", "redmi_a2",
   "redmi_13c", "redmi_13",
   "redmi_12c", "redmi_12",
   "redmi_11c",
   "redmi_10c", "redmi_10",
   "redmi_9c", "redmi_9", "redmi_9t", "redmi_9a",
   "redmi_8"
+],
+    poco: [
+      "poco_c65",
+      "poco_x6_pro",
+      "poco_m6_pro_4g",
+      "poco_f3",
+      "poco_x4_5g",
+      "poco_x3_pro",
+      "poco_x3",
+    ],
+    oppo: [
+  "oppo_a60_4g", "oppo_a40", "oppo_a79_5g", "oppo_a58_5g", "oppo_a58_4g", "oppo_a98_4g", "oppo_a96_4g",
+  "oppo_a78_5g", "oppo_a78_4g", "oppo_a74", "oppo_a77", "oppo_a57_57s", "oppo_a54_4g", "oppo_a53",
+  "oppo_a38_4g", "oppo_a18_4g", "oppo_a17", "oppo_a16_16s", "oppo_a15_15s",
+  "oppo_reno_8t", "oppo_reno_6_lite", "oppo_reno_5_lite", "oppo_reno_4_lite", "oppo_a93_4g",
+  "oppo_a31"
 ]
 
+
 };
+
+
