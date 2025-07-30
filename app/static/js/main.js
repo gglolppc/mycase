@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       reader.readAsDataURL(file);
     });
+
   };
 
   function addToCanvas(dataURL) {
