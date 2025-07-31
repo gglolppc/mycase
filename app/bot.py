@@ -7,6 +7,7 @@ load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TG_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TG_CHAT_ID")
 
+
 bot = telegram.Bot(token=TELEGRAM_TOKEN)
 def escape_html(text: str) -> str:
     return (

@@ -16,6 +16,8 @@ from app.models import OrderModel
 from dotenv import load_dotenv
 from app.db.database import get_session, Order
 
+
+
 load_dotenv()
 
 app = FastAPI()
