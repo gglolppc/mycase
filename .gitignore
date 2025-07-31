@@ -25,3 +25,5 @@ dockerized_app/__pycache__/
 # VSCode, PyCharm и IDE-шные
 .idea/
 .vscode/
+
+/uploads/
