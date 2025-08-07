@@ -7,8 +7,10 @@ from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.middleware.base import BaseHTTPMiddleware
+
 from app.bot import send_order_to_telegram
-from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response, HTTPException
+from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response, HTTPException, APIRouter
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -18,7 +20,7 @@ from app.db.database import get_session, Order
 from app.tg_bot.db.database import DbSessionMiddleware
 from app.tg_bot.handler import order, delete, start, info
 from app.tg_bot.bot_init import tg_bot
-import json
+import json, logging
 
 load_dotenv()
 
@@ -45,20 +47,49 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
+class LimitRequestSize(BaseHTTPMiddleware):
+    def __init__(self, app, max_bytes: int = 1_000_000):
+        super().__init__(app)
+        self.max_bytes = max_bytes
+
+    async def dispatch(self, request: Request, call_next):
+        raw = await request.body()
+        if len(raw) > self.max_bytes:
+            return Response(status_code=413)
+
+        # положим в request.state, чтобы контроллеру
+        # не пришлось читать body второй раз
+        request.state.raw_body = raw
+        return await call_next(request)
+
 # -------------------------- РУЧКА WEBHOOK --------------------------
-@app.post(WEBHOOK_PATH)
+router = APIRouter()
+WEBHOOK_PATH = "/webhook"
+
+@router.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> Response:
+    # берем то, что положило middleware
+    raw = getattr(request.state, "raw_body", None)
+    if raw is None:      # вдруг middleware не читал body
+        raw = await request.body()
 
-    raw = await request.body()
-    update_dict = json.loads(raw)
-    headers = request.headers
+    try:
+        update: dict = json.loads(raw)  # bytes ➜ dict
+    except Exception as e:
+        logging.exception("Bad JSON %s", e)
+        return Response(status_code=400)
 
+    logging.debug("Update parsed ok, type=%s", type(update))
+
+    # aiogram принимает dict
     ok = await dp.feed_webhook_update(
         bot=tg_bot,
-        update=update_dict,  # теперь dict, всё ок
-        headers=request.headers,
+        update=update,
+        headers=dict(request.headers),
     )
 
+    # отвечаем сразу, не ждём обработчиков
     return Response(status_code=200 if ok else 500)
 
 templates = Jinja2Templates(directory="app/templates")
