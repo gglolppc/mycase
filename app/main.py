@@ -1,26 +1,53 @@
 import shutil
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import List
 import os
-
+from aiogram import Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.bot import send_order_to_telegram
 from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response, HTTPException
-import uvicorn
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from app.models import OrderModel
 from dotenv import load_dotenv
 from app.db.database import get_session, Order
-
-
+from app.tg_bot.db.database import DbSessionMiddleware
+from app.tg_bot.handler import order, delete, start, info
+from app.tg_bot.bot_init import tg_bot
 
 load_dotenv()
 
-app = FastAPI()
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_URL = f"https://mycase.md{WEBHOOK_PATH}"
+
+dp = Dispatcher(storage=MemoryStorage())
+dp.update.middleware(DbSessionMiddleware())
+dp.include_router(order.order_router)
+dp.include_router(start.start_router)
+dp.include_router(delete.delete_router)
+dp.include_router(info.info_router)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 🚀 startup
+    await tg_bot.set_webhook(WEBHOOK_URL)
+    print("Webhook установлен")
+
+    yield  # 🔁 тут работает приложение
+
+    # 🧹 shutdown
+    await tg_bot.delete_webhook()
+    print("Webhook удалён")
+
+
+
+app = FastAPI(lifespan=lifespan)
+
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
@@ -36,14 +63,8 @@ async def limit_request_size(request: Request, call_next):
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
 
 # === ЗАКАЗ ===
 @app.post("/order")
@@ -102,3 +123,11 @@ async def receive_order(
         raise HTTPException(status_code=400, detail=str(e))
 
     return {"message": "Order received"}
+
+
+
+SimpleRequestHandler(
+    dispatcher=dp,
+    bot=tg_bot,
+    webhook_path=WEBHOOK_PATH,
+).register(app, path=WEBHOOK_PATH)
