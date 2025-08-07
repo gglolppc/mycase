@@ -10,9 +10,9 @@ from app.tg_bot.db.database import DbOrder, DbUser
 start_router = Router()
 
 @start_router.message(CommandStart())
-async def start_handler(message: Message, command: CommandObject, data: dict):
+async def start_handler(message: Message, command: CommandObject, **kwargs):
     try:
-        session: AsyncSession = data["session"]
+        session: AsyncSession = kwargs["session"]
 
         user = message.from_user
         query = select(DbUser).where(DbUser.tg_id == user.id)
