@@ -65,25 +65,28 @@ router = APIRouter()
 
 @router.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> Response:
-    raw = getattr(request.state, "raw_body", None)
-    if raw is None:
-        raw = await request.body()
-
     try:
+        raw = getattr(request.state, "raw_body", None)
+        if raw is None:
+            raw = await request.body()
+
+        logging.warning("🔥 RAW: %s", raw)
+
         update: dict = json.loads(raw)
+        logging.warning("✅ JSON OK")
+
+        ok = await dp.feed_webhook_update(
+            bot=tg_bot,
+            update=update,
+            headers=dict(request.headers),
+        )
+        logging.warning("✅ Feed update OK")
+
+        return Response(status_code=200 if ok else 500)
+
     except Exception as e:
-        logging.exception("Bad JSON %s", e)
-        return Response(status_code=400)
-
-    logging.debug("Update parsed ok, type=%s", type(update))
-
-    ok = await dp.feed_webhook_update(
-        bot=tg_bot,
-        update=update,
-        headers=dict(request.headers),
-    )
-
-    return Response(status_code=200 if ok else 500)
+        logging.exception("💥 Ошибка в webhook: %s", e)
+        return Response(status_code=500)
 
 app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
 
