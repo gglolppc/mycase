@@ -3,18 +3,21 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped
 from sqlalchemy import DateTime, func, text
+from sqlalchemy.orm import mapped_column
 from dotenv import load_dotenv
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
-from sqlalchemy.orm import mapped_column
+
 load_dotenv()
 
 DB_URL = os.environ.get("DB_URL_TG_BOT")
 engine = create_async_engine(DB_URL, pool_pre_ping=True)
-Session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)  # <-- rename here
 
+# Базовая модель
 class Base(AsyncAttrs, DeclarativeBase):
     pass
 
+# Модели
 class DbUser(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -45,6 +48,10 @@ class DbOrder(Base):
 
 class DbSessionMiddleware(BaseMiddleware):
     async def __call__(self, handler, event, data):
-        async with Session() as session:
+        async with async_session_maker() as session:
             data["session"] = session
-            return await handler(event, data)
+            try:
+                result = await handler(event, data)
+                return result
+            finally:
+                await session.close()
