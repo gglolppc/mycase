@@ -65,6 +65,7 @@ class LimitRequestSize(BaseHTTPMiddleware):
 
 # -------------------------- РУЧКА WEBHOOK --------------------------
 router = APIRouter()
+app.include_router(router)
 WEBHOOK_PATH = "/webhook"
 
 @router.post(WEBHOOK_PATH)
