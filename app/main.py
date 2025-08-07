@@ -29,11 +29,11 @@ WEBHOOK_URL = f"https://mycase.md{WEBHOOK_PATH}"
 
 # Инициализация aiogram
 dp = Dispatcher(storage=MemoryStorage())
-dp.update.middleware(DbSessionMiddleware())
-dp.include_router(order.order_router)
+# dp.update.middleware(DbSessionMiddleware())
+# dp.include_router(order.order_router)
 dp.include_router(start.start_router)
-dp.include_router(delete.delete_router)
-dp.include_router(info.info_router)
+# dp.include_router(delete.delete_router)
+# dp.include_router(info.info_router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -63,21 +63,31 @@ app.add_middleware(LimitRequestSize)
 # --- WEBHOOK ---
 router = APIRouter()
 
-@router.post("/webhook")
-async def telegram_webhook(request: Request):
-    import logging
+@router.post(WEBHOOK_PATH)
+async def telegram_webhook(request: Request) -> Response:
     try:
-        raw = await request.body()
-        logging.warning("🔥 RAW: %s", raw)
-        update = json.loads(raw)
-        logging.warning("✅ JSON OK")
-        await dp.feed_webhook_update(bot=tg_bot, update=update, headers=dict(request.headers))
-        logging.warning("✅ Feed update OK")
-    except Exception as e:
-        logging.exception("💥 Webhook exception: %s", e)
-        return PlainTextResponse("fail", status_code=500)
+        raw = getattr(request.state, "raw_body", None)
+        if raw is None:
+            raw = await request.body()
 
-    return PlainTextResponse("ok", status_code=200)
+        logging.warning("🔥 RAW: %s", raw)
+
+        update: dict = json.loads(raw)
+        logging.warning("✅ JSON OK")
+
+        ok = await dp.feed_webhook_update(
+            bot=tg_bot,
+            update=update,
+            headers=dict(request.headers),
+        )
+        logging.warning("✅ Feed update OK")
+
+        # ВАЖНО: ответ с телом, иначе Telegram думает, что сервер умер
+        return PlainTextResponse(content="ok" if ok else "fail", status_code=200 if ok else 500)
+
+    except Exception as e:
+        logging.exception("💥 Ошибка в webhook: %s", e)
+        return PlainTextResponse(content="fail", status_code=500)
 
 app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
 
