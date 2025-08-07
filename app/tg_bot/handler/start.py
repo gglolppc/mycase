@@ -1,4 +1,3 @@
-
 from aiogram import Router
 from aiogram.filters import CommandObject, CommandStart
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
@@ -11,9 +10,13 @@ start_router = Router()
 
 @start_router.message(CommandStart())
 async def start_handler(message: Message, command: CommandObject, **kwargs):
+    import logging
     try:
-        session: AsyncSession = kwargs["session"]
-
+        logging.warning("🔥 START HANDLER TRIGGERED")
+        session: AsyncSession = kwargs.get("session")
+        if not session:
+            await message.answer("❌ Нет доступа к базе.")
+            return
         user = message.from_user
         query = select(DbUser).where(DbUser.tg_id == user.id)
         result = await session.execute(query)
