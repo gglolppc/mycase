@@ -30,10 +30,10 @@ WEBHOOK_URL = f"https://mycase.md{WEBHOOK_PATH}"
 # Инициализация aiogram
 dp = Dispatcher(storage=MemoryStorage())
 dp.update.middleware(DbSessionMiddleware())
-# dp.include_router(order.order_router)
+dp.include_router(order.order_router)
 dp.include_router(start.start_router)
-# dp.include_router(delete.delete_router)
-# dp.include_router(info.info_router)
+dp.include_router(delete.delete_router)
+dp.include_router(info.info_router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
