@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
           scaleY: canvas.height / img.height
         });
         canvas.setOverlayImage(img, canvas.renderAll.bind(canvas));
+        canvas.setBackgroundColor('#0a0a0a', canvas.renderAll.bind(canvas));
         currentOverlay = img;
         bringTextToFront();
       });

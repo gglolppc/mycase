@@ -20,8 +20,7 @@ async def main():
         BotCommand(command="info", description="💰 Цена, 🚚 Доставка"),
         BotCommand(command="order", description="📦 Оформить новый заказ"),
         BotCommand(command="my_orders", description="🗂 Посмотреть мои заказы"),
-        BotCommand(command="clear", description="🧹 Отменить заказ и очистить данные"),
+        BotCommand(command="clear", description="🧹 Отменить и очистить данные"),
 
 
     ])
-    print("Bot started")

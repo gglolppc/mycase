@@ -34,7 +34,7 @@ class MyOrders(StatesGroup):
 
 @order_router.message(Command("order"))
 async def get_model(message: Message, state: FSMContext):
-    await message.answer("Напишите вашу марку и модель телефона.")
+    await message.answer("📱 Напиши марку и модель своего телефона. Например: *iPhone 13 Pro Max*")
     await state.set_state(Order.waiting_model)
 
 @order_router.message(Order.waiting_model)
@@ -42,15 +42,15 @@ async def get_photo(message: Message, state: FSMContext):
     try:
         if message.text.startswith("/"):
             await state.clear()
-            await message.answer("Модель не должна начинаться с символа /  для заказа начните заного /order")
+            await message.answer("⚠️ Модель **не должна начинаться с символа '/'**\n🔁 Если что-то пошло не так — начни заново командой /order")
             return
         await state.update_data(model=message.text)
         await state.update_data(user_id=message.from_user.id)
         await state.update_data(user_name=message.from_user.full_name)
-        await message.answer("Отправьте желаемое фото.")
+        await message.answer("🖼️ Пришли желаемое фото для чехла")
         await state.set_state(Order.waiting_photo)
     except AttributeError:
-        await message.answer("Ошибка, укажите модель телефона написав его текстом, начните заного /order")
+        await message.answer("⚠️ Модель **не должна начинаться с символа '/'**\n🔁 Если что-то пошло не так — начни заново командой /order")
         await state.clear()
 
 @order_router.message(Order.waiting_photo)
@@ -61,7 +61,7 @@ async def get_address(message: Message, state: FSMContext):
         mime_type = message.document.mime_type
         await state.update_data(photo_id=message.document.file_id)
         await state.set_state(Order.waiting_address)
-        await message.answer("Данные для доставки.")
+        await message.answer("🚚 Введи данные для доставки:\n*Имя, номер телефона и адрес*")
 
 
     else:
@@ -69,15 +69,15 @@ async def get_address(message: Message, state: FSMContext):
         if text:
             if message.text.lower() == 'cancel':
                 await state.clear()
-                await message.answer("Заказ отменен")
+                await message.answer("🚫 Заказ отменён. Если передумаешь — всегда можно начать заново: /order")
                 return
-            await message.answer("Отправьте фото, а не ссылку или текст, для отмены напишите 'cancel' ")
+            await message.answer("⚠️ Нужно отправить именно фото, а не ссылку или текст\n❗Если хочешь отменить — просто напиши *cancel*")
             await state.set_state(Order.waiting_photo)
             return
         try:
             photo = message.photo[-1]
             await state.update_data(photo_id=photo.file_id)
-            await message.answer("Данные для доставки.")
+            await message.answer("🚚 Введи данные для доставки:\n*Имя, номер телефона и адрес*")
             await state.set_state(Order.waiting_address)
         except NameError:
             await message.answer("bla bla bla ")
