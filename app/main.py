@@ -5,7 +5,6 @@ from typing import List
 import os
 from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.webhook.aiohttp_server import AiohttpWebhookCallback
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.bot import send_order_to_telegram
