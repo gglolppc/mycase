@@ -82,7 +82,7 @@ async def telegram_webhook(request: Request) -> Response:
         )
         logging.warning("✅ Feed update OK")
 
-        return Response(status_code=200 if ok else 500)
+        return Response(content="ok" if ok else "fail", status_code=200 if ok else 500)
 
     except Exception as e:
         logging.exception("💥 Ошибка в webhook: %s", e)
