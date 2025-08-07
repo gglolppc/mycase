@@ -126,7 +126,7 @@ async def process_confirm(callback: CallbackQuery, state: FSMContext, session: A
         await callback.message.edit_reply_markup()  # убираем кнопки
         await callback.message.answer(f"✅ Заказ отправлен, ID вашего заказа - {new_order.id}")
         await callback.message.answer("Мои заказы - /my_orders\nЗаказать еще /order")
-        await bot.send_message(ADMIN, f"📬 Новый заказ от @{callback.from_user.username}\nID заказа: {new_order.id}")
+        await tg_bot.send_message(ADMIN, f"📬 Новый заказ от @{callback.from_user.username}\nID заказа: {new_order.id}")
         await state.clear()
 
     except (IntegrityError, DataError):
