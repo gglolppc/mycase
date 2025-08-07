@@ -48,10 +48,15 @@ app = FastAPI(lifespan=lifespan)
 @app.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> Response:
 
-    body    = await request.body()
+    body = await request.json()
     headers = request.headers
 
-    ok = await dp.feed_webhook_update(bot=tg_bot, update=body, headers=headers)
+    ok = await dp.feed_webhook_update(
+        bot=tg_bot,
+        update=body,  # теперь dict, всё ок
+        headers=request.headers,
+    )
+
     return Response(status_code=200 if ok else 500)
 
 templates = Jinja2Templates(directory="app/templates")
