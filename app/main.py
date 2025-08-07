@@ -27,6 +27,7 @@ load_dotenv()
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = f"https://mycase.md{WEBHOOK_PATH}"
 
+# Инициализация aiogram
 dp = Dispatcher(storage=MemoryStorage())
 dp.update.middleware(DbSessionMiddleware())
 dp.include_router(order.order_router)
@@ -36,10 +37,7 @@ dp.include_router(info.info_router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await tg_bot.set_webhook(
-        WEBHOOK_URL,
-
-    )
+    await tg_bot.set_webhook(WEBHOOK_URL)
     print("✅ Webhook установлен")
     yield
     await tg_bot.delete_webhook()
@@ -47,9 +45,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
+# Middleware на ограничение размера запроса
 class LimitRequestSize(BaseHTTPMiddleware):
-    def __init__(self, app, max_bytes: int = 1_000_000):
+    def __init__(self, app, max_bytes: int = 5_000_000):
         super().__init__(app)
         self.max_bytes = max_bytes
 
@@ -57,52 +55,41 @@ class LimitRequestSize(BaseHTTPMiddleware):
         raw = await request.body()
         if len(raw) > self.max_bytes:
             return Response(status_code=413)
-
-        # положим в request.state, чтобы контроллеру
-        # не пришлось читать body второй раз
         request.state.raw_body = raw
         return await call_next(request)
 
-# -------------------------- РУЧКА WEBHOOK --------------------------
+app.add_middleware(LimitRequestSize)
+
+# --- WEBHOOK ---
 router = APIRouter()
-app.include_router(router)
-WEBHOOK_PATH = "/webhook"
 
 @router.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> Response:
-    # берем то, что положило middleware
     raw = getattr(request.state, "raw_body", None)
-    if raw is None:      # вдруг middleware не читал body
+    if raw is None:
         raw = await request.body()
 
     try:
-        update: dict = json.loads(raw)  # bytes ➜ dict
+        update: dict = json.loads(raw)
     except Exception as e:
         logging.exception("Bad JSON %s", e)
         return Response(status_code=400)
 
     logging.debug("Update parsed ok, type=%s", type(update))
 
-    # aiogram принимает dict
     ok = await dp.feed_webhook_update(
         bot=tg_bot,
         update=update,
         headers=dict(request.headers),
     )
 
-    # отвечаем сразу, не ждём обработчиков
     return Response(status_code=200 if ok else 500)
+
+app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
 
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-MAX_REQUEST_SIZE = 50 * 1024 * 1024  # 50 MB
-@app.middleware("http")
-async def limit_request_size(request: Request, call_next):
-    body = await request.body()
-    if len(body) > MAX_REQUEST_SIZE:
-        return Response("Request too large", status_code=413)
-    return await call_next(request)
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
