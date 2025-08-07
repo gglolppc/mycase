@@ -5,7 +5,7 @@ from typing import List
 import os
 from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler
+from aiogram.webhook.aiohttp_server import AiohttpWebhookCallback
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.bot import send_order_to_telegram
@@ -34,19 +34,26 @@ dp.include_router(info.info_router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 🚀 startup
-    await tg_bot.set_webhook(WEBHOOK_URL)
-    print("Webhook установлен")
+    await tg_bot.set_webhook(
+        WEBHOOK_URL,
 
-    yield  # 🔁 тут работает приложение
-
-    # 🧹 shutdown
+    )
+    print("✅ Webhook установлен")
+    yield
     await tg_bot.delete_webhook()
-    print("Webhook удалён")
-
-
+    print("🧹 Webhook удалён")
 
 app = FastAPI(lifespan=lifespan)
+
+# -------------------------- РУЧКА WEBHOOK --------------------------
+@app.post(WEBHOOK_PATH)
+async def telegram_webhook(request: Request) -> Response:
+
+    body    = await request.body()
+    headers = request.headers
+
+    ok = await dp.feed_webhook_update(bot=tg_bot, update=body, headers=headers)
+    return Response(status_code=200 if ok else 500)
 
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -123,11 +130,3 @@ async def receive_order(
         raise HTTPException(status_code=400, detail=str(e))
 
     return {"message": "Order received"}
-
-
-
-SimpleRequestHandler(
-    dispatcher=dp,
-    bot=tg_bot,
-    webhook_path=WEBHOOK_PATH,
-).register(app, path=WEBHOOK_PATH)
