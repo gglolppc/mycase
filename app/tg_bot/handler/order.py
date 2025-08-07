@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.tg_bot.bot_init import bot
+from app.tg_bot.bot_init import tg_bot
 from app.tg_bot.db.database import DbOrder
 
 
