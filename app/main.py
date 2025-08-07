@@ -8,7 +8,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.base import BaseHTTPMiddleware
-
+from fastapi.responses import PlainTextResponse
 from app.bot import send_order_to_telegram
 from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response, HTTPException, APIRouter
 from starlette.responses import HTMLResponse
@@ -82,11 +82,12 @@ async def telegram_webhook(request: Request) -> Response:
         )
         logging.warning("✅ Feed update OK")
 
-        return Response(content="ok" if ok else "fail", status_code=200 if ok else 500)
+        # ВАЖНО: ответ с телом, иначе Telegram думает, что сервер умер
+        return PlainTextResponse(content="ok" if ok else "fail", status_code=200 if ok else 500)
 
     except Exception as e:
         logging.exception("💥 Ошибка в webhook: %s", e)
-        return Response(status_code=500)
+        return PlainTextResponse(content="fail", status_code=500)
 
 app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
 
