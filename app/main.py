@@ -63,31 +63,21 @@ app.add_middleware(LimitRequestSize)
 # --- WEBHOOK ---
 router = APIRouter()
 
-@router.post(WEBHOOK_PATH)
-async def telegram_webhook(request: Request) -> Response:
+@router.post("/webhook")
+async def telegram_webhook(request: Request):
+    import logging
     try:
-        raw = getattr(request.state, "raw_body", None)
-        if raw is None:
-            raw = await request.body()
-
+        raw = await request.body()
         logging.warning("🔥 RAW: %s", raw)
-
-        update: dict = json.loads(raw)
+        update = json.loads(raw)
         logging.warning("✅ JSON OK")
-
-        ok = await dp.feed_webhook_update(
-            bot=tg_bot,
-            update=update,
-            headers=dict(request.headers),
-        )
+        await dp.feed_webhook_update(bot=tg_bot, update=update, headers=dict(request.headers))
         logging.warning("✅ Feed update OK")
-
-        # ВАЖНО: ответ с телом, иначе Telegram думает, что сервер умер
-        return PlainTextResponse(content="ok" if ok else "fail", status_code=200 if ok else 500)
-
     except Exception as e:
-        logging.exception("💥 Ошибка в webhook: %s", e)
-        return PlainTextResponse(content="fail", status_code=500)
+        logging.exception("💥 Webhook exception: %s", e)
+        return PlainTextResponse("fail", status_code=500)
+
+    return PlainTextResponse("ok", status_code=200)
 
 app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
 
