@@ -18,6 +18,7 @@ from app.db.database import get_session, Order
 from app.tg_bot.db.database import DbSessionMiddleware
 from app.tg_bot.handler import order, delete, start, info
 from app.tg_bot.bot_init import tg_bot
+import json
 
 load_dotenv()
 
@@ -48,12 +49,13 @@ app = FastAPI(lifespan=lifespan)
 @app.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> Response:
 
-    body = await request.json()
+    raw = await request.body()
+    update_dict = json.loads(raw)
     headers = request.headers
 
     ok = await dp.feed_webhook_update(
         bot=tg_bot,
-        update=body,  # теперь dict, всё ок
+        update=update_dict,  # теперь dict, всё ок
         headers=request.headers,
     )
 
