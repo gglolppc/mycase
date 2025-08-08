@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped
-from sqlalchemy import DateTime, func, text
+from sqlalchemy import DateTime, func, text, BigInteger
 from sqlalchemy.orm import mapped_column
 from dotenv import load_dotenv
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
@@ -21,7 +21,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 class DbUser(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    tg_id: Mapped[int] = mapped_column(unique=True)
+    tg_id: Mapped[int] = mapped_column(BigInteger, unique=True, index=True, nullable=False)
     c_name: Mapped[str] = mapped_column(nullable=True)
     total_orders: Mapped[int] = mapped_column(server_default=text("1"))
     language: Mapped[str] = mapped_column(nullable=True)
