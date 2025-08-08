@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 
 load_dotenv()
-
 DB_URL = os.environ.get("DB_URL_TG_BOT")
 engine = create_async_engine(DB_URL, pool_pre_ping=True)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)  # <-- rename here
