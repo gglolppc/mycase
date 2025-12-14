@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ro">
 <head>
-        <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRN1WNWTXK"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -10,211 +9,303 @@
 
       gtag('config', 'G-KRN1WNWTXK');
     </script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Чехлы на заказ с фото в Кишиневе, Молдова</title>
-  <!-- SEO meta -->
-  <meta name="title" content="Чехлы на заказ в Молдове — MYCASE" />
-  <meta name="description" content="Индивидуальные чехлы с фото, текстом, логотипами и номерами. Печать под вашу модель телефона. Быстрая доставка по Молдове." />
-  <meta name="keywords" content="чехлы на заказ, чехол с фото, чехол с номером, mycase, Кишинёв, Молдова, кастомные чехлы, чехлы с принтом" />
+  <title>Huse personalizate cu poză în Chișinău, Moldova | Calitate Premium</title>
+  <meta name="title" content="Huse la comandă în Moldova — MYCASE" />
+  <meta name="description" content="Huse individuale cu poză, text, logo și numere. Imprimare pentru modelul tău de telefon. Livrare rapidă în Moldova." />
+  <meta name="keywords" content="huse la comandă, husă cu poză, husă cu număr, mycase, Chișinău, Moldova, huse personalizate, huse cu print" />
   <meta name="author" content="MYCASE Team" />
 
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mycase.md/" />
-  <meta property="og:title" content="Чехлы на заказ — MyCase Молдова" />
-  <meta property="og:description" content="Создай уникальный чехол: добавь фото, номер, логотип или текст. Поддержка всех моделей. Доставка по всей стране." />
+  <meta property="og:title" content="Huse la comandă — MyCase Moldova" />
+  <meta property="og:description" content="Creează o husă unică: adaugă poză, număr, logo sau text. Suport pentru toate modelele. Livrare în toată țara." />
   <meta property="og:image" content="{{ request.url_for('static', path='assets/preview.jpg') }}" />
 
-  <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://mycase.md/" />
-  <meta property="twitter:title" content="Чехлы на заказ — MyCase Молдова" />
-  <meta property="twitter:description" content="Создай уникальный чехол: добавь фото, номер, логотип или текст. Поддержка всех моделей. Доставка по всей стране." />
+  <meta property="twitter:title" content="Huse la comandă — MyCase Moldova" />
+  <meta property="twitter:description" content="Creează o husă unică: adaugă poză, număr, logo sau text. Suport pentru toate modelele. Livrare în toată țara." />
   <meta property="twitter:image" content="https://mycase.md/static/assets/og-preview.jpg" />
   <link rel="icon" type="image/png" href="{{ request.url_for('static', path='assets/favicon.png') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Setăm paleta de culori pentru accent premium (Grafit)
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'accent-main': '#495057', // Gri închis/Grafit accent
+            'text-dark': '#212529',  // Aproape negru pentru textul principal
+            'bg-light': '#F8F9FA',   // Fundal foarte deschis
+            'primary-blue': '#007BFF', // Albastru aprins pentru butonul de comandă
+          }
+        }
+      }
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <script>
     const STATIC_BASE = "{{ request.url_for('static', path='') }}";
   </script>
+  <style>
+    /* Gradient curcubeu pentru indicatorii de culoare */
+    .color-gradient-ring {
+      background: conic-gradient(
+        from 90deg at 50% 50%,
+        #ff0000 0%,
+        #ffff00 17%,
+        #00ff00 34%,
+        #00ffff 50%,
+        #0000ff 67%,
+        #ff00ff 84%,
+        #ff0000 100%
+      );
+    }
+
+    /* Stil pentru butonul de ștergere pe miniatură */
+    .delete-thumbnail-btn {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        z-index: 20;
+    }
+
+    /* Animație premium (doar umbră, fără sărituri) */
+    .button-hover:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        transform: scale(1.005);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-bg-light min-h-screen flex flex-col font-sans text-text-dark">
 
-  <!-- HEADER -->
-    <header class="bg-gradient-to-b from-gray-300 to-gray-100 shadow-md py-6 relative">
-    <div class="container mx-auto px-4 relative">
+  <header class="bg-white shadow-sm py-4 relative border-b border-gray-200">
+    <div class="container mx-auto px-6 flex justify-between items-center">
 
-      <!-- Центрированный блок: логотип и слоган -->
-      <div class="flex flex-col items-center space-y-1">
-        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="logo" class="w-16 h-16 shadow-md rounded-full" />
-        <h1 class="text-2xl font-bold text-gray-800">mycase</h1>
-        <p class="text-sm text-gray-600 italic">Чехлы с характером — под ваш стиль 🚀</p>
+      <div class="flex items-center space-x-3">
+        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="logo" class="w-12 h-12 rounded-full border border-gray-100 shadow-md" />
+        <div>
+          <h1 class="text-xl font-extrabold text-accent-main tracking-wider">MYCASE</h1>
+          <p class="text-xs text-gray-500 italic hidden sm:block">Huse premium la comandă</p>
+        </div>
       </div>
 
-      <!-- Иконки в углу -->
-        <div class="flex justify-center md:justify-end items-center space-x-4 mt-4 md:mt-0 md:absolute md:top-4 md:right-4">
-        <a href="https://t.me/mycasemd" target="_blank" class="flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/telegram.svg" alt="Telegram" class="w-5 h-5" />
-          <span class="text-sm font-medium">Telegram</span>
+      <div class="flex items-center space-x-4">
+        <a href="https://t.me/mycasemd" target="_blank" class="text-text-dark hover:text-accent-main transition duration-300 flex items-center space-x-1">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.3 8.35L8.76 13.9c-.31.13-.67.04-.84-.23l-.74-2.19c-.1-.31-.05-.65.13-.93l7.98-4.72c.23-.14.51-.12.72.06.2.19.23.49.07.72z"/></svg>
+          <span class="text-sm hidden md:inline">Telegram</span>
         </a>
 
-        <a href="https://t.me/mycasemd_bot" target="_blank" class="flex items-center space-x-1 text-blue-500 hover:text-blue-700 transition">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/telegram.svg" alt="Telegram Bot" class="w-5 h-5" />
-          <span class="text-sm font-medium">TG Bot</span>
-        </a>
-
-        <a href="viber://chat?number=%2B37368109777" target="_blank" class="flex items-center space-x-1 text-purple-600 hover:text-purple-800 transition">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/viber.svg" alt="Viber" class="w-5 h-5" />
-          <span class="text-sm font-medium">Viber</span>
+        <a href="viber://chat?number=%2B37368109777" target="_blank" class="text-text-dark hover:text-accent-main transition duration-300 flex items-center space-x-1">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.17 11.21c-.48-.09-1.01-.13-1.61-.13-1.4 0-2.42.34-3.03 1.02-.6.68-.9 1.63-.9 2.87v.14c0 .32-.23.59-.55.66-.4.09-.7-.18-.78-.57-.08-.39.19-.7.57-.78.43-.09.73-.39.73-.67v-.14c0-1.04.22-1.78.65-2.27.43-.49 1.25-.74 2.44-.74.67 0 1.22.06 1.7.15.54.1.86-.23.76-.78-.07-.38-.34-.65-.72-.72zM12 7c-1.4 0-2.5.9-2.5 2s1.1 2 2.5 2 2.5-.9 2.5-2-1.1-2-2.5-2zm-3.5 0c0-.83.67-1.5 1.5-1.5h4c.83 0 1.5.67 1.5 1.5v1c0 .83-.67 1.5-1.5 1.5h-4c-.83 0-1.5-.67-1.5-1.5v-1z"/></svg>
+          <span class="text-sm hidden md:inline">Viber</span>
         </a>
       </div>
 
     </div>
   </header>
 
-  <!-- BODY -->
-  <main class="flex-grow flex flex-col lg:flex-row items-start justify-between p-4 max-w-7xl mx-auto space-y-4 lg:space-y-0 lg:space-x-4">
-  <!-- text-color -->
-    <div id="text-style-panel" class="hidden fixed top-96 right-1/6 bg-white p-4 rounded shadow space-y-2 z-50 border border-black">
-      <label class="block">
-        <span class="text-sm">Шрифт</span>
-        <select id="font-selector" class="mt-1 block w-full border rounded px-2 py-1">
-          <option value="Arial">Arial</option>
-          <option value="Georgia">Georgia</option>
-          <option value="Courier New">Courier New</option>
-          <option value="Verdana">Verdana</option>
-        </select>
-      </label>
-      <label class="block">
-        <span class="text-sm">Цвет</span>
-        <input type="color" id="color-picker" class="mt-1 w-full h-8 border rounded" />
-      </label>
-   </div>
+  <main class="flex-grow flex flex-col lg:flex-row lg:items-stretch p-6 max-w-7xl mx-auto space-y-6 lg:space-y-0 lg:space-x-6">
+
+    <aside class="w-full lg:w-[600px] bg-white p-6 rounded-xl shadow-lg flex flex-col h-full">
+
+        <div class="mb-8 border-b border-gray-100 pb-6">
+            <h2 class="text-lg font-bold text-text-dark mb-4">📱 Alege modelul</h2>
+
+            <div class="flex flex-col space-y-4">
+                <select id="brand-select" class="block w-full border border-gray-300 p-4 rounded-xl text-lg bg-gray-50 text-text-dark focus:ring-2 focus:ring-accent-main focus:border-accent-main transition shadow-sm cursor-pointer hover:bg-white">
+                    <option value="">Alege brandul</option>
+                    <option value="apple">Apple</option>
+                    <option value="samsungs">Samsung S</option>
+                    <option value="samsunga">Samsung A</option>
+                    <option value="samsungm">Samsung M</option>
+                    <option value="redmi">Redmi</option>
+                    <option value="oppo">Oppo</option>
+                    <option value="poco">Poco</option>
+                </select>
+
+                <select id="model-select" class="block w-full border border-gray-300 p-4 rounded-xl text-lg bg-gray-50 text-text-dark focus:ring-2 focus:ring-accent-main focus:border-accent-main transition shadow-sm cursor-pointer hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed">
+                    <option value="">Alege modelul</option>
+                </select>
+            </div>
+        </div>
 
 
-    <!-- Слева: миниатюры -->
-    <aside class="w-full lg:w-1/4 bg-white p-2 rounded shadow overflow-y-auto">
-      <div class="mb-4">
-        <input type="file" id="upload" multiple class="hidden" />
-        <label for="upload" class="cursor-pointer bg-green-600 text-white px-4 py-3 rounded text-center block w-full text-lg hover:bg-green-700 transition">
-          Загрузить фото
-        </label>
-      </div>
-      <div id="thumbnails" class="space-y-2"></div>
+        <div class="mb-6">
+            <input type="file" id="upload" multiple class="hidden" accept="image/*" />
+            <label for="upload" class="cursor-pointer bg-accent-main text-white px-5 py-4 rounded-xl text-base font-semibold hover:bg-[#343A40] transition duration-300 shadow-md button-hover block text-center">
+                <i class="fas fa-cloud-upload-alt mr-2"></i> Încarcă foto
+            </label>
+        </div>
+
+        <div id="thumbnails-container" class="max-h-[400px] overflow-y-auto mb-6 -mx-3 px-3">
+            <div id="thumbnails" class="grid grid-cols-3 gap-5 pt-3">
+            </div>
+        </div>
+
+        <button id="add-text" class="bg-gray-100 text-text-dark px-4 py-4 rounded-xl text-base font-bold hover:bg-gray-200 transition duration-300 shadow-sm button-hover mb-6 w-full text-left flex items-center justify-between group">
+            <span><i class="fas fa-font mr-2 text-accent-main"></i> Adaugă text</span>
+            <i class="fas fa-plus text-gray-400 group-hover:text-accent-main transition"></i>
+        </button>
+
+        <div id="text-style-panel" class="hidden w-full bg-bg-light p-5 rounded-xl shadow-inner border border-gray-200 transition duration-300">
+            <div class="flex items-center space-x-6">
+
+                <div class="flex flex-col flex-grow space-y-1">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Font</span>
+                    <select id="font-selector" class="block w-full border border-gray-300 p-3 rounded-lg text-text-dark text-base bg-white focus:ring-accent-main focus:border-accent-main shadow-sm">
+                        <option value="Poppins, sans-serif">Poppins</option>
+                        <option value="'Roboto Slab', serif">Roboto Slab</option>
+                        <option value="Oswald, sans-serif">Oswald</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col space-y-1 items-center">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Culoare</span>
+                    <div title="Culoare text" class="relative">
+                        <input type="color" id="color-picker" class="w-12 h-12 rounded-full cursor-pointer opacity-0 absolute top-0 left-0 z-10" />
+                        <div id="text-color-indicator" class="w-12 h-12 rounded-full color-gradient-ring p-[3px] shadow-md transform active:scale-95 transition">
+                            <div class="w-full h-full rounded-full bg-black border-2 border-white"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </aside>
 
-    <!-- Центр: канвас и всё остальное -->
-    <section class="w-full lg:flex-grow lg:basis-1/3 flex flex-col items-center justify-start">
+    <section class="w-full lg:w-[400px] flex flex-col items-center justify-start">
 
-      <!-- Выбор марки и модели -->
-      <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <select id="brand-select" class="border p-2 rounded w-full sm:w-auto">
-          <option value="">Марка</option>
-          <option value="apple">Apple</option>
-          <option value="samsungs">Samsung S</option>
-          <option value="samsunga">Samsung A</option>
-          <option value="samsungm">Samsung M</option>
+        <h2 class="text-lg font-bold text-text-dark mb-4 border-b pb-2 w-full text-center">🎨 Designul tău</h2>
 
-          <option value="redmi">Redmi</option>
-          <option value="oppo">Oppo</option>
-          <option value="poco">Poco</option>
+        <div class="bg-white p-5 rounded-2xl shadow-2xl border border-gray-100 mb-6 flex-shrink-0">
+            <canvas id="phone-canvas" width="360" height="650" class="rounded-lg border border-gray-300"></canvas>
+        </div>
 
-        </select>
-
-        <select id="model-select" class="border p-2 rounded w-full sm:w-auto">
-          <option value="">Модель</option>
-        </select>
-      </div>
-
-      <!-- Кнопки: текст и сохранить -->
-      <div class="mb-2 space-x-2">
-        <button id="add-text" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Добавить текст</button>
-        <button id="save" class="bg-green-600 text-white px-3 py-1 rounded text-sm">Сохранить</button>
-        <button id="clear-canvas" class="bg-red-600 text-white px-3 py-1 rounded text-sm">Очистить всё</button>
-      </div>
-
-      <!-- Канвас -->
-      <div class="bg-white p-4 rounded shadow">
-        <canvas id="phone-canvas" width="360" height="650" class="border"></canvas>
-      </div>
+        <div class="flex justify-center space-x-4 w-full">
+            <button id="clear-canvas" class="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition duration-300 shadow-md button-hover">
+                <i class="fas fa-trash-alt mr-2"></i>Șterge tot
+            </button>
+            <button id="save" class="flex-1 bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition duration-300 shadow-md button-hover">
+                <i class="fas fa-download mr-2"></i>Salvează PNG
+            </button>
+        </div>
     </section>
 
-    <!-- Правый блок с ценой, заказом и инфо -->
-    <div class="w-full lg:w-1/3 p-4 space-y-6">
+<div class="w-full lg:flex-grow flex flex-col h-full justify-start">
 
-      <!-- Цена и заказ -->
-      <div class="bg-white p-5 rounded-2xl shadow-lg space-y-4">
-        <div class="text-2xl font-bold text-green-700">💰 Цена: <span class="text-gray-900">200 лей</span></div>
-        <div class="text-md text-gray-600">🚚 Доставка: <span class="font-medium">50 лей</span></div>
-        <div class="text-md text-gray-600">📍 Самовывоз: bd. Moscova 11, Кишинёв, 068109777</div>
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 flex flex-col">
 
-        <button id="order-btn" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 w-full mt-2 shadow-md transition">
-      🛒 Заказать
-        </button>
-      </div>
+            <div class="bg-gradient-to-r from-gray-50 to-white p-6 border-b border-gray-100 text-center relative">
+                <span class="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">Best Price</span>
+                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Preț final</p>
+                <div class="text-5xl font-extrabold text-primary-blue tracking-tight">
+                    200 <span class="text-2xl text-gray-500 font-medium">MDL</span>
+                </div>
+            </div>
 
-      <!-- Инфо-блок -->
-      <div class="bg-white p-5 rounded-2xl shadow-lg space-y-6 text-sm text-gray-800 leading-relaxed">
+            <div class="p-6 pb-2">
+                <button id="order-btn" class="w-full bg-primary-blue text-white py-4 rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:bg-blue-600 transition-all duration-300 transform hover:-translate-y-1 font-bold text-lg flex items-center justify-center group">
+                    <span>Comandă acum</span>
+                    <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <p class="text-center text-xs text-gray-400 mt-3">
+                    <i class="fas fa-lock text-xs mr-1"></i> Fără plată în avans (Achitare la primire)
+                </p>
+            </div>
 
-        <!-- Подблок 1: Доставка -->
-        <div>
-          <h3 class="font-semibold text-blue-600 mb-1 text-base">🚀 Доставка</h3>
-          <ul class="list-disc list-inside space-y-1 text-gray-700">
-            <li>По Кишинёву — <span class="font-medium">курьером</span></li>
-            <li>Другие города — <span class="font-medium">почтой</span></li>
-            <li>Срок: <span class="font-medium">2–4 дня</span></li>
-          </ul>
+            <div class="p-5 bg-white">
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
+                            <i class="fas fa-shipping-fast text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700 uppercase">Livrare</span>
+                        <span class="text-xs text-gray-500">1-3 zile (de la 50 MDL)</span>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
+                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-2">
+                            <i class="fas fa-store text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700 uppercase">Preluare</span>
+                        <span class="text-xs text-gray-500">Gratuit (bd. Moscova 11 Râșcani)</span>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-2">
+                            <i class="fas fa-gem text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700 uppercase">Premium</span>
+                        <span class="text-xs text-gray-500">Silicon Soft-Touch</span>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
+                        <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
+                            <i class="fas fa-paint-brush text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700 uppercase">Print UV</span>
+                        <span class="text-xs text-gray-500">Garanție 1 an+</span>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
-
-        <!-- Подблок 2: Материалы -->
-        <div>
-          <h3 class="font-semibold text-purple-600 mb-1 text-base">🧪 Материалы и печать</h3>
-          <ul class="list-disc list-inside space-y-1 text-gray-700">
-            <li>Материал: <span class="font-medium">силикон</span></li>
-            <li>Печать: <span class="font-medium">УФ, прямое нанесение</span></li>
-            <li>Срок службы принта: <span class="font-medium">1 год+</span></li>
-          </ul>
-        </div>
-
-      </div>
     </div>
   </main>
 
-  <section class="bg-white py-6 mt-8">
-    <h2 class="text-center text-xl font-bold mb-4">📸 Примеры наших работ</h2>
-    <div class="flex flex-wrap justify-center gap-4 px-4">
-      <img src="/static/assets/examples/1.jpg" class="w-36 h-72 object-cover rounded-lg shadow" />
-      <img src="/static/assets/examples/2.jpg" class="w-36 h-72 object-cover rounded-lg shadow" />
-      <img src="/static/assets/examples/3.jpg" class="w-36 h-72 object-cover rounded-lg shadow" />
-      <img src="/static/assets/examples/4.jpg" class="w-36 h-72 object-cover rounded-lg shadow" />
-      <img src="/static/assets/examples/5.jpg" class="w-36 h-72 object-cover rounded-lg shadow" />
+  <section class="bg-white py-12 mt-8 shadow-inner">
+    <h2 class="text-center text-3xl font-bold text-text-dark mb-8">✨ Exemplele lucrărilor noastre</h2>
+    <div class="flex flex-wrap justify-center gap-5 px-4">
+      <img src="/static/assets/examples/1.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
+      <img src="/static/assets/examples/2.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
+      <img src="/static/assets/examples/3.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
+      <img src="/static/assets/examples/4.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
+      <img src="/static/assets/examples/5.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-gradient-to-r from-blue-400 to-green-400 text-center text-sm text-black-500 p-4 border-t">
-    Доставка по всей стране. Оплата при получении. Все права защищены © 2025
+  <footer class="bg-gray-800 text-white text-center text-sm p-4 mt-auto">
+    <div class="container mx-auto">
+      <p class="mb-1">Livrare în toată țara. Plata la primire (ramburs).</p>
+      <p class="text-xs text-gray-400">Toate drepturile rezervate © MYCASE 2025</p>
+    </div>
   </footer>
-  <div id="order-form" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-    <div class="bg-white p-6 rounded w-full max-w-md space-y-4">
-      <h2 class="text-xl font-bold">Оформление заказа</h2>
+  <div id="order-form" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center hidden z-50 transition-opacity duration-300">
+    <div class="bg-white p-8 rounded-2xl w-full max-w-md space-y-5 shadow-2xl">
+      <h2 class="text-2xl font-bold text-primary-blue border-b pb-2">Finalizare comandă</h2>
       <form id="order-form-el" class="space-y-4">
-        <input type="text" name="name" placeholder="Ваше имя" required class="w-full border p-2 rounded" />
-        <input type="text" name="phone" placeholder="Телефон" required class="w-full border p-2 rounded" />
-        <input type="text" name="address" placeholder="Адрес доставки" required class="w-full border p-2 rounded" />
-        <div class="flex justify-end space-x-2">
-          <button type="button" id="cancel-order" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Отмена</button>
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Заказать</button>
+        <input type="text" name="name" placeholder="Numele tău" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
+        <input type="text" name="phone" placeholder="Telefon" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
+        <input type="text" name="address" placeholder="Adresa de livrare" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" id="cancel-order" class="bg-gray-300 text-text-dark px-5 py-2 rounded-lg hover:bg-gray-400 transition duration-300">Anulare</button>
+          <button type="submit" class="bg-primary-blue text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition duration-300 font-semibold shadow-md button-hover">Comandă</button>
         </div>
       </form>
     </div>
   </div>
 <script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
-<div id="toast" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-  <div class="bg-green-600 text-white px-8 py-4 rounded-xl shadow-lg max-w-sm text-center">
-    Заказ получен! Мы скоро свяжемся с вами 📞
+<div id="toast" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+  <div class="bg-white text-text-dark px-8 py-4 rounded-xl shadow-2xl max-w-sm text-center font-bold border-t-4 border-primary-blue">
+    Comandă primită! Te vom contacta în curând 📞
   </div>
 </div>
 </body>

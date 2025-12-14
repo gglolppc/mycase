@@ -1,33 +1,39 @@
-import shutil
+import os
+import logging
+import aiofiles  # <--- Нужно установить: pip install aiofiles
 from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import List
-import os
-from aiogram import Dispatcher
+
+from aiogram import Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, HTTPException, APIRouter
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi.responses import PlainTextResponse
+
 from app.bot import send_order_to_telegram
-from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, Response, HTTPException, APIRouter
-from starlette.responses import HTMLResponse
-from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
-from app.models import OrderModel
-from dotenv import load_dotenv
 from app.db.database import get_session, Order
+from app.models import OrderModel
+from app.tg_bot.bot_init import tg_bot
 from app.tg_bot.db.database import DbSessionMiddleware
 from app.tg_bot.handler import order, delete, start, info
-from app.tg_bot.bot_init import tg_bot
-import json, logging
 
 load_dotenv()
 
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = f"https://mycase.md{WEBHOOK_PATH}"
+UPLOAD_DIR = "uploads"
 
-# Инициализация aiogram
+# Создаем папку при старте скрипта (синхронно ок)
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
 dp = Dispatcher(storage=MemoryStorage())
 dp.update.middleware(DbSessionMiddleware())
 dp.include_router(order.order_router)
@@ -35,120 +41,122 @@ dp.include_router(start.start_router)
 dp.include_router(delete.delete_router)
 dp.include_router(info.info_router)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await tg_bot.set_webhook(WEBHOOK_URL)
-    print("✅ Webhook установлен")
+    logging.info("✅ Webhook установлен")
     yield
     await tg_bot.delete_webhook()
-    print("🧹 Webhook удалён")
+    logging.info("🧹 Webhook удалён")
+
 
 app = FastAPI(lifespan=lifespan)
 
-# Middleware на ограничение размера запроса
-class LimitRequestSize(BaseHTTPMiddleware):
-    def __init__(self, app, max_bytes: int = 5_000_000):
-        super().__init__(app)
-        self.max_bytes = max_bytes
-
-    async def dispatch(self, request: Request, call_next):
-        raw = await request.body()
-        if len(raw) > self.max_bytes:
-            return Response(status_code=413)
-        request.state.raw_body = raw
-        return await call_next(request)
-
-app.add_middleware(LimitRequestSize)
-
-# --- WEBHOOK ---
-router = APIRouter()
-
-@router.post("/webhook")
-async def telegram_webhook(request: Request):
-    try:
-        raw = await request.body()
-        logging.warning("🔥 RAW: %s", raw)
-        update = json.loads(raw)
-        logging.warning("✅ JSON OK")
-
-        await dp.feed_webhook_update(
-            bot=tg_bot,
-            update=update,
-            headers=dict(request.headers),
-        )
-
-        logging.warning("✅ Feed update OK")
-
-    except Exception as e:
-        logging.exception("💥 Webhook exception: %s", e)
-
-app.include_router(router)  # <-- Подключаем ПОСЛЕ объявления маршрута
-
+# Статика и шаблоны
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+# --- WEBHOOK ---
+webhook_router = APIRouter()
+
+
+@webhook_router.post(WEBHOOK_PATH)
+async def telegram_webhook(request: Request):
+    try:
+        # FastAPI сам распарсит JSON асинхронно
+        update_data = await request.json()
+
+        # Преобразуем dict в объект Update aiogram
+        update = types.Update(**update_data)
+
+        # Передаем в диспетчер
+        await dp.feed_update(bot=tg_bot, update=update)
+
+        return {"status": "ok"}
+    except Exception as e:
+        logging.exception("💥 Webhook error: %s", e)
+        # Возвращаем 200, чтобы Telegram не долбил повторными запросами при ошибке в коде
+        return {"status": "error", "message": str(e)}
+
+
+app.include_router(webhook_router)
 
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # === ЗАКАЗ ===
 @app.post("/order")
 async def receive_order(
-    session: AsyncSession = Depends(get_session),
-    order: OrderModel = Depends(OrderModel.as_form),
-    comment: str = Form(""),
-    brand: str = Form(""),
-    model: str = Form(""),
-    design_image: UploadFile = File(...),
-    files: List[UploadFile] = File(default=[])
+        session: AsyncSession = Depends(get_session),
+        order_data: OrderModel = Depends(OrderModel.as_form),
+        # Переименовал переменную, чтобы не путать с модулем order
+        comment: str = Form(""),
+        brand: str = Form(""),
+        model: str = Form(""),
+        design_image: UploadFile = File(...),
+        files: List[UploadFile] = File(default=[])
 ):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    order_dir = os.path.join(UPLOAD_DIR, f"{order.name}_{timestamp}")
+    # Используем ID или имя, чистим от спецсимволов по хорошему
+    safe_name = "".join(x for x in order_data.name if x.isalnum())
+    order_dir = os.path.join(UPLOAD_DIR, f"{safe_name}_{timestamp}")
+
+    # os.makedirs блокирующий, но быстрый. Для идеала можно aiofiles.os.makedirs, но и так сойдет
     os.makedirs(order_dir, exist_ok=True)
 
-    # Сохраняем дизайн
+    # 1. Асинхронное сохранение дизайна
     design_path = os.path.join(order_dir, "design.png")
-    with open(design_path, "wb") as f:
-        shutil.copyfileobj(design_image.file, f)
+    async with aiofiles.open(design_path, "wb") as f:
+        content = await design_image.read()
+        await f.write(content)
 
-    # Сохраняем остальные файлы
+    # 2. Асинхронное сохранение файлов
     file_paths = []
     for idx, file in enumerate(files):
-        path = os.path.join(order_dir, f"user_file_{idx}_{file.filename}")
-        with open(path, "wb") as out_file:
-            shutil.copyfileobj(file.file, out_file)
+        if not file.filename: continue  # Пропуск пустых
+        path = os.path.join(order_dir, f"user_{idx}_{file.filename}")
+        async with aiofiles.open(path, "wb") as out_file:
+            while content := await file.read(1024 * 1024):  # Читаем кусками по 1Мб (если файлы большие)
+                await out_file.write(content)
         file_paths.append(path)
 
-    # Отправляем заказ в Telegram
-    await send_order_to_telegram(
-        {
-            "name": order.name,
-            "phone": order.phone,
-            "brand": brand,
-            "model": model,
-            "address": order.address,
-            "comment": comment,
-        },
-        design_path=design_path,
-        file_paths=file_paths
-    )
+    # 3. Сначала пишем в БД (чтобы ID заказа получить или гарантировать сохранность)
     try:
         new_order = Order(
-            c_name=order.name,
-            phone_number=order.phone,
-            address=order.address,
+            c_name=order_data.name,
+            phone_number=order_data.phone,
+            address=order_data.address,
             brand=brand,
             phone_model=model,
             design_url=design_path
-
         )
         session.add(new_order)
         await session.commit()
     except (IntegrityError, DataError) as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        logging.error(f"DB Error: {e}")
+        raise HTTPException(status_code=400, detail="Ошибка сохранения заказа в БД")
+
+    # 4. Отправляем в Telegram
+    # Лучше обернуть в try/except, чтобы ошибка ТГ не крашила ответ юзеру, если заказ уже в базе
+    try:
+        await send_order_to_telegram(
+            {
+                "name": order_data.name,
+                "phone": order_data.phone,
+                "brand": brand,
+                "model": model,
+                "address": order_data.address,
+                "comment": comment,
+            },
+            design_path=design_path,
+            file_paths=file_paths
+        )
+    except Exception as e:
+        logging.error(f"Telegram send error: {e}")
+        # Можно вернуть warning, но заказ принят
 
     return {"message": "Order received"}
