@@ -136,8 +136,21 @@
         </div>
 
         <div class="flex gap-6 w-full max-w-lg">
-          <button id="clear-canvas" class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold"><i class="fas fa-trash mr-2"></i>Șterge tot</button>
-          <button id="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition"><i class="fas fa-download mr-2"></i>Salvează PNG</button>
+          <button
+              id="clear-canvas"
+              data-action="clear"
+              class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold"
+            >
+              <i class="fas fa-trash mr-2"></i>Șterge tot
+            </button>
+
+            <button
+              id="save"
+              data-action="save"
+              class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition"
+            >
+              <i class="fas fa-download mr-2"></i>Salvează PNG
+            </button>
         </div>
       </section>
 
@@ -212,11 +225,11 @@
   </section>
 
   <!-- Sticky bottom bar для мобильных -->
-  <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
-    <button id="clear-canvas" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
-    <button id="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Salvează</button>
-    <button id="order-btn" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
-  </div>
+    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
+          <button data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
+          <button data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Salvează</button>
+          <button data-action="order" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
+    </div>
 
 
     <!-- Модальное окно заказа -->
@@ -297,7 +310,8 @@
   </div>
 </footer>
 <!-- Floating Contact Button -->
-<div id="floating-contact" class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+<div id="floating-contact" class="fixed bottom-28 right-4 z-40 flex flex-col items-end gap-4">
+
   <!-- Раскрывающиеся кнопки (скрыты по умолчанию) -->
   <div id="contact-buttons" class="flex flex-col items-end gap-3 opacity-0 scale-0 transition-all duration-300 origin-bottom-right">
     <a href="https://t.me/mycasemd" target="_blank" class="bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
@@ -322,6 +336,7 @@
 </div>
 
 <style>
+
   .pulse-animation {
     animation: pulse 2s infinite;
   }
@@ -331,6 +346,8 @@
     100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
   }
   html { scroll-behavior: smooth; } /* Плавный скролл по всему сайту */
+
+  body { overflow-x: hidden; }
 </style>
 
 <script>
