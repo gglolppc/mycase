@@ -1,312 +1,354 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" class="scroll-smooth">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Huse personalizate cu poză în Chișinău | MYCASE</title>
+    <meta name="description" content="Creează husă unică cu poză, text sau logo. Calitate premium, livrare rapidă în Moldova." />
+    <meta name="keywords" content="huse personalizate, husă cu poză, mycase, Chișinău, Moldova" />
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRN1WNWTXK"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-KRN1WNWTXK');
     </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Huse personalizate cu poză în Chișinău, Moldova | Calitate Premium</title>
-  <meta name="title" content="Huse la comandă în Moldova — MYCASE" />
-  <meta name="description" content="Huse individuale cu poză, text, logo și numere. Imprimare pentru modelul tău de telefon. Livrare rapidă în Moldova." />
-  <meta name="keywords" content="huse la comandă, husă cu poză, husă cu număr, mycase, Chișinău, Moldova, huse personalizate, huse cu print" />
-  <meta name="author" content="MYCASE Team" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://mycase.md/" />
-  <meta property="og:title" content="Huse la comandă — MyCase Moldova" />
-  <meta property="og:description" content="Creează o husă unică: adaugă poză, număr, logo sau text. Suport pentru toate modelele. Livrare în toată țara." />
-  <meta property="og:image" content="{{ request.url_for('static', path='assets/preview.jpg') }}" />
-
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://mycase.md/" />
-  <meta property="twitter:title" content="Huse la comandă — MyCase Moldova" />
-  <meta property="twitter:description" content="Creează o husă unică: adaugă poză, număr, logo sau text. Suport pentru toate modelele. Livrare în toată țara." />
-  <meta property="twitter:image" content="https://mycase.md/static/assets/og-preview.jpg" />
-  <link rel="icon" type="image/png" href="{{ request.url_for('static', path='assets/favicon.png') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Setăm paleta de culori pentru accent premium (Grafit)
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'accent-main': '#495057', // Gri închis/Grafit accent
-            'text-dark': '#212529',  // Aproape negru pentru textul principal
-            'bg-light': '#F8F9FA',   // Fundal foarte deschis
-            'primary-blue': '#007BFF', // Albastru aprins pentru butonul de comandă
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              accent: '#6366F1',
+              'bg-light': '#F8FAFC',
+              glass: 'rgba(255, 255, 255, 0.75)',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
           }
         }
       }
-    }
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
-  <script>
-    const STATIC_BASE = "{{ request.url_for('static', path='') }}";
-  </script>
-  <style>
-    /* Gradient curcubeu pentru indicatorii de culoare */
-    .color-gradient-ring {
-      background: conic-gradient(
-        from 90deg at 50% 50%,
-        #ff0000 0%,
-        #ffff00 17%,
-        #00ff00 34%,
-        #00ffff 50%,
-        #0000ff 67%,
-        #ff00ff 84%,
-        #ff0000 100%
-      );
-    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/fabric.min.js"></script>
+    <script>const STATIC_BASE = "{{ request.url_for('static', path='') }}";</script>
 
-    /* Stil pentru butonul de ștergere pe miniatură */
-    .delete-thumbnail-btn {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid white;
-        z-index: 20;
-    }
-
-    /* Animație premium (doar umbră, fără sărituri) */
-    .button-hover:hover {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        transform: scale(1.005);
-    }
-  </style>
+    <style>
+      .glass { @apply bg-glass backdrop-blur-md border border-white/30; }
+      .neumorphic { @apply bg-white/80 shadow-xl; }
+      .neumorphic-btn { @apply bg-white/90 shadow-inner shadow-gray-400/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300; }
+      .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    </style>
 </head>
-<body class="bg-bg-light min-h-screen flex flex-col font-sans text-text-dark">
+<body class="bg-bg-light text-gray-800 min-h-screen flex flex-col">
 
-  <header class="bg-white shadow-sm py-4 relative border-b border-gray-200">
-    <div class="container mx-auto px-6 flex justify-between items-center">
-
-      <div class="flex items-center space-x-3">
-        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="logo" class="w-12 h-12 rounded-full border border-gray-100 shadow-md" />
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur-md shadow-sm py-5 sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE" class="w-12 h-12 rounded-full shadow-md"/>
         <div>
-          <h1 class="text-xl font-extrabold text-accent-main tracking-wider">MYCASE</h1>
-          <p class="text-xs text-gray-500 italic hidden sm:block">Huse premium la comandă</p>
+          <h1 class="text-2xl font-bold text-accent">MYCASE</h1>
+          <p class="text-sm text-gray-500">Huse premium la comandă</p>
         </div>
       </div>
-
-      <div class="flex items-center space-x-4">
-        <a href="https://t.me/mycasemd" target="_blank" class="text-text-dark hover:text-accent-main transition duration-300 flex items-center space-x-1">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.3 8.35L8.76 13.9c-.31.13-.67.04-.84-.23l-.74-2.19c-.1-.31-.05-.65.13-.93l7.98-4.72c.23-.14.51-.12.72.06.2.19.23.49.07.72z"/></svg>
-          <span class="text-sm hidden md:inline">Telegram</span>
-        </a>
-
-        <a href="viber://chat?number=%2B37368109777" target="_blank" class="text-text-dark hover:text-accent-main transition duration-300 flex items-center space-x-1">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.17 11.21c-.48-.09-1.01-.13-1.61-.13-1.4 0-2.42.34-3.03 1.02-.6.68-.9 1.63-.9 2.87v.14c0 .32-.23.59-.55.66-.4.09-.7-.18-.78-.57-.08-.39.19-.7.57-.78.43-.09.73-.39.73-.67v-.14c0-1.04.22-1.78.65-2.27.43-.49 1.25-.74 2.44-.74.67 0 1.22.06 1.7.15.54.1.86-.23.76-.78-.07-.38-.34-.65-.72-.72zM12 7c-1.4 0-2.5.9-2.5 2s1.1 2 2.5 2 2.5-.9 2.5-2-1.1-2-2.5-2zm-3.5 0c0-.83.67-1.5 1.5-1.5h4c.83 0 1.5.67 1.5 1.5v1c0 .83-.67 1.5-1.5 1.5h-4c-.83 0-1.5-.67-1.5-1.5v-1z"/></svg>
-          <span class="text-sm hidden md:inline">Viber</span>
-        </a>
+      <div class="flex items-center gap-6">
+        <a href="https://t.me/mycasemd" class="text-gray-700 hover:text-accent transition"><i class="fab fa-telegram text-xl"></i></a>
+        <a href="viber://chat?number=%2B37368109777" class="text-gray-700 hover:text-accent transition"><i class="fab fa-viber text-xl"></i></a>
       </div>
-
     </div>
   </header>
 
-  <main class="flex-grow flex flex-col lg:flex-row lg:items-stretch p-6 max-w-7xl mx-auto space-y-6 lg:space-y-0 lg:space-x-6">
+  <!-- Main -->
+  <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="flex flex-col lg:flex-row gap-8">
 
-    <aside class="w-full lg:w-[600px] bg-white p-6 rounded-xl shadow-lg flex flex-col h-full">
+      <!-- Левая панель -->
+      <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96 order-2 lg:order-1">
+        <div class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-800">📱 Alege modelul</h2>
 
-        <div class="mb-8 border-b border-gray-100 pb-6">
-            <h2 class="text-lg font-bold text-text-dark mb-4">📱 Alege modelul</h2>
-
-            <div class="flex flex-col space-y-4">
-                <select id="brand-select" class="block w-full border border-gray-300 p-4 rounded-xl text-lg bg-gray-50 text-text-dark focus:ring-2 focus:ring-accent-main focus:border-accent-main transition shadow-sm cursor-pointer hover:bg-white">
-                    <option value="">Alege brandul</option>
-                    <option value="apple">Apple</option>
-                    <option value="samsungs">Samsung S</option>
-                    <option value="samsunga">Samsung A</option>
-                    <option value="samsungm">Samsung M</option>
-                    <option value="redmi">Redmi</option>
-                    <option value="oppo">Oppo</option>
-                    <option value="poco">Poco</option>
-                </select>
-
-                <select id="model-select" class="block w-full border border-gray-300 p-4 rounded-xl text-lg bg-gray-50 text-text-dark focus:ring-2 focus:ring-accent-main focus:border-accent-main transition shadow-sm cursor-pointer hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed">
-                    <option value="">Alege modelul</option>
-                </select>
+          <div class="relative">
+            <select id="brand-select" class="w-full appearance-none bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl px-6 py-5 text-lg text-gray-800 focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
+              <option value="">Alege brandul</option>
+              <option value="apple">Apple</option>
+              <option value="samsungs">Samsung S</option>
+              <option value="samsunga">Samsung A</option>
+              <option value="samsungm">Samsung M</option>
+              <option value="redmi">Redmi</option>
+              <option value="oppo">Oppo</option>
+              <option value="poco">Poco</option>
+            </select>
+            <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+              <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
             </div>
-        </div>
+          </div>
 
-
-        <div class="mb-6">
-            <input type="file" id="upload" multiple class="hidden" accept="image/*" />
-            <label for="upload" class="cursor-pointer bg-accent-main text-white px-5 py-4 rounded-xl text-base font-semibold hover:bg-[#343A40] transition duration-300 shadow-md button-hover block text-center">
-                <i class="fas fa-cloud-upload-alt mr-2"></i> Încarcă foto
-            </label>
-        </div>
-
-        <div id="thumbnails-container" class="max-h-[400px] overflow-y-auto mb-6 -mx-3 px-3">
-            <div id="thumbnails" class="grid grid-cols-3 gap-5 pt-3">
+          <div class="relative">
+            <select id="model-select" class="w-full appearance-none bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl px-6 py-5 text-lg text-gray-800 focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
+              <option value="">Alege modelul</option>
+            </select>
+            <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+              <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
             </div>
+          </div>
         </div>
 
-        <button id="add-text" class="bg-gray-100 text-text-dark px-4 py-4 rounded-xl text-base font-bold hover:bg-gray-200 transition duration-300 shadow-sm button-hover mb-6 w-full text-left flex items-center justify-between group">
-            <span><i class="fas fa-font mr-2 text-accent-main"></i> Adaugă text</span>
-            <i class="fas fa-plus text-gray-400 group-hover:text-accent-main transition"></i>
+        <input type="file" id="upload" multiple accept="image/*" class="hidden"/>
+        <label for="upload" class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
+          <i class="fas fa-cloud-upload-alt mr-3"></i>Încarcă foto
+        </label>
+
+        <div id="thumbnails-container" class="max-h-96 overflow-y-auto px-2">
+          <div id="thumbnails" class="grid grid-cols-3 gap-4"></div>
+        </div>
+
+        <button id="add-text" class="neumorphic-btn py-5 rounded-2xl font-semibold flex justify-between items-center">
+          <span><i class="fas fa-font mr-3 text-accent"></i>Adaugă text</span>
+          <i class="fas fa-plus"></i>
         </button>
 
-        <div id="text-style-panel" class="hidden w-full bg-bg-light p-5 rounded-xl shadow-inner border border-gray-200 transition duration-300">
-            <div class="flex items-center space-x-6">
-
-                <div class="flex flex-col flex-grow space-y-1">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Font</span>
-                    <select id="font-selector" class="block w-full border border-gray-300 p-3 rounded-lg text-text-dark text-base bg-white focus:ring-accent-main focus:border-accent-main shadow-sm">
-                        <option value="Poppins, sans-serif">Poppins</option>
-                        <option value="'Roboto Slab', serif">Roboto Slab</option>
-                        <option value="Oswald, sans-serif">Oswald</option>
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="Georgia, serif">Georgia</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col space-y-1 items-center">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Culoare</span>
-                    <div title="Culoare text" class="relative">
-                        <input type="color" id="color-picker" class="w-12 h-12 rounded-full cursor-pointer opacity-0 absolute top-0 left-0 z-10" />
-                        <div id="text-color-indicator" class="w-12 h-12 rounded-full color-gradient-ring p-[3px] shadow-md transform active:scale-95 transition">
-                            <div class="w-full h-full rounded-full bg-black border-2 border-white"></div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <div id="text-style-panel" class="hidden glass p-5 rounded-2xl space-y-4">
+          <div class="flex items-center justify-between">
+            <label class="font-medium">Font</label>
+            <select id="font-selector" class="p-3 rounded-lg border border-gray-300 bg-white/80"></select>
+          </div>
+          <div class="flex items-center justify-between">
+            <label class="font-medium">Culoare</label>
+            <input type="color" id="color-picker" class="w-12 h-12 rounded-full cursor-pointer"/>
+          </div>
         </div>
-    </aside>
+      </aside>
 
-    <section class="w-full lg:w-[400px] flex flex-col items-center justify-start">
+      <!-- Центральный canvas -->
+      <section class="flex-1 flex flex-col items-center gap-8 order-1 lg:order-2">
 
-        <h2 class="text-lg font-bold text-text-dark mb-4 border-b pb-2 w-full text-center">🎨 Designul tău</h2>
-
-        <div class="bg-white p-5 rounded-2xl shadow-2xl border border-gray-100 mb-6 flex-shrink-0">
-            <canvas id="phone-canvas" width="360" height="650" class="rounded-lg border border-gray-300"></canvas>
+        <div class="glass neumorphic rounded-3xl p-10 shadow-2xl">
+          <canvas id="phone-canvas" width="420" height="780" class="rounded-3xl shadow-2xl border border-gray-200"></canvas>
         </div>
 
-        <div class="flex justify-center space-x-4 w-full">
-            <button id="clear-canvas" class="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition duration-300 shadow-md button-hover">
-                <i class="fas fa-trash-alt mr-2"></i>Șterge tot
-            </button>
-            <button id="save" class="flex-1 bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition duration-300 shadow-md button-hover">
-                <i class="fas fa-download mr-2"></i>Salvează PNG
-            </button>
+        <div class="flex gap-6 w-full max-w-lg">
+          <button id="clear-canvas" class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold"><i class="fas fa-trash mr-2"></i>Șterge tot</button>
+          <button id="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition"><i class="fas fa-download mr-2"></i>Salvează PNG</button>
         </div>
-    </section>
+      </section>
 
-<div class="w-full lg:flex-grow flex flex-col h-full justify-start">
-
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 flex flex-col">
-
-            <div class="bg-gradient-to-r from-gray-50 to-white p-6 border-b border-gray-100 text-center relative">
-                <span class="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">Best Price</span>
-                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Preț final</p>
-                <div class="text-5xl font-extrabold text-primary-blue tracking-tight">
-                    200 <span class="text-2xl text-gray-500 font-medium">MDL</span>
-                </div>
-            </div>
-
-            <div class="p-6 pb-2">
-                <button id="order-btn" class="w-full bg-primary-blue text-white py-4 rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:bg-blue-600 transition-all duration-300 transform hover:-translate-y-1 font-bold text-lg flex items-center justify-center group">
-                    <span>Comandă acum</span>
-                    <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
-                </button>
-                <p class="text-center text-xs text-gray-400 mt-3">
-                    <i class="fas fa-lock text-xs mr-1"></i> Fără plată în avans (Achitare la primire)
-                </p>
-            </div>
-
-            <div class="p-5 bg-white">
-                <div class="grid grid-cols-2 gap-4">
-
-                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
-                            <i class="fas fa-shipping-fast text-sm"></i>
-                        </div>
-                        <span class="text-xs font-bold text-gray-700 uppercase">Livrare</span>
-                        <span class="text-xs text-gray-500">1-3 zile (de la 50 MDL)</span>
-                    </div>
-
-                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
-                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-2">
-                            <i class="fas fa-store text-sm"></i>
-                        </div>
-                        <span class="text-xs font-bold text-gray-700 uppercase">Preluare</span>
-                        <span class="text-xs text-gray-500">Gratuit (bd. Moscova 11 Râșcani)</span>
-                    </div>
-
-                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
-                        <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-2">
-                            <i class="fas fa-gem text-sm"></i>
-                        </div>
-                        <span class="text-xs font-bold text-gray-700 uppercase">Premium</span>
-                        <span class="text-xs text-gray-500">Silicon Soft-Touch</span>
-                    </div>
-
-                    <div class="bg-gray-50 p-3 rounded-xl flex flex-col items-center text-center border border-gray-100">
-                        <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
-                            <i class="fas fa-paint-brush text-sm"></i>
-                        </div>
-                        <span class="text-xs font-bold text-gray-700 uppercase">Print UV</span>
-                        <span class="text-xs text-gray-500">Garanție 1 an+</span>
-                    </div>
-
-                </div>
-            </div>
-
+      <!-- Правая панель цены -->
+      <aside class="glass neumorphic rounded-3xl p-8 lg:w-80 order-3">
+        <div class="text-center py-8 border-b border-gray-200">
+          <p class="text-sm uppercase tracking-wider text-gray-500 mb-2">Preț</p>
+          <div class="text-6xl font-bold text-accent">200 <span class="text-3xl text-gray-600">MDL</span></div>
         </div>
+
+        <button id="order-btn" class="w-full bg-accent text-white py-6 rounded-2xl mt-8 font-bold text-xl hover:bg-indigo-700 transition shadow-lg">
+          Comandă acum →
+        </button>
+
+        <p class="text-center text-sm text-gray-500 mt-4"><i class="fas fa-lock mr-1"></i>Fără plată în avans</p>
+
+        <div class="grid grid-cols-2 gap-4 mt-8">
+          <div class="bg-white/60 rounded-xl p-4 text-center"><i class="fas fa-shipping-fast text-2xl text-blue-500 mb-2"></i><p class="text-xs font-bold">Livrare 1-3 zile de la 50 lei</p></div>
+          <div class="bg-white/60 rounded-xl p-4 text-center"><i class="fas fa-store text-2xl text-green-500 mb-2"></i><p class="text-xs font-bold">Preluare gratuit</p></div>
+          <div class="bg-white/60 rounded-xl p-4 text-center"><i class="fas fa-gem text-2xl text-purple-500 mb-2"></i><p class="text-xs font-bold">Silicon Premium</p></div>
+          <div class="bg-white/60 rounded-xl p-4 text-center"><i class="fas fa-paint-brush text-2xl text-orange-500 mb-2"></i><p class="text-xs font-bold">Print UV Garanție</p></div>
+        </div>
+      </aside>
     </div>
   </main>
 
-  <section class="bg-white py-12 mt-8 shadow-inner">
-    <h2 class="text-center text-3xl font-bold text-text-dark mb-8">✨ Exemplele lucrărilor noastre</h2>
-    <div class="flex flex-wrap justify-center gap-5 px-4">
-      <img src="/static/assets/examples/1.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
-      <img src="/static/assets/examples/2.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
-      <img src="/static/assets/examples/3.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
-      <img src="/static/assets/examples/4.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
-      <img src="/static/assets/examples/5.jpg" class="w-40 h-80 object-cover rounded-xl shadow-xl transition duration-300 ring-2 ring-accent-main/50" />
+    <!-- Exemplele lucrărilor noastre -->
+  <section class="py-16 px-6 bg-gradient-to-b from-transparent to-gray-50">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-4xl font-bold text-center text-accent mb-12">✨ Exemplele lucrărilor noastre</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <!-- Повтори этот блок для каждого фото (у тебя было 5) -->
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+          <img src="{{ request.url_for('static', path='assets/examples/1.jpg') }}"
+               alt="Exemplu husă personalizată"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+          <img src="{{ request.url_for('static', path='assets/examples/2.jpg') }}"
+               alt="Exemplu husă personalizată"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+          <img src="{{ request.url_for('static', path='assets/examples/3.jpg') }}"
+               alt="Exemplu husă personalizată"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+          <img src="{{ request.url_for('static', path='assets/examples/4.jpg') }}"
+               alt="Exemplu husă personalizată"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+          <img src="{{ request.url_for('static', path='assets/examples/5.jpg') }}"
+               alt="Exemplu husă personalizată"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+      </div>
+
+      <p class="text-center text-gray-600 mt-10 text-lg">Și a ta va fi la fel de frumoasă ✨</p>
     </div>
   </section>
 
-  <footer class="bg-gray-800 text-white text-center text-sm p-4 mt-auto">
-    <div class="container mx-auto">
-      <p class="mb-1">Livrare în toată țara. Plata la primire (ramburs).</p>
-      <p class="text-xs text-gray-400">Toate drepturile rezervate © MYCASE 2025</p>
-    </div>
-  </footer>
-  <div id="order-form" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center hidden z-50 transition-opacity duration-300">
-    <div class="bg-white p-8 rounded-2xl w-full max-w-md space-y-5 shadow-2xl">
-      <h2 class="text-2xl font-bold text-primary-blue border-b pb-2">Finalizare comandă</h2>
-      <form id="order-form-el" class="space-y-4">
-        <input type="text" name="name" placeholder="Numele tău" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
-        <input type="text" name="phone" placeholder="Telefon" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
-        <input type="text" name="address" placeholder="Adresa de livrare" required class="w-full border border-gray-300 p-3 rounded-lg text-text-dark focus:border-primary-blue focus:ring focus:ring-primary-blue/50" />
-        <div class="flex justify-end space-x-3 pt-2">
-          <button type="button" id="cancel-order" class="bg-gray-300 text-text-dark px-5 py-2 rounded-lg hover:bg-gray-400 transition duration-300">Anulare</button>
-          <button type="submit" class="bg-primary-blue text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition duration-300 font-semibold shadow-md button-hover">Comandă</button>
-        </div>
-      </form>
-    </div>
+  <!-- Sticky bottom bar для мобильных -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
+    <button id="clear-canvas" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
+    <button id="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Salvează</button>
+    <button id="order-btn" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
   </div>
-<script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
-<div id="toast" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-  <div class="bg-white text-text-dark px-8 py-4 rounded-xl shadow-2xl max-w-sm text-center font-bold border-t-4 border-primary-blue">
+
+
+    <!-- Модальное окно заказа -->
+    <div id="order-form" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center hidden z-50 transition-all duration-300">
+      <div class="bg-white rounded-3xl p-10 max-w-md w-full mx-6 shadow-2xl border border-gray-100">
+        <h2 class="text-3xl font-bold text-accent mb-8 text-center">Finalizare comandă</h2>
+        <form id="order-form-el" class="space-y-6">
+          <input type="text" name="name" placeholder="Numele tău" required class="w-full p-5 rounded-2xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
+          <input type="text" name="phone" placeholder="Telefon" required class="w-full p-5 rounded-2xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
+          <input type="text" name="address" placeholder="Adresa de livrare" required class="w-full p-5 rounded-2xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
+
+          <div class="flex justify-end gap-4 mt-10">
+            <button type="button" id="cancel-order" class="px-8 py-4 rounded-2xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition">
+              Anulare
+            </button>
+            <button type="submit" id="submit-order-btn" class="relative px-10 py-4 rounded-2xl bg-accent text-white font-bold hover:bg-indigo-700 transition shadow-lg w-full">
+              <span id="submit-text">Comandă acum</span>
+              <span id="loading-text" class="hidden flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Se trimite ordine...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white text-gray-800 px-8 py-4 rounded-2xl shadow-2xl border-t-4 border-green-500 opacity-0 pointer-events-none transition-opacity duration-300 z-50 font-bold">
     Comandă primită! Te vom contacta în curând 📞
   </div>
+
+  <script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
+<!-- Footer -->
+<footer class="bg-white/70 backdrop-blur-md border-t border-gray-200 mt-20">
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+
+      <!-- Логотип и слоган -->
+      <div class="flex flex-col items-center md:items-start">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE" class="w-10 h-10 rounded-full shadow-md"/>
+          <h3 class="text-2xl font-bold text-accent">MYCASE</h3>
+        </div>
+        <p class="text-sm text-gray-600">Huse premium personalizate<br>Chișinău · Moldova · 2025</p>
+      </div>
+
+      <!-- Контакты -->
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Contact</p>
+        <div class="space-y-2 text-gray-600">
+          <p class="flex items-center justify-center md:justify-start gap-2">
+            <i class="fab fa-telegram text-accent"></i> @mycasemd
+          </p>
+          <p class="flex items-center justify-center md:justify-start gap-2">
+            <i class="fab fa-viber text-accent"></i> +373 69 214 888
+          </p>
+          <p class="flex items-center justify-center md:justify-start gap-2">
+            <i class="fas fa-map-marker-alt text-accent"></i> bd. Moscova 11, Rîșcani
+          </p>
+        </div>
+      </div>
+
+      <!-- Инфо -->
+      <div class="space-y-3">
+        <p class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Info</p>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>Livrare în toată Moldova (de la 50 lei)</p>
+          <p>Plata la primire (ramburs)</p>
+          <p>Garanție calitate print UV</p>
+          <p class="text-xs text-gray-500 mt-4">© 2025 MYCASE. Toate drepturile rezervate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- Floating Contact Button -->
+<div id="floating-contact" class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+  <!-- Раскрывающиеся кнопки (скрыты по умолчанию) -->
+  <div id="contact-buttons" class="flex flex-col items-end gap-3 opacity-0 scale-0 transition-all duration-300 origin-bottom-right">
+    <a href="https://t.me/mycasemd" target="_blank" class="bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <i class="fab fa-telegram text-2xl"></i>
+    </a>
+    <a href="viber://chat?number=%2B37368109777" class="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <i class="fab fa-viber text-2xl"></i>
+    </a>
+    <a href="tel:+373 69 214 888" class="bg-green-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <i class="fas fa-phone text-2xl"></i>
+    </a>
+    <!-- Кнопка скролла к футеру (с контактами) -->
+    <button onclick="document.querySelector('footer').scrollIntoView({behavior: 'smooth'})" class="bg-accent text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <i class="fas fa-arrow-down text-2xl"></i>
+    </button>
+  </div>
+
+  <!-- Главная кнопка (открывает/закрывает меню) -->
+  <button id="toggle-contact" class="bg-accent text-white p-5 rounded-full shadow-2xl hover:scale-110 transition transform pulse-animation">
+    <i id="toggle-icon" class="fas fa-comment-dots text-3xl"></i>
+  </button>
 </div>
+
+<style>
+  .pulse-animation {
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  }
+  html { scroll-behavior: smooth; } /* Плавный скролл по всему сайту */
+</style>
+
+<script>
+  const toggleBtn = document.getElementById('toggle-contact');
+  const contactButtons = document.getElementById('contact-buttons');
+  const toggleIcon = document.getElementById('toggle-icon');
+
+  toggleBtn.addEventListener('click', () => {
+    if (contactButtons.classList.contains('opacity-0')) {
+      contactButtons.classList.remove('opacity-0', 'scale-0');
+      contactButtons.classList.add('opacity-100', 'scale-100');
+      toggleIcon.classList.replace('fa-comment-dots', 'fa-times');
+    } else {
+      contactButtons.classList.add('opacity-0', 'scale-0');
+      contactButtons.classList.remove('opacity-100', 'scale-100');
+      toggleIcon.classList.replace('fa-times', 'fa-comment-dots');
+    }
+  });
+</script>
 </body>
 </html>
