@@ -1,6 +1,14 @@
 // static/js/canvas.js
+
+export const BASE_W = 420;
+export const BASE_H = 780;
+
 export function createCanvas() {
   const canvas = new fabric.Canvas('phone-canvas', { preserveObjectStacking: true });
+
+  // Сразу базовый размер (важно для расчётов)
+  canvas.setWidth(BASE_W);
+  canvas.setHeight(BASE_H);
 
   const defaultText = new fabric.Text('Alege modelul telefonului', {
     left: canvas.width / 2,
@@ -32,10 +40,7 @@ export function addImageToCanvas(canvas, dataURL) {
   fabric.Image.fromURL(
     dataURL,
     (img) => {
-      const scale = Math.min(
-        (canvas.width * 0.85) / img.width,
-        (canvas.height * 0.85) / img.height,
-      );
+      const scale = Math.min((canvas.width * 0.85) / img.width, (canvas.height * 0.85) / img.height);
       img.scale(scale);
       img.set({
         left: canvas.width / 2,
@@ -85,31 +90,96 @@ export function setPhoneOverlay({ canvas, state, brand, model }) {
 export function clearDesign({ canvas, state, stylePanelEl }) {
   canvas
     .getObjects()
-    .filter((o) => o !== state.currentOverlay && o !== state.defaultText)
+    .filter((o) => o !== state.defaultText) // overlay не в objects
     .forEach((o) => canvas.remove(o));
 
-  if (stylePanelEl) {
-    stylePanelEl.classList.add('hidden');
+  // вернуть дефолтный текст если нет оверлея
+  if (!state.currentOverlay) {
+    canvas.add(state.defaultText);
+    state.defaultText.set({ left: canvas.width / 2, top: canvas.height / 2 });
   }
 
+  if (stylePanelEl) stylePanelEl.classList.add('hidden');
   canvas.renderAll();
 }
 
-export async function exportCanvasPng(canvas, state) {
-  // временно убираем overlay, чтобы сохранить чистый принт
+// ----------- RESPONSIVE (через Fabric, не через CSS) -----------
+
+function scaleAllObjects(canvas, sx, sy) {
+  canvas.getObjects().forEach((obj) => {
+    obj.scaleX *= sx;
+    obj.scaleY *= sy;
+    obj.left *= sx;
+    obj.top *= sy;
+    obj.setCoords();
+  });
+}
+
+export function setupResponsiveCanvas(canvas, state, { baseW = BASE_W, baseH = BASE_H } = {}) {
+  let lastW = canvas.getWidth();
+  let lastH = canvas.getHeight();
+
+  function resize() {
+    const el = document.getElementById('phone-canvas');
+    if (!el) return;
+
+    const container = el.parentElement;
+    if (!container) return;
+
+    // контейнер уже с паддингами, поэтому чуть запас
+    const cw = container.clientWidth;
+    const targetW = Math.min(baseW, Math.floor(cw - 2));
+    const targetH = Math.round(targetW * (baseH / baseW));
+
+    if (targetW <= 0 || targetH <= 0) return;
+    if (targetW === lastW && targetH === lastH) return;
+
+    const sx = targetW / lastW;
+    const sy = targetH / lastH;
+
+    canvas.setWidth(targetW);
+    canvas.setHeight(targetH);
+
+    scaleAllObjects(canvas, sx, sy);
+
+    // центр дефолтного текста (если он есть)
+    if (state.defaultText) {
+      state.defaultText.set({ left: canvas.width / 2, top: canvas.height / 2 });
+    }
+
+    // рескейл оверлея
+    if (state.currentOverlay) {
+      state.currentOverlay.set({
+        left: 0,
+        top: 0,
+        scaleX: canvas.width / state.currentOverlay.width,
+        scaleY: canvas.height / state.currentOverlay.height,
+      });
+      canvas.setOverlayImage(state.currentOverlay, canvas.renderAll.bind(canvas));
+    }
+
+    canvas.requestRenderAll();
+
+    lastW = targetW;
+    lastH = targetH;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  return { resize };
+}
+
+// ----------- EXPORT (всегда 420×780) -----------
+
+export async function exportCanvasPng(canvas, state, { outWidth = BASE_W } = {}) {
   const prevOverlay = state.currentOverlay;
 
-  if (prevOverlay) {
-    canvas.setOverlayImage(null, canvas.renderAll.bind(canvas));
-  }
+  if (prevOverlay) canvas.setOverlayImage(null, canvas.renderAll.bind(canvas));
+  await new Promise((r) => setTimeout(r, 80));
 
-  await new Promise((r) => setTimeout(r, 100));
+  const multiplier = outWidth / canvas.getWidth();
+  const dataURL = canvas.toDataURL({ format: 'png', multiplier });
 
-  const dataURL = canvas.toDataURL('image/png');
-
-  if (prevOverlay) {
-    canvas.setOverlayImage(prevOverlay, canvas.renderAll.bind(canvas));
-  }
-
+  if (prevOverlay) canvas.setOverlayImage(prevOverlay, canvas.renderAll.bind(canvas));
   return dataURL;
 }

@@ -27,7 +27,7 @@ export function setupOrderForm({ DOM, state, canvas, showToast, exportCanvasPng,
 
     // Экспорт дизайна с overlay уже на канвасе
     await new Promise((r) => setTimeout(r, 100));
-    const dataURL = await exportCanvasPng(canvas, state);
+    const dataURL = await exportCanvasPng(canvas, state, { outWidth: 420 });
     const blob = await (await fetch(dataURL)).blob();
     formData.append('design_image', blob, 'design.png');
 

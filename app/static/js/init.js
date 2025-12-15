@@ -1,10 +1,16 @@
 // static/js/init.js
+
 import { models } from './models.js';
-import { createCanvas, addImageToCanvas, setPhoneOverlay, clearDesign, exportCanvasPng } from './canvas.js';
-import { setupFabricControls } from './controls.js';
-import { bindUploadInput, showToast as baseShowToast, populateFontSelector } from './ui.js';
-import { bindActionButtons, setupModalClose } from './events.js';
+import {
+  createCanvas,
+  addImageToCanvas,
+  setPhoneOverlay,
+  clearDesign,
+  exportCanvasPng,
+  setupResponsiveCanvas,
+} from './canvas.js';
 import { setupOrderForm } from './submit.js';
+import { bindActionButtons, setupModalClose } from './events.js';
 
 export function init() {
   const DOM = {
@@ -16,13 +22,16 @@ export function init() {
     fontSelector: document.getElementById('font-selector'),
     colorPicker: document.getElementById('color-picker'),
     stylePanel: document.getElementById('text-style-panel'),
+
     saveBtn: document.getElementById('save'),
     clearCanvasBtn: document.getElementById('clear-canvas'),
     orderBtn: document.getElementById('order-btn'),
+
     cancelOrder: document.getElementById('cancel-order'),
     orderFormModal: document.getElementById('order-form'),
     form: document.getElementById('order-form-el'),
     toast: document.getElementById('toast'),
+
     submitOrderBtn: document.getElementById('submit-order-btn'),
     submitText: document.getElementById('submit-text'),
     loadingText: document.getElementById('loading-text'),
@@ -37,9 +46,19 @@ export function init() {
     defaultText,
   };
 
-  const showToast = (msg, type) => baseShowToast(DOM, msg, type);
+  // 🔥 главное: адаптивный Fabric-canvas без CSS-скейла
+  setupResponsiveCanvas(canvas, state);
 
-  // Бренд/модель
+  // -------- toast --------
+  function showToast(msg, type = 'success') {
+    DOM.toast.textContent = msg;
+    DOM.toast.classList.remove('border-green-500', 'border-red-500');
+    DOM.toast.classList.add(type === 'error' ? 'border-red-500' : 'border-green-500');
+    DOM.toast.classList.remove('opacity-0');
+    setTimeout(() => DOM.toast.classList.add('opacity-0'), 4000);
+  }
+
+  // -------- бренды/модели --------
   DOM.brandSelect.addEventListener('change', () => {
     const brand = DOM.brandSelect.value;
     DOM.modelSelect.innerHTML = '<option value="">Alege modelul</option>';
@@ -59,58 +78,86 @@ export function init() {
   });
 
   DOM.modelSelect.addEventListener('change', () => {
-    const brand = DOM.brandSelect.value;
-    const model = DOM.modelSelect.value;
-    setPhoneOverlay({ canvas, state, brand, model });
+    setPhoneOverlay({ canvas, state, brand: DOM.brandSelect.value, model: DOM.modelSelect.value });
   });
 
-  // Управление канвасом, текст
-  setupFabricControls(canvas, DOM, state);
+  // -------- загрузка фото + превью --------
+  DOM.uploadInput.addEventListener('change', (e) => {
+    [...e.target.files].forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const fileId = Date.now() + Math.random().toString(16).slice(2);
+        state.uploadedFiles.push({ fileId, file });
 
-  // Загрузка фото + превью
-  bindUploadInput(DOM, state, (dataURL) => addImageToCanvas(canvas, dataURL));
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative aspect-square rounded-xl overflow-hidden shadow-md';
+        wrapper.dataset.fileId = fileId;
 
-  // Шрифты
-  populateFontSelector(DOM);
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        img.className = 'w-full h-full object-cover cursor-pointer';
+        img.onclick = () => addImageToCanvas(canvas, ev.target.result);
 
-  // Очистка дизайна
-  const handleClear = () => {
-    clearDesign({ canvas, state, stylePanelEl: DOM.stylePanel });
-  };
+        const del = document.createElement('button');
+        del.className =
+          'absolute top-1 right-1 bg-red-500 text-white w-7 h-7 rounded-full flex items-center justify-center shadow';
+        del.innerHTML = '×';
+        del.onclick = (ev2) => {
+          ev2.stopPropagation();
+          wrapper.remove();
+          state.uploadedFiles = state.uploadedFiles.filter((f) => f.fileId !== fileId);
+        };
 
-  // Сохранение PNG
+        wrapper.append(img, del);
+        DOM.thumbnails.appendChild(wrapper);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    e.target.value = '';
+  });
+
+  // -------- текст (минимально оставил как было) --------
+  DOM.addTextBtn.addEventListener('click', () => {
+    const text = new fabric.Textbox('Scrie textul aici', {
+      left: canvas.width / 2,
+      top: 150,
+      originX: 'center',
+      fontSize: 40,
+      fill: '#000000',
+      fontFamily: 'Poppins, sans-serif',
+      width: 300,
+    });
+    canvas.add(text);
+    canvas.setActiveObject(text);
+  });
+
+  // -------- действия (clear/save/order) --------
+  const handleClear = () => clearDesign({ canvas, state, stylePanelEl: DOM.stylePanel });
+
   const handleSave = async () => {
-    if (!DOM.modelSelect.value) {
-      showToast('Alege modelul telefonului!', 'error');
-      return;
-    }
+    if (!DOM.modelSelect.value) return showToast('Alege modelul telefonului!', 'error');
 
-    const dataURL = await exportCanvasPng(canvas, state);
+    const dataURL = await exportCanvasPng(canvas, state, { outWidth: 420 });
 
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'mycase-design.png';
-    link.click();
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'mycase-design.png';
+    a.click();
   };
 
-  // Открытие формы заказа
   const handleOrder = () => {
-    if (!state.currentOverlay) {
-      showToast('Creează designul mai întâi!', 'error');
-      return;
-    }
+    if (!state.currentOverlay) return showToast('Creează designul mai întâi!', 'error');
     DOM.orderFormModal.classList.remove('hidden');
   };
 
-  // Привязка к верхним кнопкам (для надёжности)
+  // верхние кнопки + нижняя панель через data-action
   DOM.clearCanvasBtn.addEventListener('click', handleClear);
   DOM.saveBtn.addEventListener('click', handleSave);
   DOM.orderBtn.addEventListener('click', handleOrder);
-
-  // Привязка ко всем кнопкам с data-action (включая нижнюю панель)
   bindActionButtons({ handleClear, handleSave, handleOrder });
 
-  // Логика формы заказа
+  // -------- submit --------
   const resetApp = () => {
     DOM.form.reset();
     DOM.orderFormModal.classList.add('hidden');
@@ -137,4 +184,12 @@ export function init() {
   });
 
   setupModalClose(DOM);
+
+  // fonts selector (если нужен)
+  ['Poppins, sans-serif', 'Inter, sans-serif', 'Roboto Slab, serif', 'Arial, sans-serif'].forEach((f) => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f.split(',')[0];
+    DOM.fontSelector.appendChild(opt);
+  });
 }
