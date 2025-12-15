@@ -35,6 +35,9 @@ export function init() {
     submitOrderBtn: document.getElementById('submit-order-btn'),
     submitText: document.getElementById('submit-text'),
     loadingText: document.getElementById('loading-text'),
+
+    // 🔥 НОВОЕ: Элемент-источник ширины, который мы добавили в HTML
+    canvasContainerSource: document.getElementById('canvas-container-source'),
   };
 
   const { canvas, defaultText } = createCanvas();
@@ -46,8 +49,14 @@ export function init() {
     defaultText,
   };
 
-  // 🔥 главное: адаптивный Fabric-canvas без CSS-скейла
-  setupResponsiveCanvas(canvas, state);
+  // 🔥 ИЗМЕНЕНИЕ: Передаём canvasContainerSource в функцию
+  if (DOM.canvasContainerSource) {
+      setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
+  } else {
+      console.error('Контейнер #canvas-container-source не найден. Адаптивность не работает.');
+      setupResponsiveCanvas(canvas, state); // Запасной вариант, если не найдено
+  }
+
 
   // -------- toast --------
   function showToast(msg, type = 'success') {
@@ -78,7 +87,20 @@ export function init() {
   });
 
   DOM.modelSelect.addEventListener('change', () => {
-    setPhoneOverlay({ canvas, state, brand: DOM.brandSelect.value, model: DOM.modelSelect.value });
+    // 🔥 ВАЖНО: STATIC_BASE не определен в init.js, он определен в HTML.
+    // Предполагая, что ты его импортируешь или передашь.
+    // Для рабочего кода нужно либо импортировать STATIC_BASE, либо
+    // передать его из main.js, где он доступен глобально.
+    // Пока что используем глобальный объект, как он объявлен в HTML.
+    const STATIC_BASE_GLOBAL = window.STATIC_BASE || '/static/';
+
+    setPhoneOverlay({
+      canvas,
+      state,
+      brand: DOM.brandSelect.value,
+      model: DOM.modelSelect.value,
+      STATIC_BASE: STATIC_BASE_GLOBAL // <-- Передача STATIC_BASE
+    });
   });
 
   // -------- загрузка фото + превью --------
