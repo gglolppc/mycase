@@ -8,6 +8,7 @@ import {
   clearDesign,
   exportCanvasPng,
   setupResponsiveCanvas,
+  setCanvasTheme,
 } from './canvas.js';
 import { setupOrderForm } from './submit.js';
 import { bindActionButtons, setupModalClose } from './events.js';
@@ -36,8 +37,11 @@ export function init() {
     submitText: document.getElementById('submit-text'),
     loadingText: document.getElementById('loading-text'),
 
-    // 🔥 НОВОЕ: Элемент-источник ширины, который мы добавили в HTML
     canvasContainerSource: document.getElementById('canvas-container-source'),
+
+    // theme
+    themeToggle: document.getElementById('theme-toggle'),
+    themeIcon: document.getElementById('theme-icon'),
   };
 
   const { canvas, defaultText } = createCanvas();
@@ -49,14 +53,39 @@ export function init() {
     defaultText,
   };
 
-  // 🔥 ИЗМЕНЕНИЕ: Передаём canvasContainerSource в функцию
+  // responsive
   if (DOM.canvasContainerSource) {
-      setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
+    setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
   } else {
-      console.error('Контейнер #canvas-container-source не найден. Адаптивность не работает.');
-      setupResponsiveCanvas(canvas, state); // Запасной вариант, если не найдено
+    console.error('Контейнер #canvas-container-source не найден. Адаптивность не работает.');
+    setupResponsiveCanvas(canvas, state);
   }
 
+  // -------- THEME --------
+  function applyTheme(isDark) {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+    // канвас: темно-серый фон в dark
+    setCanvasTheme(canvas, state, isDark);
+
+    // иконка
+    if (DOM.themeIcon) {
+      DOM.themeIcon.classList.remove('fa-moon', 'fa-sun');
+      DOM.themeIcon.classList.add(isDark ? 'fa-sun' : 'fa-moon');
+    }
+  }
+
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved ? saved === 'dark' : prefersDark);
+
+  if (DOM.themeToggle) {
+    DOM.themeToggle.addEventListener('click', () => {
+      const isDarkNow = document.documentElement.classList.contains('dark');
+      applyTheme(!isDarkNow);
+    });
+  }
 
   // -------- toast --------
   function showToast(msg, type = 'success') {
@@ -84,14 +113,13 @@ export function init() {
     canvas.clear();
     canvas.add(defaultText);
     state.currentOverlay = null;
+
+    // вернуть корректный фон канваса после clear()
+    const isDark = document.documentElement.classList.contains('dark');
+    setCanvasTheme(canvas, state, isDark);
   });
 
   DOM.modelSelect.addEventListener('change', () => {
-    // 🔥 ВАЖНО: STATIC_BASE не определен в init.js, он определен в HTML.
-    // Предполагая, что ты его импортируешь или передашь.
-    // Для рабочего кода нужно либо импортировать STATIC_BASE, либо
-    // передать его из main.js, где он доступен глобально.
-    // Пока что используем глобальный объект, как он объявлен в HTML.
     const STATIC_BASE_GLOBAL = window.STATIC_BASE || '/static/';
 
     setPhoneOverlay({
@@ -99,8 +127,12 @@ export function init() {
       state,
       brand: DOM.brandSelect.value,
       model: DOM.modelSelect.value,
-      STATIC_BASE: STATIC_BASE_GLOBAL // <-- Передача STATIC_BASE
+      STATIC_BASE: STATIC_BASE_GLOBAL
     });
+
+    // после setPhoneOverlay canvas.clear() — снова применим фон
+    const isDark = document.documentElement.classList.contains('dark');
+    setCanvasTheme(canvas, state, isDark);
   });
 
   // -------- загрузка фото + превью --------
@@ -118,7 +150,38 @@ export function init() {
         const img = document.createElement('img');
         img.src = ev.target.result;
         img.className = 'w-full h-full object-cover cursor-pointer';
-        img.onclick = () => addImageToCanvas(canvas, ev.target.result);
+
+        // подсказка: "нажми чтобы добавить"
+        const hint = document.createElement('div');
+        hint.className = 'thumb-hint';
+        hint.textContent = 'Click';
+
+        const ring = document.createElement('div');
+        ring.className = 'thumb-ring';
+
+        wrapper.append(img, ring, hint);
+
+        // убираем подсказку после первого клика
+        let usedOnce = false;
+
+        img.onclick = () => {
+          addImageToCanvas(canvas, ev.target.result);
+
+          if (!usedOnce) {
+            usedOnce = true;
+            hint.remove();
+            ring.remove();
+          }
+        };
+
+        // (опционально) если не кликнули — через 6 секунд подсказка исчезнет сама
+        setTimeout(() => {
+          if (!usedOnce) {
+            hint.remove();
+            ring.remove();
+          }
+        }, 6000);
+
 
         const del = document.createElement('button');
         del.className =
@@ -139,14 +202,16 @@ export function init() {
     e.target.value = '';
   });
 
-  // -------- текст (минимально оставил как было) --------
+  // -------- текст --------
   DOM.addTextBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+
     const text = new fabric.Textbox('Scrie textul aici', {
       left: canvas.width / 2,
       top: 150,
       originX: 'center',
       fontSize: 40,
-      fill: '#000000',
+      fill: isDark ? '#ffffff' : '#000000',
       fontFamily: 'Poppins, sans-serif',
       width: 300,
     });
@@ -155,7 +220,13 @@ export function init() {
   });
 
   // -------- действия (clear/save/order) --------
-  const handleClear = () => clearDesign({ canvas, state, stylePanelEl: DOM.stylePanel });
+  const handleClear = () => {
+    clearDesign({ canvas, state, stylePanelEl: DOM.stylePanel });
+
+    // clearDesign может менять содержимое — снова фон темы
+    const isDark = document.documentElement.classList.contains('dark');
+    setCanvasTheme(canvas, state, isDark);
+  };
 
   const handleSave = async () => {
     if (!DOM.modelSelect.value) return showToast('Alege modelul telefonului!', 'error');
@@ -173,7 +244,6 @@ export function init() {
     DOM.orderFormModal.classList.remove('hidden');
   };
 
-  // верхние кнопки + нижняя панель через data-action
   DOM.clearCanvasBtn.addEventListener('click', handleClear);
   DOM.saveBtn.addEventListener('click', handleSave);
   DOM.orderBtn.addEventListener('click', handleOrder);
@@ -194,6 +264,10 @@ export function init() {
     state.uploadedFiles = [];
     state.currentOverlay = null;
     state.selectedText = null;
+
+    // фон темы после reset
+    const isDark = document.documentElement.classList.contains('dark');
+    setCanvasTheme(canvas, state, isDark);
   };
 
   setupOrderForm({
@@ -207,7 +281,7 @@ export function init() {
 
   setupModalClose(DOM);
 
-  // fonts selector (если нужен)
+  // fonts selector
   ['Poppins, sans-serif', 'Inter, sans-serif', 'Roboto Slab, serif', 'Arial, sans-serif'].forEach((f) => {
     const opt = document.createElement('option');
     opt.value = f;
