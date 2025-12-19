@@ -1,0 +1,221 @@
+<!-- termos.html -->
+{% extends "base.html" %}
+
+{% block title %}
+<title>Termos personalizat în Chișinău | MYCASE</title>
+{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Creează termos personalizat cu text și poză. Calitate premium, livrare rapidă în Moldova." />
+<meta name="keywords" content="termos personalizat, termos cu poză, mycase, Chișinău, Moldova" />
+{% endblock %}
+
+{% block extra_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Amatic+SC:wght@400;700&family=Caveat:wght@400..700&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Great+Vibes&family=Marck+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Pacifico&family=Rampart+One&family=Roboto+Slab:wght@100..900&family=Rubik+Dirt&family=Russo+One&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block header_subtitle %}Termosuri premium la comandă{% endblock %}
+
+{% block main %}
+<main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- Левая панель (термос) -->
+    <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96">
+
+      <div class="space-y-6">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">🧴 Alege termosul</h2>
+
+        <!-- size radio -->
+        <div class="space-y-3">
+          <label class="flex items-center gap-3 p-4 rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10 cursor-pointer">
+            <input id="termos-500" type="radio" name="termos-size" class="w-4 h-4" checked />
+            <span class="text-gray-900 dark:text-gray-100 font-semibold">500 ml cu LED temp.</span>
+          </label>
+
+          <label class="flex items-center gap-3 p-4 rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10 cursor-pointer">
+            <input id="termos-750" type="radio" name="termos-size" class="w-4 h-4" />
+            <span class="text-gray-900 dark:text-gray-100 font-semibold">750 ml</span>
+          </label>
+        </div>
+
+        <!-- preview image -->
+        <div class="rounded-2xl overflow-hidden bg-white/70 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10">
+          <img id="termos-preview"
+               src="{{ request.url_for('static', path='assets/termos-previews/500.png') }}"
+               alt="Termos preview"
+               class="w-full h-44 object-contain p-4">
+        </div>
+
+        <!-- colors -->
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">🎨 Culoare</h3>
+
+          </div>
+          <div id="termos-colors" class="flex flex-wrap gap-3 mt-3"></div>
+        </div>
+
+        <!-- text + font + color -->
+        <div class="space-y-3">
+          <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">🔤 Text pe termos</h3>
+
+          <input id="termos-text"
+                 type="text"
+                 value="NUMELE"
+                 class="w-full bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
+                        border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
+                        text-gray-800 dark:text-gray-100
+                        focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300"
+                 placeholder="NUMELE" />
+
+          <div class="flex items-center gap-4">
+            <select id="font-selector-termos"
+                    class="flex-1 p-4 rounded-2xl border border-gray-200 dark:border-white/10
+                           bg-white/70 dark:bg-gray-900/60 text-gray-900 dark:text-gray-100
+                           focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition">
+            </select>
+
+            <input type="color" id="text-color-termos"
+                   class="w-14 h-14 rounded-full cursor-pointer border border-gray-200 dark:border-white/10"
+                   value="#ffffff" />
+          </div>
+
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Textul apare automat pe termos (vertical) și rămâne deasupra imaginilor.
+          </p>
+        </div>
+      </div>
+
+      <!-- upload -->
+      <input type="file" id="upload-termos" multiple accept="image/*" class="hidden"/>
+      <label for="upload-termos"
+             class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
+        <i class="fas fa-cloud-upload-alt mr-3"></i>Încarcă foto
+      </label>
+
+      <div id="thumbnails-container-termos" class="max-h-96 overflow-y-auto px-2">
+        <div id="thumbnails-termos" class="grid grid-cols-3 gap-4"></div>
+      </div>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400">
+        Click pe miniatură → adaugă pe canvas (max ~200px).
+      </p>
+    </aside>
+
+    <!-- Центральный canvas -->
+    <section class="flex-1 flex flex-col items-center gap-6">
+      <div class="glass neumorphic rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl max-w-full overflow-hidden">
+        <div id="canvas-container-source" class="w-full h-full flex justify-center items-center">
+          <canvas
+            id="termos-canvas"
+            width="420"
+            height="780"
+            class="rounded-3xl shadow-2xl border border-gray-200 dark:border-white/10 block"
+            style="max-width: 100%; height: auto;"></canvas>
+        </div>
+      </div>
+
+      <!-- только очистить -->
+      <div class="flex gap-6 w-full max-w-lg">
+        <button id="clear-canvas-termos" data-action="clear"
+                class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold">
+          <i class="fas fa-trash mr-2"></i>Șterge tot
+        </button>
+      </div>
+    </section>
+
+    <!-- Правая панель цены -->
+    <aside class="glass neumorphic rounded-3xl p-8 lg:w-80">
+      <div class="text-center py-8 border-b border-gray-200 dark:border-white/10">
+        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Preț</p>
+        <div class="text-6xl font-bold text-accent">
+          <span id="price-value-termos">100</span>
+          <span class="text-3xl text-gray-600 dark:text-gray-300">Lei</span>
+        </div>
+      </div>
+
+      <button id="order-btn-termos"
+              class="w-full bg-accent text-white py-6 rounded-2xl mt-8 font-bold text-xl hover:bg-indigo-700 transition shadow-lg">
+        Comandă acum →
+      </button>
+
+      <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+        <i class="fas fa-lock mr-1"></i>Fără plată în avans
+      </p>
+
+      <div class="grid grid-cols-2 gap-4 mt-8">
+        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
+          <i class="fas fa-shipping-fast text-2xl text-blue-500 mb-2"></i>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Livrare 1-3 zile</p>
+        </div>
+        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
+          <i class="fas fa-gem text-2xl text-purple-500 mb-2"></i>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Termos premium</p>
+        </div>
+        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
+          <i class="fas fa-paint-brush text-2xl text-orange-500 mb-2"></i>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Print UV</p>
+        </div>
+        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
+          <i class="fas fa-temperature-low text-2xl text-green-500 mb-2"></i>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Păstrează cald/rece</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+{% endblock %}
+
+{% block examples %}
+<section class="py-16 px-6 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-950">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-4xl font-bold text-center text-accent mb-12">✨ Exemple</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+    </div>
+
+    <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">Încarcă exemplele tale și arată bomba ✨</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block mobile_bar %}
+<div class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-white/10 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
+  <button data-action="clear" id="mobile-clear-termos" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
+  <button data-action="order" id="mobile-order-termos" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
+</div>
+{% endblock %}
+
+{% block order_form_extra %}
+<textarea name="comment" placeholder="Comentariu (opțional)"
+          class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
+                 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
+                 focus:ring-4 focus:ring-accent/30 focus:border-accent transition"></textarea>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ request.url_for('static', path='js/termos/main.js') }}"></script>
+{% endblock %}
+
+{% block footer_subtitle %}Termosuri premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}

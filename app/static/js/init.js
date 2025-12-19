@@ -1,6 +1,7 @@
 // static/js/init.js
 
 import { models } from './models.js';
+import { setupFabricControls } from './controls.js';
 import {
   createCanvas,
   addImageToCanvas,
@@ -52,7 +53,7 @@ export function init() {
     selectedText: null,
     defaultText,
   };
-
+  setupFabricControls(canvas, DOM, state);
   // responsive
   if (DOM.canvasContainerSource) {
     setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
@@ -202,22 +203,6 @@ export function init() {
     e.target.value = '';
   });
 
-  // -------- текст --------
-  DOM.addTextBtn.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.contains('dark');
-
-    const text = new fabric.Textbox('Scrie textul aici', {
-      left: canvas.width / 2,
-      top: 150,
-      originX: 'center',
-      fontSize: 40,
-      fill: isDark ? '#ffffff' : '#000000',
-      fontFamily: 'Poppins, sans-serif',
-      width: 300,
-    });
-    canvas.add(text);
-    canvas.setActiveObject(text);
-  });
 
   // -------- действия (clear/save/order) --------
   const handleClear = () => {

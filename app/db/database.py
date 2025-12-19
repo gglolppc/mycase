@@ -36,3 +36,8 @@ class Order(Base):
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
+
+
+async def get_async_session() -> AsyncSession:
+    async with SessionLocal() as session:
+        yield session

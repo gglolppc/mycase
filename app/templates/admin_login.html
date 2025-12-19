@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin • Login</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b1220; color:#e5e7eb; display:flex; min-height:100vh; align-items:center; justify-content:center; }
+    .card { width:min(420px, 92vw); background:#111827; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+    .title { font-size:20px; font-weight:800; margin:0 0 14px; }
+    input { width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:#0b1220; color:#e5e7eb; font-size:16px; }
+    button { width:100%; margin-top:12px; padding:12px 14px; border-radius:12px; border:none; background:#6366f1; color:white; font-weight:800; font-size:16px; cursor:pointer; }
+    .err { margin-top:10px; color:#fca5a5; font-weight:700; }
+    .hint { margin-top:10px; color:#94a3b8; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">MYCASE Admin</div>
+
+    <form method="post" action="/admin/login">
+      <input type="password" name="password" placeholder="Password" autofocus required />
+      <button type="submit">Login</button>
+      {% if error %}
+        <div class="err">{{ error }}</div>
+      {% endif %}
+      <div class="hint">/admin — доступ по паролю из .env</div>
+    </form>
+  </div>
+</body>
+</html>
