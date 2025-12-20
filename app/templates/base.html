@@ -286,71 +286,80 @@
   </div>
 
   <style>
-     input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        input[type="color"]::-webkit-color-swatch {
-            border: none;
-            border-radius: 9999px; /* делаем сам цветной квадрат внутри круглым */
-        }
+      /* Fabric canvas — отключаем нативные жесты браузера */
+      #phone-canvas,
+      #canvas-container,
+      canvas {
+        touch-action: none;
+      }
 
-        /* Для Firefox */
-        input[type="color"]::-moz-color-swatch {
-            border: none;
-            border-radius: 9999px;
-        }
-    .pulse-animation { animation: pulse 2s infinite; }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
-    }
-    html { scroll-behavior: smooth; }
-    body { overflow-x: hidden; }
-    .thumb-hint {
-      position: absolute;
-      left: 8px;
-      right: 8px;
-      bottom: 8px;
-      padding: 6px 10px;
-      border-radius: 14px;
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: .2px;
-      color: #fff;
-      background: rgba(99, 102, 241, 0.92);
-      backdrop-filter: blur(6px);
-      pointer-events: none;
-      transform: translateY(0);
-      animation: thumbHintPulse 1.1s ease-in-out infinite;
-    }
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 9999px;
+      }
+      input[type="color"]::-moz-color-swatch {
+        border: none;
+        border-radius: 9999px;
+      }
 
-    .thumb-hint-top {
-      top: 8px;
-      bottom: auto;
-    }
+      .pulse-animation { animation: pulse 2s infinite; }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+      }
 
-    @keyframes thumbHintPulse {
-      0% { transform: translateY(0) scale(1); opacity: .85; }
-      50% { transform: translateY(-2px) scale(1.03); opacity: 1; }
-      100% { transform: translateY(0) scale(1); opacity: .85; }
-    }
+      html { scroll-behavior: smooth; }
+      body { overflow-x: hidden; }
 
-    .thumb-ring {
-      position: absolute;
-      inset: 6px;
-      border-radius: 14px;
-      pointer-events: none;
-      border: 2px solid rgba(99, 102, 241, 0.75);
-      animation: thumbRing 1.2s ease-in-out infinite;
-    }
-    @keyframes thumbRing {
-      0% { opacity: .2; transform: scale(.98); }
-      50% { opacity: .9; transform: scale(1.02); }
-      100% { opacity: .2; transform: scale(.98); }
-    }
-  </style>
+      .thumb-hint {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 6px 10px;
+        border-radius: 14px;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: .2px;
+        color: #fff;
+        background: rgba(99, 102, 241, 0.92);
+        backdrop-filter: blur(6px);
+        pointer-events: none;
+        animation: thumbHintPulse 1.1s ease-in-out infinite;
+      }
+
+      .thumb-hint-top {
+        top: 8px;
+        bottom: auto;
+      }
+
+      @keyframes thumbHintPulse {
+        0% { transform: translateY(0) scale(1); opacity: .85; }
+        50% { transform: translateY(-2px) scale(1.03); opacity: 1; }
+        100% { transform: translateY(0) scale(1); opacity: .85; }
+      }
+
+      .thumb-ring {
+        position: absolute;
+        inset: 6px;
+        border-radius: 14px;
+        pointer-events: none;
+        border: 2px solid rgba(99, 102, 241, 0.75);
+        animation: thumbRing 1.2s ease-in-out infinite;
+      }
+
+      @keyframes thumbRing {
+        0% { opacity: .2; transform: scale(.98); }
+        50% { opacity: .9; transform: scale(1.02); }
+        100% { opacity: .2; transform: scale(.98); }
+      }
+    </style>
+
 
   <script>
     const toggleBtn = document.getElementById('toggle-contact');

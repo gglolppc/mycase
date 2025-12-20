@@ -173,29 +173,20 @@
     <h2 class="text-4xl font-bold text-center text-accent mb-12">✨ Exemple</h2>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      {% for i in range(1, 6) %}
       <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
+        <img
+          src="{{ request.url_for('static', path='assets/examples-termos/' ~ i ~ '.jpg') }}"
+          alt="Exemplu termos {{ i }}"
+          class="w-full h-44 object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+        />
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </div>
-      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      </div>
-      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      </div>
-      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      </div>
-      <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-        <div class="w-full h-44 bg-white/60 dark:bg-gray-900/60"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      </div>
+      {% endfor %}
     </div>
 
-    <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">Încarcă exemplele tale și arată bomba ✨</p>
+    <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">Și a tău va arăta la fel de bine ✨</p>
   </div>
 </section>
 {% endblock %}

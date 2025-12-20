@@ -10,6 +10,10 @@ export const BASE_H = 780;
 export function createCanvas() {
   const canvas = new fabric.Canvas('phone-canvas', {
     preserveObjectStacking: true,
+    selection: true,
+    allowTouchScrolling: false,
+    fireRightClick: true,
+    stopContextMenu: true,
     width: BASE_W,
     height: BASE_H,
   });
@@ -74,6 +78,11 @@ export function addImageToCanvas(canvas, dataURL) {
         top: canvas.height / 2,
         originX: 'center',
         originY: 'center',
+        selectable: true,
+        evented: true,
+        padding: 12,
+        cornerSize: 12,
+        transparentCorners: false,
       });
       addWithAnimation(canvas, img);
     },

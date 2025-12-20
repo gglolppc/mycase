@@ -176,4 +176,57 @@ export function setupFabricControls(canvas, DOM, state) {
     canvas.requestRenderAll();
   });
 
+    let lastTouchDistance = null;
+    let lastTouchAngle = null;
+
+    canvas.on('touch:gesture', function (opt) {
+      const e = opt.e;
+      const target = canvas.getActiveObject();
+
+      if (!target || e.touches.length !== 2) return;
+
+      e.preventDefault();
+
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+
+      const dx = t2.clientX - t1.clientX;
+      const dy = t2.clientY - t1.clientY;
+
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx);
+
+      // SCALE
+      if (lastTouchDistance) {
+        let scale = target.scaleX * (distance / lastTouchDistance);
+
+        // ограничения
+        scale = Math.max(0.1, Math.min(scale, 10));
+
+        target.scale(scale);
+      }
+
+      // ROTATE
+      if (lastTouchAngle !== null) {
+        const delta = angle - lastTouchAngle;
+        target.rotate((target.angle || 0) + delta * (180 / Math.PI));
+      }
+
+      lastTouchDistance = distance;
+      lastTouchAngle = angle;
+
+      target.setCoords();
+      canvas.requestRenderAll();
+    });
+
+    canvas.on('touch:drag', function () {
+      lastTouchDistance = null;
+      lastTouchAngle = null;
+    });
+
+    canvas.on('touch:orientation', function () {
+      lastTouchDistance = null;
+      lastTouchAngle = null;
+    });
+
 }
