@@ -122,6 +122,7 @@ export function setPhoneOverlay({ canvas, state, brand, model, STATIC_BASE }) {
         scaleY: canvas.height / imgHeight,
         originalWidth: imgWidth,
         originalHeight: imgHeight,
+        excludeFromExport: false, // 🔥 ВАЖНО
       });
 
       canvas.setOverlayImage(img, canvas.renderAll.bind(canvas));
@@ -224,7 +225,7 @@ export function setupResponsiveCanvas(
 export async function exportCanvasPng(canvas, state, { outWidth = BASE_W } = {}) {
   const prevOverlay = state.currentOverlay;
 
-  if (prevOverlay) canvas.setOverlayImage(null, canvas.renderAll.bind(canvas));
+
 
   await new Promise((r) => setTimeout(r, 80));
 

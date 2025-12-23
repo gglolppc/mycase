@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>{{ design.title }} | MYCASE</title>
+{% endblock %}
+
+{% block header_subtitle %}{{ design.title }}{% endblock %}
+
+{% block main %}
+<main class="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+  <!-- PREVIEW -->
+    <div class="glass neumorphic rounded-3xl p-6 flex justify-center">
+      <div
+        class="w-full max-w-[600px] aspect-square rounded-3xl overflow-hidden
+               border border-gray-200 dark:border-white/10"
+      >
+        <img
+          src="{{ design.image_url }}"
+          alt="{{ design.title }}"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+
+  <!-- INFO -->
+  <div class="space-y-6">
+    <h1 class="text-3xl font-extrabold">{{ design.title }}</h1>
+
+    <p class="text-gray-600 dark:text-gray-300">
+      Design gata. Personalizare discretă cu nume (opțional).
+    </p>
+
+    <div class="text-4xl font-extrabold text-accent">
+      {{ design.price_mdl }} MDL
+    </div>
+
+    {% if request.query_params.get('ok') == '1' %}
+    <div class="p-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-300 font-bold">
+      Comandă primită! Te contactăm în curând 📞
+    </div>
+    {% endif %}
+
+    <!-- SELECT + BUTTON (НЕ отправляет форму) -->
+    <form id="ready-design-form" class="space-y-4">
+
+      <input type="hidden" id="design-id" value="{{ design.id }}"/>
+
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">📱 Alege modelul</h2>
+
+        <div class="relative">
+          <select id="brand-select" required
+            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
+                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
+                   text-gray-800 dark:text-gray-100
+                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
+            <option value="">Alege brandul</option>
+            <option value="apple">Apple</option>
+            <option value="samsungs">Samsung S</option>
+            <option value="samsunga">Samsung A</option>
+            <option value="samsungm">Samsung M</option>
+            <option value="redmi">Redmi</option>
+            <option value="oppo">Oppo</option>
+            <option value="poco">Poco</option>
+          </select>
+          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </div>
+        </div>
+
+        <div class="relative">
+          <select id="model-select" required disabled
+            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
+                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
+                   text-gray-800 dark:text-gray-100
+                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
+            <option value="">Alege modelul</option>
+          </select>
+          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        id="personal-text"
+        maxlength="30"
+        placeholder="Nume (opțional)"
+        class="w-full p-4 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-gray-900"
+      />
+
+      <button
+        id="open-order-modal"
+        type="button"
+        class="w-full bg-accent text-white py-5 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition">
+        Comandă acest design →
+      </button>
+    </form>
+
+    <p class="text-xs text-gray-500">
+      Textul este poziționat automat sub emblemă.
+    </p>
+  </div>
+
+</main>
+
+<!-- ================= MODAL ================= -->
+<div id="order-modal" class="fixed inset-0 z-50 hidden">
+  <div id="order-modal-overlay" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+  <div class="relative min-h-full flex items-center justify-center p-4">
+    <div class="glass neumorphic rounded-3xl w-full max-w-lg p-6 md:p-8 border border-white/20 dark:border-white/10">
+
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-extrabold">{{ design.title }}</h3>
+        <button id="order-modal-close" class="neumorphic-btn px-4 py-3 rounded-2xl font-bold">
+          ✕
+        </button>
+      </div>
+
+      <div class="bg-white/60 dark:bg-gray-900/60 rounded-2xl p-4 mb-6">
+        <p class="text-sm">
+          <b>Model:</b> <span id="summary-model">—</span>
+        </p>
+        <p class="text-lg font-extrabold text-accent mt-2">{{ design.price_mdl }} MDL</p>
+      </div>
+
+      <!-- REAL POST -->
+      <form method="post" action="/order/ready" class="space-y-4">
+        <input type="hidden" name="design_id" value="{{ design.id }}">
+        <input type="hidden" name="brand" id="payload-brand">
+        <input type="hidden" name="phone_model" id="payload-model">
+        <input type="hidden" name="personal_text" id="payload-personal">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input name="name" required placeholder="Numele tău"
+            class="w-full p-4 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-gray-900">
+          <input name="phone" required placeholder="Telefon"
+            class="w-full p-4 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-gray-900">
+        </div>
+
+        <input name="address" required placeholder="Adresa"
+          class="w-full p-4 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-gray-900">
+
+        <button
+          type="submit"
+          class="w-full bg-accent text-white py-5 rounded-2xl font-extrabold hover:bg-indigo-700 transition">
+          Confirmă comanda →
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ request.url_for('static', path='js/design_detail.js') }}"></script>
+{% endblock %}

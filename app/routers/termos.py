@@ -88,7 +88,7 @@ async def receive_termos_order(
     try:
         await send_order_to_telegram(
             {
-                "type": "TERMOS",
+                "order_type": "termos",
                 "name": order_data.name,
                 "phone": order_data.phone,
                 "address": order_data.address,

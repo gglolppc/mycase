@@ -62,31 +62,16 @@ export function init() {
     setupResponsiveCanvas(canvas, state);
   }
 
-  // -------- THEME --------
-  function applyTheme(isDark) {
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-    // канвас: темно-серый фон в dark
-    setCanvasTheme(canvas, state, isDark);
-
-    // иконка
-    if (DOM.themeIcon) {
-      DOM.themeIcon.classList.remove('fa-moon', 'fa-sun');
-      DOM.themeIcon.classList.add(isDark ? 'fa-sun' : 'fa-moon');
+  function syncThemeToCanvas() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setCanvasTheme(canvas, state, isDark);
     }
-  }
 
-  const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved ? saved === 'dark' : prefersDark);
+    // 1) применить при старте
+    syncThemeToCanvas();
 
-  if (DOM.themeToggle) {
-    DOM.themeToggle.addEventListener('click', () => {
-      const isDarkNow = document.documentElement.classList.contains('dark');
-      applyTheme(!isDarkNow);
-    });
-  }
+    // 2) реагировать на клик по глобальной кнопке
+    window.addEventListener('theme:changed', syncThemeToCanvas);
 
   // -------- toast --------
   function showToast(msg, type = 'success') {

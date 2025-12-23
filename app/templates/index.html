@@ -1,159 +1,195 @@
-<!-- index.html -->
+
 {% extends "base.html" %}
 
 {% block title %}
-<title>Huse personalizate cu poză în Chișinău | MYCASE</title>
+<title>MYCASE — Huse premium personalizate în Moldova</title>
 {% endblock %}
 
 {% block meta %}
-<meta name="description" content="Creează husă unică cu poză, text sau logo. Calitate premium, livrare rapidă în Moldova." />
-<meta name="keywords" content="huse personalizate, husă cu poză, mycase, Chișinău, Moldova" />
+<meta name="description" content="Huse premium personalizate în Moldova. Alege un design gata sau personalizează cu poză și text. Print UV, livrare rapidă." />
+<meta name="keywords" content="huse personalizate, husă cu poză, husă cu nume, designuri, mycase, Moldova, Chișinău" />
 {% endblock %}
 
-{% block header_subtitle %}Huse premium la comandă{% endblock %}
+{% block header_subtitle %}Huse premium · Design curat · Print UV{% endblock %}
 
 {% block main %}
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
-  <div class="flex flex-col lg:flex-row gap-8">
 
-    <!-- Левая панель -->
-    <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96">
+  <!-- HERO -->
+  <section class="glass neumorphic rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden relative">
+    <div class="absolute -top-24 -right-24 w-72 h-72 bg-accent/20 blur-3xl rounded-full"></div>
+    <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-indigo-400/10 blur-3xl rounded-full"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">📱 Alege modelul</h2>
+        <div class="inline-flex items-center gap-2 bg-white/60 dark:bg-gray-900/50 border border-white/30 dark:border-white/10 px-4 py-2 rounded-2xl">
+          <i class="fas fa-gem text-accent"></i>
+          <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">Premium look, fără bătaie de cap</span>
+        </div>
 
-        <div class="relative">
-          <select id="brand-select"
-            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
-                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
-                   text-gray-800 dark:text-gray-100
-                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">Alege brandul</option>
-            <option value="apple">Apple</option>
-            <option value="samsungs">Samsung S</option>
-            <option value="samsunga">Samsung A</option>
-            <option value="samsungm">Samsung M</option>
-            <option value="redmi">Redmi</option>
-            <option value="oppo">Oppo</option>
-            <option value="poco">Poco</option>
-          </select>
-          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+          Huse personalizate care arată
+          <span class="text-accent">scump</span>.
+        </h1>
+
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-xl">
+          Alege un design gata (cu nume) sau creează al tău cu poză și text.
+          Print UV, culori puternice, și livrare rapidă în Moldova.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <!-- IMPORTANT: пока ведем на твою текущую страницу конструктора -->
+          <a href="/"
+             class="bg-accent text-white px-8 py-5 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-3">
+            <i class="fas fa-magic"></i> Personalizează (Constructor)
+          </a>
+
+          <!-- Это пока заглушка, потом сделаешь /designuri -->
+          <a href="#designuri"
+             class="neumorphic-btn px-8 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3">
+            <i class="fas fa-layer-group text-accent"></i> Vezi designurile
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
+          <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Print</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">UV</p>
+          </div>
+          <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Livrare</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">1–3 zile</p>
+          </div>
+          <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Plată</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">la primire</p>
+          </div>
+          <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Calitate</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">Premium</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock / Preview -->
+      <div class="flex justify-center lg:justify-end">
+        <div class="glass neumorphic rounded-3xl p-4 md:p-6 w-full max-w-md">
+          <div class="rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-gray-900/40">
+            <!-- Поставь сюда свой реальный рендер/картинку -->
+
+            <div
+              class="aspect-[9/16] flex items-center justify-center bg-cover bg-center"
+              style="background-image: url('{{ request.url_for('static', path='assets/images/case-preview2.jpg') }}');"
+            >
+
+              <div class="text-center px-8">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Preview</p>
+                <p class="text-2xl font-extrabold text-gray-900 dark:text-white">Republica Moldova</p>
+                <p class="text-gray-600 dark:text-gray-300 mt-2">Limited Edition · Nume personalizat</p>
+                <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-accent/10 border border-accent/20">
+                  <i class="fas fa-star text-accent"></i>
+                  <span class="font-bold text-accent">Best seller vibe</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 flex gap-3">
+            <div class="flex-1 bg-white/60 dark:bg-gray-900/60 rounded-2xl p-4 border border-transparent dark:border-white/10">
+              <p class="text-xs text-gray-500 dark:text-gray-400">De la</p>
+              <p class="text-xl font-extrabold text-gray-900 dark:text-white">200 MDL</p>
+            </div>
+            <div class="flex-1 bg-white/60 dark:bg-gray-900/60 rounded-2xl p-4 border border-transparent dark:border-white/10">
+              <p class="text-xs text-gray-500 dark:text-gray-400">Nume</p>
+              <p class="text-xl font-extrabold text-gray-900 dark:text-white">inclus</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DESIGNURI (каталог-тизер) -->
+  <section id="designuri" class="mt-14">
+    <div class="flex items-end justify-between gap-6 mb-8">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Designurile noastre</h2>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">Alegi un design gata → introduci numele → alegi modelul → comandă.</p>
+      </div>
+      <a href="/" class="neumorphic-btn px-5 py-3 rounded-2xl font-semibold hidden sm:inline-flex items-center gap-2">
+        <i class="fas fa-wand-magic-sparkles text-accent"></i> Mergi la constructor
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% set cards = [
+        {"title":"Moldova Limited", "desc":"Nume personalizat · look premium", "tag":"LIMITED"},
+        {"title":"Auto Silhouette", "desc":"Brand vibe · minimalist", "tag":"AUTO"},
+        {"title":"Initials Luxury", "desc":"Inițiale + nume · classy", "tag":"LUX"},
+        {"title":"Minimal Black", "desc":"Curat · elegant · unisex", "tag":"MINIMAL"}
+      ] %}
+
+      {% for c in cards %}
+      <div class="group glass neumorphic rounded-3xl p-6 border border-white/20 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-accent/15 text-accent border border-accent/20">{{ c.tag }}</span>
+          <i class="fas fa-arrow-right text-gray-400 group-hover:text-accent transition"></i>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-gray-900/40">
+          <!-- Тут позже поставишь реальный превью-рендер -->
+          <div class="aspect-[4/5] flex items-center justify-center">
+            <span class="text-gray-500 dark:text-gray-400 font-semibold">Preview</span>
           </div>
         </div>
 
-        <div class="relative">
-          <select id="model-select"
-            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
-                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
-                   text-gray-800 dark:text-gray-100
-                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">Alege modelul</option>
-          </select>
-          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </div>
-        </div>
+        <h3 class="mt-5 text-xl font-extrabold text-gray-900 dark:text-white">{{ c.title }}</h3>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ c.desc }}</p>
+
+        <!-- пока CTA ведёт на конструктор, позже заменишь на /designuri/<slug> -->
+        <a href="/"
+           class="mt-5 inline-flex w-full items-center justify-center gap-2 bg-accent text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition">
+          Vezi detalii
+        </a>
       </div>
+      {% endfor %}
+    </div>
+  </section>
 
-      <input type="file" id="upload" multiple accept="image/*" class="hidden"/>
-      <label for="upload" class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
-        <i class="fas fa-cloud-upload-alt mr-3"></i>Încarcă foto
-      </label>
+  <!-- CUM FUNCTIONEAZA -->
+  <section class="mt-14 glass neumorphic rounded-3xl p-8 md:p-10">
+    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Cum funcționează</h2>
 
-      <div id="thumbnails-container" class="max-h-96 overflow-y-auto px-2">
-        <div id="thumbnails" class="grid grid-cols-3 gap-4"></div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+        <i class="fas fa-layer-group text-2xl text-accent"></i>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Alegi</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">Design gata sau personalizare completă.</p>
       </div>
-        <button id="add-text" class="w-full neumorphic-btn py-4 rounded-2xl flex items-center justify-center gap-3 text-blue-600 font-bold mb-4">
-            <i class="fas fa-plus-circle"></i> Adaugă Text
-        </button>
-
-        <div id="text-style-panel" class="hidden space-y-4 p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-white/5 mb-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Font</label>
-                <select id="font-selector" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl p-2 text-sm">
-                    <option value="Poppins, sans-serif">Poppins</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Courier New">Courier</option>
-                    <option value="Pacifico, cursive">Pacifico</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Culoare</label>
-                <input type="color" id="color-picker" class="w-full h-10 rounded-lg cursor-pointer bg-transparent">
-            </div>
-        </div>
-    </aside>
-
-    <!-- Центральный canvas -->
-    <section class="flex-1 flex flex-col items-center gap-6">
-      <div class="glass neumorphic rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl max-w-full overflow-hidden">
-        <div id="canvas-container-source" class="w-full h-full flex justify-center items-center">
-          <canvas
-            id="phone-canvas"
-            width="360"
-            height="670"
-            class="rounded-3xl shadow-2xl border border-gray-200 dark:border-white/10 block"
-            style="max-width: 100%; height: auto;"></canvas>
-        </div>
+      <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+        <i class="fas fa-font text-2xl text-accent"></i>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Introduci numele</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">Simplu. Fără setări inutile.</p>
       </div>
-
-      <div class="flex gap-6 w-full max-w-lg">
-        <button id="clear-canvas" data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold">
-          <i class="fas fa-trash mr-2"></i>Șterge tot
-        </button>
-
-        <button id="save" data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition">
-          <i class="fas fa-download mr-2"></i>Salvează PNG
-        </button>
+      <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+        <i class="fas fa-mobile-screen text-2xl text-accent"></i>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Alegi modelul</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">Apple, Samsung, Redmi etc.</p>
       </div>
-    </section>
-
-    <!-- Правая панель цены -->
-    <aside class="glass neumorphic rounded-3xl p-8 lg:w-80">
-      <div class="text-center py-8 border-b border-gray-200 dark:border-white/10">
-        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Preț</p>
-        <div class="text-6xl font-bold text-accent">200 <span class="text-3xl text-gray-600 dark:text-gray-300">MDL</span></div>
+      <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+        <i class="fas fa-truck-fast text-2xl text-accent"></i>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Primești</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">1–3 zile, plata la primire.</p>
       </div>
+    </div>
+  </section>
 
-      <button id="order-btn" class="w-full bg-accent text-white py-6 rounded-2xl mt-8 font-bold text-xl hover:bg-indigo-700 transition shadow-lg">
-        Comandă acum →
-      </button>
-
-      <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4"><i class="fas fa-lock mr-1"></i>Fără plată în avans</p>
-
-      <div class="grid grid-cols-2 gap-4 mt-8">
-        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
-          <i class="fas fa-shipping-fast text-2xl text-blue-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Livrare 1-3 zile de la 50 lei</p>
-        </div>
-        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
-          <i class="fas fa-store text-2xl text-green-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Preluare gratuit</p>
-        </div>
-        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
-          <i class="fas fa-gem text-2xl text-purple-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Silicon Premium</p>
-        </div>
-        <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
-          <i class="fas fa-paint-brush text-2xl text-orange-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Print UV Garanție</p>
-        </div>
-      </div>
-    </aside>
-  </div>
 </main>
 {% endblock %}
 
-{% block mobile_bar %}
-<div class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-white/10 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
-  <button data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
-  <button data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Salvează</button>
-  <button data-action="order" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
-</div>
-{% endblock %}
-
 {% block scripts %}
-<script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
+<!-- Главной пока не нужен main.js (конструкторный), иначе он будет искать canvas элементы -->
 {% endblock %}
 
 {% block footer_subtitle %}Huse premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}

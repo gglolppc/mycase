@@ -76,8 +76,8 @@ export function setDefaultVerticalText({ canvas, state, text, fontFamily, fill }
           originY: 'center',
           angle: 90,
           fontSize: 75,
-          fill: fill || '#000000',
-          fontFamily: 'Montserrat, sans-serif',
+          fill: fill || '#ffffff',
+          fontFamily: fontFamily || 'Montserrat, sans-serif',
           editable: true,
           // width: 260, // Больше не нужно, IText сам определит ширину
           textAlign: 'center',

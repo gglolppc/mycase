@@ -3,11 +3,11 @@ import logging
 
 from contextlib import asynccontextmanager
 
-
+from app.routers.pages import router as pages_router
 from aiogram import Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, HTTPException, APIRouter
+from fastapi import FastAPI, Request, APIRouter
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -18,7 +18,7 @@ from app.tg_bot.db.database import DbSessionMiddleware
 from app.tg_bot.handler import order, delete, start, info
 
 from app.admin.router import router as admin_router
-from app.routers import termos, index
+from app.routers import termos, huse_personalizate, designs, orders_ready
 
 load_dotenv()
 
@@ -58,12 +58,15 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SESSION_SECRET", "dev_only_change_me"),
     same_site="lax",
-    https_only=False,   # если у тебя HTTPS (на проде да). Если пока нет — поставь False.
+    https_only=True,   # если у тебя HTTPS (на проде да). Если пока нет — поставь False.
 )
 
 app.include_router(admin_router)
 app.include_router(termos.router)
-app.include_router(index.router)
+app.include_router(huse_personalizate.router)
+app.include_router(pages_router)
+app.include_router(designs.router)
+app.include_router(orders_ready.router)
 
 # --- WEBHOOK ---
 webhook_router = APIRouter()

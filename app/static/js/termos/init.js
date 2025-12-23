@@ -13,10 +13,13 @@ import { setupThermosOrderForm } from './submit.js';
 
 // ---------- helpers ----------
 async function waitForFonts(fonts) {
-  // Подгружаем именно семейства, чтобы Fabric не рисовал fallback
   await Promise.all(fonts.map(({ label }) => document.fonts.load(`16px "${label}"`)));
   await document.fonts.ready;
 }
+
+
+
+
 
 export async function initThermos() {
   const DOM = {
@@ -33,8 +36,13 @@ export async function initThermos() {
     thumbnails: document.getElementById('thumbnails-termos'),
     uploadInput: document.getElementById('upload-termos'),
 
+    // desktop
     clearCanvasBtn: document.getElementById('clear-canvas-termos'),
     orderBtn: document.getElementById('order-btn-termos'),
+
+    // ✅ mobile (добавили)
+    mobileClearBtn: document.getElementById('mobile-clear-termos'),
+    mobileOrderBtn: document.getElementById('mobile-order-termos'),
 
     priceValue: document.getElementById('price-value-termos'),
 
@@ -45,9 +53,6 @@ export async function initThermos() {
     submitOrderBtn: document.getElementById('submit-order-btn'),
     submitText: document.getElementById('submit-text'),
     loadingText: document.getElementById('loading-text'),
-
-    themeToggle: document.getElementById('theme-toggle'),
-    themeIcon: document.getElementById('theme-icon'),
   };
 
   const STATIC_BASE = window.STATIC_BASE || '/static/';
@@ -58,14 +63,15 @@ export async function initThermos() {
     currentOverlay: null,
     defaultTextObj: null,
     selectedColor: 'black',
+
+    // ✅ чтобы тема не перетирала цвет, если юзер сам выбрал
+    userPickedTextColor: false,
   };
 
-  // всегда держим текст выше всего
+  // --- keep text always on top
   const keep = () => keepTextOnTop(canvas, state);
   canvas.on('object:added', keep);
   canvas.on('object:modified', keep);
-  canvas.on('selection:created', keep);
-  canvas.on('selection:updated', keep);
 
   const colorSets = {
     '500': [
@@ -73,7 +79,7 @@ export async function initThermos() {
       { key: 'grey', hex: '#5e5c5b' },
       { key: 'light_blue', hex: '#a5ccd9' },
       { key: 'pink', hex: '#d69d99' },
-      { key: 'orange', hex: '#ea580c' }, // я поставил оранжевый реально оранжевый
+      { key: 'orange', hex: '#ea580c' },
       { key: 'red', hex: '#af3036' },
       { key: 'mint', hex: '#9ad9a7' },
       { key: 'blue', hex: '#26415e' },
@@ -118,15 +124,25 @@ export async function initThermos() {
     setTimeout(() => DOM.toast.classList.add('opacity-0'), 3500);
   }
 
-  function applyTheme(isDark) {
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  // ✅ Единственный источник темы — класс "dark" на <html>
+  function syncThemeToCanvas({ forceText = false } = {}) {
+    const isDark = document.documentElement.classList.contains('dark');
     setCanvasTheme(canvas, isDark);
 
-    if (DOM.themeIcon) {
-      DOM.themeIcon.classList.remove('fa-moon', 'fa-sun');
-      DOM.themeIcon.classList.add(isDark ? 'fa-sun' : 'fa-moon');
+    // если текст уже есть — делаем читабельным (если юзер не выбирал цвет)
+    if (
+      state.defaultTextObj &&
+      (forceText || !state.userPickedTextColor) &&
+      !state.defaultTextObj.__userColorSet
+    ) {
+      const next = isDark ? '#ffffff' : '#ffffff';
+      state.defaultTextObj.set({ fill: next });
+
+      // синхроним пикер, чтобы UI не врал
+      if (DOM.textColor) DOM.textColor.value = next;
     }
+
+    canvas.requestRenderAll();
   }
 
   function currentSize() {
@@ -149,7 +165,6 @@ export async function initThermos() {
     DOM.colorsWrap.innerHTML = '';
     if (!colors.length) return;
 
-    // если выбранный цвет не существует в этом размере — берем первый
     if (!colors.some((c) => c.key === state.selectedColor)) {
       state.selectedColor = colors[0].key;
     }
@@ -157,7 +172,8 @@ export async function initThermos() {
     colors.forEach((c) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'w-9 h-9 rounded-full border-2 border-white/60 shadow-md hover:scale-110 transition';
+      btn.className =
+        'w-9 h-9 rounded-full border-2 border-white/60 shadow-md hover:scale-110 transition';
       btn.style.background = c.hex;
 
       if (c.key === state.selectedColor) {
@@ -168,7 +184,6 @@ export async function initThermos() {
         state.selectedColor = c.key;
         renderColors();
         setThermosOverlay({ canvas, state, size, color: state.selectedColor, STATIC_BASE });
-        // и текст обратно наверх
         keep();
       });
 
@@ -179,22 +194,39 @@ export async function initThermos() {
   function ensureDefaultText() {
     const txt = DOM.termosText.value || 'NUMELE';
 
+    // ✅ если юзер не выбирал цвет — авто-цвет от темы
+    const isDark = document.documentElement.classList.contains('dark');
+    const autoColor = isDark ? '#ffffff' : '#111827';
+
+    const chosen =
+      (state.userPickedTextColor || state.defaultTextObj?.__userColorSet)
+        ? DOM.textColor.value
+        : autoColor;
+
+    // синхроним пикер, чтобы не врал
+    if (!(state.userPickedTextColor || state.defaultTextObj?.__userColorSet)) {
+      DOM.textColor.value = autoColor;
+    }
+
     if (!state.defaultTextObj) {
       setDefaultVerticalText({
         canvas,
         state,
         text: txt,
         fontFamily: DOM.fontSelector.value,
-        fill: DOM.textColor.value,
+        fill: chosen,
       });
       keep();
+
+      // ✅ сразу после создания — синхроним тему (фон + текст)
+      syncThemeToCanvas({ forceText: true });
       return;
     }
 
     state.defaultTextObj.set({
       text: txt,
       fontFamily: DOM.fontSelector.value,
-      fill: DOM.textColor.value,
+      fill: chosen,
     });
 
     keep();
@@ -210,41 +242,42 @@ export async function initThermos() {
 
     setThermosOverlay({ canvas, state, size, color: state.selectedColor, STATIC_BASE });
 
-    // после overlay гарантируем дефолт-текст (и что он сверху)
+    // ✅ сначала текст (с правильным цветом), потом тема
     ensureDefaultText();
+    syncThemeToCanvas({ forceText: false });
   }
 
   // ---------- fonts selector ----------
   DOM.fontSelector.innerHTML = '';
   fonts.forEach((f) => {
     const opt = document.createElement('option');
-    opt.value = f.value;     // важно: value = "Montserrat, sans-serif"
+    opt.value = f.value;
     opt.textContent = f.label;
     DOM.fontSelector.appendChild(opt);
   });
 
-  // 🔥 ждём загрузку шрифтов до первого рендера текста
   await waitForFonts(fonts);
 
-  // ---------- theme init ----------
-  const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved ? saved === 'dark' : prefersDark);
-
-  DOM.themeToggle?.addEventListener('click', () => {
-    const isDarkNow = document.documentElement.classList.contains('dark');
-    applyTheme(!isDarkNow);
-    // тема поменялась — просто перерендер
-    canvas.requestRenderAll();
-  });
+  // ✅ theme sync (один раз, без дубля)
+  syncThemeToCanvas();
+  window.addEventListener('theme:changed', () => syncThemeToCanvas({ forceText: false }));
 
   // ---------- events ----------
-  DOM.size500.addEventListener('change', applyOverlayAndDefaults);
-  DOM.size750.addEventListener('change', applyOverlayAndDefaults);
+  DOM.size500.addEventListener('change', () => {
+    applyOverlayAndDefaults();
+  });
+  DOM.size750.addEventListener('change', () => {
+    applyOverlayAndDefaults();
+  });
 
   DOM.termosText.addEventListener('input', ensureDefaultText);
   DOM.fontSelector.addEventListener('change', ensureDefaultText);
-  DOM.textColor.addEventListener('input', ensureDefaultText);
+
+  DOM.textColor.addEventListener('input', () => {
+    state.userPickedTextColor = true;
+    if (state.defaultTextObj) state.defaultTextObj.__userColorSet = true;
+    ensureDefaultText();
+  });
 
   DOM.uploadInput.addEventListener('change', (e) => {
     [...e.target.files].forEach((file) => {
@@ -285,35 +318,68 @@ export async function initThermos() {
     e.target.value = '';
   });
 
-  DOM.clearCanvasBtn.addEventListener('click', () => {
+  // =========================
+  // ✅ ONLY CHANGE: make both buttons work
+  // =========================
+
+  const handleClear = () => {
     clearDesignThermos({ canvas, state });
     applyOverlayAndDefaults();
-  });
+  };
 
-  DOM.orderBtn.addEventListener('click', () => {
+  [DOM.clearCanvasBtn, DOM.mobileClearBtn]
+    .filter(Boolean)
+    .forEach((btn) => btn.addEventListener('click', handleClear));
+
+  const handleOrderOpen = () => {
     if (!state.currentOverlay) return showToast('Alege termosul!', 'error');
     DOM.orderFormModal.classList.remove('hidden');
-  });
+  };
 
+  // =========================
+    // MODAL CLOSE HANDLERS
+    // =========================
+
+    // клик по фону (вне окна)
+    DOM.orderFormModal.addEventListener('click', (e) => {
+      // если клик именно по оверлею, а не по содержимому
+      if (e.target === DOM.orderFormModal) {
+        DOM.orderFormModal.classList.add('hidden');
+      }
+    });
+
+    // Esc — закрыть
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !DOM.orderFormModal.classList.contains('hidden')) {
+        DOM.orderFormModal.classList.add('hidden');
+      }
+    });
+
+
+  [DOM.orderBtn, DOM.mobileOrderBtn]
+    .filter(Boolean)
+    .forEach((btn) => btn.addEventListener('click', handleOrderOpen));
+
+  // ---------- resetApp ----------
   const resetApp = () => {
     DOM.form.reset();
     DOM.orderFormModal.classList.add('hidden');
     DOM.thumbnails.innerHTML = '';
     state.uploadedFiles = [];
 
-    // дефолты
-    DOM.size750.checked = true;                 // ты в конце так и делал
-    state.selectedColor = 'black-matte';        // чтобы подходило под 750, иначе будет авто-первый
+    state.userPickedTextColor = false;
+
+    DOM.size750.checked = true;
+    state.selectedColor = 'black-matte';
     DOM.termosText.value = 'Numele tau';
-    DOM.textColor.value = '#ffffff';
-    DOM.fontSelector.value = 'Montserrat, sans-serif'; // ✅ важно
+    DOM.fontSelector.value = 'Montserrat, sans-serif';
+
+    // ✅ дефолтный цвет зависит от темы
+    DOM.textColor.value = document.documentElement.classList.contains('dark') ? '#ffffff' : '#111827';
 
     canvas.clear();
     state.currentOverlay = null;
     state.defaultTextObj = null;
-
-    const isDark = document.documentElement.classList.contains('dark');
-    setCanvasTheme(canvas, isDark);
 
     applyOverlayAndDefaults();
   };
@@ -329,10 +395,12 @@ export async function initThermos() {
 
   // ---------- INIT DEFAULT ----------
   DOM.size750.checked = true;
-  state.selectedColor = 'black-matte'; // чтобы совпало с 750
+  state.selectedColor = 'black-matte';
   DOM.termosText.value = 'Numele tau';
-  DOM.textColor.value = '#ffffff';
-  DOM.fontSelector.value = 'Montserrat, sans-serif'; // ✅ важно
+  DOM.fontSelector.value = 'Montserrat, sans-serif';
+
+  // ✅ дефолтный цвет зависит от темы
+  DOM.textColor.value = document.documentElement.classList.contains('dark') ? '#ffffff' : '#111827';
 
   applyOverlayAndDefaults();
 }

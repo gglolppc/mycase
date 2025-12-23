@@ -22,9 +22,9 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/huse_personalizate", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("huse_personalizate.html", {"request": request})
 
 
 # === ЗАКАЗ ===

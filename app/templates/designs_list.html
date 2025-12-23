@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Designurile noastre | MYCASE</title>
+{% endblock %}
+
+{% block header_subtitle %}Designuri gata · Personalizare discretă{% endblock %}
+
+{% block main %}
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- FILTER -->
+    <aside class="glass neumorphic rounded-3xl p-6 lg:w-72 h-fit">
+      <h2 class="text-lg font-extrabold mb-4">Categorii</h2>
+
+      <div class="space-y-2">
+        <a href="/designuri"
+           class="block px-4 py-3 rounded-2xl font-bold transition
+           {% if not active_category %}
+             bg-accent text-white
+           {% else %}
+             bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
+           {% endif %}">
+          Toate
+        </a>
+
+        {% for c in categories %}
+        <a href="/designuri?category={{ c }}"
+           class="block px-4 py-3 rounded-2xl font-bold transition
+           {% if active_category == c %}
+             bg-accent text-white
+           {% else %}
+             bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
+           {% endif %}">
+          {{ c|capitalize }}
+        </a>
+        {% endfor %}
+      </div>
+
+      {% if active_category %}
+      <div class="mt-4 text-sm text-gray-500">
+        Filtru: <span class="font-bold">{{ active_category|capitalize }}</span>
+      </div>
+      {% endif %}
+    </aside>
+
+    <!-- LIST -->
+    <section class="flex-1">
+      <h1 class="text-4xl font-extrabold mb-8">Designurile noastre</h1>
+
+      {% if items %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for item in items %}
+        <a href="/designuri/{{ item.slug }}"
+           class="group glass neumorphic rounded-3xl p-5 hover:shadow-2xl transition">
+
+          <div class="aspect-square rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10">
+            <img
+              src="{{ item.image_url }}"
+              alt="{{ item.title }}"
+              class="w-full h-full object-cover group-hover:scale-105 transition"
+            />
+          </div>
+
+          <div class="mt-4">
+            <h3 class="text-lg font-bold">{{ item.title }}</h3>
+            <p class="text-sm text-gray-500 mt-1">
+              {{ item.category|capitalize }}
+              {% if item.brand %} · {{ item.brand|upper }}{% endif %}
+            </p>
+
+            <div class="mt-3 font-extrabold text-accent">
+              {{ item.price_mdl }} MDL
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+        <p class="text-gray-500">Nu sunt designuri disponibile momentan.</p>
+      {% endif %}
+    </section>
+
+  </div>
+
+</main>
+{% endblock %}

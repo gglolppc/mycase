@@ -1,0 +1,43 @@
+{# templates/admin_order_detail.html #}
+{% extends "admin_base.html" %}
+
+{% block admin_content %}
+<div class="glass neumorphic rounded-3xl p-8">
+  <div class="flex items-center justify-between gap-6 mb-8">
+    <div>
+      <h1 class="text-3xl font-extrabold">Comanda #{{ order.id }}</h1>
+      <p class="text-gray-600 dark:text-gray-300 mt-1">{{ order.order_date }}</p>
+    </div>
+
+    <a href="/admin/orders" class="neumorphic-btn px-5 py-3 rounded-2xl font-bold">
+      ← Înapoi
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+      <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Client</p>
+      <p class="text-xl font-extrabold mt-2">{{ order.c_name or '-' }}</p>
+
+      <div class="mt-6 space-y-2 text-gray-700 dark:text-gray-200">
+        <p><b>Telefon:</b> {{ order.phone_number or '-' }}</p>
+        <p><b>Adresa:</b> {{ order.address or '-' }}</p>
+        <p><b>Model:</b> {{ (order.brand or '-')|upper }} / {{ (order.phone_model or '-')|upper }}</p>
+        <p><b>Status:</b> {{ order.status }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
+      <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Design</p>
+
+      {% if order.design_url %}
+        <div class="mt-4 rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10">
+          <img src="{{ order.design_url }}" alt="Design" class="w-full h-full object-cover" />
+        </div>
+      {% else %}
+        <p class="mt-4 text-gray-500">Nu există design salvat.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

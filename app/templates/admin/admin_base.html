@@ -1,0 +1,52 @@
+{# templates/admin_base.html #}
+{% extends "base.html" %}
+
+{% block main %}
+<main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+  <div class="flex gap-8">
+
+    <!-- SIDEBAR -->
+    <aside class="glass neumorphic rounded-3xl p-6 w-72 hidden lg:block">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Admin</p>
+          <h2 class="text-2xl font-extrabold text-accent">MYCASE</h2>
+        </div>
+
+        <form method="post" action="/admin/logout">
+          <button class="neumorphic-btn px-4 py-2 rounded-2xl font-semibold text-sm">
+            <i class="fas fa-right-from-bracket mr-2"></i>Ieși
+          </button>
+        </form>
+      </div>
+
+      <nav class="space-y-3">
+        <a href="/admin/orders"
+           class="neumorphic-btn w-full px-5 py-4 rounded-2xl font-bold flex items-center gap-3
+                  {% if active_page == 'orders' %} border border-accent/40 text-accent {% endif %}">
+          <i class="fas fa-receipt text-accent"></i>
+          Comenzi
+        </a>
+
+        <a href="/admin/designs"
+           class="neumorphic-btn w-full px-5 py-4 rounded-2xl font-bold flex items-center gap-3
+                  {% if active_page == 'designs' %} border border-accent/40 text-accent {% endif %}">
+          <i class="fas fa-palette text-accent"></i>
+          Designuri
+        </a>
+      </nav>
+
+      <div class="mt-8 p-4 rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10">
+        <p class="text-xs text-gray-500 dark:text-gray-400">Status</p>
+        <p class="font-bold text-gray-900 dark:text-white">Autorizat</p>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <section class="flex-1">
+      {% block admin_content %}{% endblock %}
+    </section>
+
+  </div>
+</main>
+{% endblock %}
