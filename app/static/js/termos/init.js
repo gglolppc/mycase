@@ -394,7 +394,7 @@ export async function initThermos() {
   });
 
   // ---------- INIT DEFAULT ----------
-  DOM.size750.checked = true;
+  DOM.size500.checked = true;
   state.selectedColor = 'black-matte';
   DOM.termosText.value = 'Numele tau';
   DOM.fontSelector.value = 'Montserrat, sans-serif';
