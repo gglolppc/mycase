@@ -95,61 +95,123 @@
   {% set p = request.url.path %}
 
   <!-- Header -->
-  <header class="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-5 sticky top-0 z-50 border-b border-gray-100 dark:border-white/10">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-      <div class="flex items-center gap-8">
-        <a href="/" class="flex items-center gap-4 group">
-          <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE"
-               class="w-12 h-12 rounded-full shadow-md group-hover:scale-105 transition-transform"/>
-          <div class="hidden sm:block">
-            <h1 class="text-2xl font-bold text-accent">MYCASE</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{% block header_subtitle %}Produse premium la comandă{% endblock %}</p>
-          </div>
+<header class="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-3 sm:py-5 sticky top-0 z-50 border-b border-gray-100 dark:border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-3">
+
+    <!-- Left: logo -->
+    <div class="flex items-center gap-3 sm:gap-8 min-w-0">
+      <a href="/" class="flex items-center gap-3 sm:gap-4 group shrink-0">
+        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE"
+             class="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-md group-hover:scale-105 transition-transform"/>
+        <div class="hidden sm:block">
+          <h1 class="text-2xl font-bold text-accent">MYCASE</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {% block header_subtitle %}Produse premium la comandă{% endblock %}
+          </p>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden sm:flex items-center gap-6">
+        <a href="/huse_personalizate"
+           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+           {% if p.startswith('/huse_personalizate') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+          Huse personalizate
         </a>
 
-        <nav class="flex items-center gap-6">
+        <a href="/termos"
+           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+           {% if p.startswith('/termos') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+          Termosuri personalizate
+        </a>
+
+        <a href="/designuri"
+           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+           {% if p.startswith('/designuri') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+          Designurile noastre
+        </a>
+      </nav>
+    </div>
+
+    <!-- Right: actions -->
+    <div class="flex items-center gap-3 sm:gap-4 shrink-0">
+
+      <!-- Mobile burger -->
+      <button
+        id="mobile-menu-btn"
+        class="sm:hidden neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center justify-center"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+      >
+        <i id="mobile-menu-icon" class="fas fa-bars"></i>
+      </button>
+
+      <button
+        id="theme-toggle"
+        class="neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2"
+        type="button"
+        aria-label="Toggle theme"
+        title="Theme"
+      >
+        <i id="theme-icon" class="fas fa-moon"></i>
+      </button>
+
+      <div class="hidden sm:flex items-center gap-4">
+        <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
+          <i class="fab fa-telegram text-xl"></i>
+        </a>
+        <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
+          <i class="fab fa-viber text-xl"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu-overlay" class="sm:hidden fixed inset-0 bg-black/40 hidden z-40"></div>
+
+  <div id="mobile-menu" class="sm:hidden hidden relative z-50">
+    <div class="px-4 pb-4">
+      <div class="glass rounded-3xl p-4 border border-white/30 dark:border-white/10 shadow-xl">
+        <div class="flex flex-col gap-2">
           <a href="/huse_personalizate"
-             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-             {% if p.startswith('/huse_personalizate') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+             {% if p.startswith('/huse_personalizate') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
             Huse personalizate
           </a>
 
           <a href="/termos"
-             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-             {% if p.startswith('/termos') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+             {% if p.startswith('/termos') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
             Termosuri personalizate
           </a>
 
           <a href="/designuri"
-             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-             {% if p.startswith('/designuri') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+             {% if p.startswith('/designuri') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
             Designurile noastre
           </a>
-        </nav>
-      </div>
 
-      <div class="flex items-center gap-4">
-        <button
-          id="theme-toggle"
-          class="neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2"
-          type="button"
-          aria-label="Toggle theme"
-          title="Theme"
-        >
-          <i id="theme-icon" class="fas fa-moon"></i>
-        </button>
+          <div class="h-px bg-gray-200/70 dark:bg-white/10 my-2"></div>
 
-        <div class="hidden sm:flex items-center gap-4">
-          <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-            <i class="fab fa-telegram text-xl"></i>
-          </a>
-          <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-            <i class="fab fa-viber text-xl"></i>
-          </a>
+          <div class="flex items-center gap-4 px-2">
+            <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
+              <i class="fab fa-telegram text-2xl"></i>
+            </a>
+            <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
+              <i class="fab fa-viber text-2xl"></i>
+            </a>
+            <a href="tel:+373 69 214 888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
+              <i class="fas fa-phone text-2xl"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
+
 
   {% block main %}{% endblock %}
 
@@ -320,6 +382,46 @@
         toggleIcon.classList.toggle('fa-times', closed);
       });
     }
+      (function () {
+    const btn = document.getElementById('mobile-menu-btn');
+    const icon = document.getElementById('mobile-menu-icon');
+    const menu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
+
+    if (!btn || !menu || !overlay || !icon) return;
+
+    function openMenu() {
+      menu.classList.remove('hidden');
+      overlay.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    }
+
+    function closeMenu() {
+      menu.classList.add('hidden');
+      overlay.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+      icon.classList.add('fa-bars');
+      icon.classList.remove('fa-times');
+    }
+
+    function toggleMenu() {
+      const isOpen = !menu.classList.contains('hidden');
+      isOpen ? closeMenu() : openMenu();
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Закрывать по Esc
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    // Закрывать после клика по ссылке
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  })();
   </script>
 
 </body>
