@@ -1,5 +1,5 @@
-export const BASE_W = 420;
-export const BASE_H = 780;
+export const BASE_W = 310;
+export const BASE_H = 551;
 
 export function createCanvasThermos() {
   const canvas = new fabric.Canvas('termos-canvas', {
@@ -75,9 +75,9 @@ export function setDefaultVerticalText({ canvas, state, text, fontFamily, fill }
           originX: 'center',
           originY: 'center',
           angle: 90,
-          fontSize: 75,
+          fontSize: 60,
           fill: fill || '#ffffff',
-          fontFamily: fontFamily || 'Montserrat, sans-serif',
+          fontFamily: fontFamily || 'Russo One, sans-serif',
           editable: true,
           // width: 260, // Больше не нужно, IText сам определит ширину
           textAlign: 'center',
@@ -98,7 +98,7 @@ export function addImageToCanvasSmall(canvas, state, dataURL) {
   fabric.Image.fromURL(
     dataURL,
     (img) => {
-      const max = 200;
+      const max = 150;
       const scale = Math.min(max / img.width, max / img.height, 1);
 
       img.scale(scale);

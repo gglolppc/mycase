@@ -11,40 +11,72 @@
 
   <div class="flex flex-col lg:flex-row gap-8">
 
-    <!-- FILTER -->
-    <aside class="glass neumorphic rounded-3xl p-6 lg:w-72 h-fit">
-      <h2 class="text-lg font-extrabold mb-4">Categorii</h2>
+<aside class="glass neumorphic rounded-3xl p-6 lg:w-72 h-fit">
+  <h2 class="text-lg font-extrabold mb-4">Categorii</h2>
 
-      <div class="space-y-2">
-        <a href="/designuri"
-           class="block px-4 py-3 rounded-2xl font-bold transition
-           {% if not active_category %}
-             bg-accent text-white
-           {% else %}
-             bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
-           {% endif %}">
-          Toate
-        </a>
+  <div class="space-y-2">
 
-        {% for c in categories %}
+    <!-- TOATE -->
+    <a href="/designuri"
+       class="block px-4 py-3 rounded-2xl font-bold transition
+       {% if not active_category %}
+         bg-accent text-white
+       {% else %}
+         bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
+       {% endif %}">
+      Toate
+    </a>
+
+    {% for c in categories %}
+      {% set is_open = (active_category|default('')|trim|lower == c|default('')|trim|lower) %}
+      <div class="rounded-2xl overflow-hidden">
+
+        <!-- category link -->
         <a href="/designuri?category={{ c }}"
-           class="block px-4 py-3 rounded-2xl font-bold transition
-           {% if active_category == c %}
+           class="block px-4 py-3 font-bold transition
+           {% if is_open %}
              bg-accent text-white
            {% else %}
              bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
            {% endif %}">
           {{ c|capitalize }}
         </a>
-        {% endfor %}
-      </div>
 
-      {% if active_category %}
-      <div class="mt-4 text-sm text-gray-500">
-        Filtru: <span class="font-bold">{{ active_category|capitalize }}</span>
+        <!-- BRANDS (только внутри активной категории и только если реально есть) -->
+        {% if is_open and brands and (brands|length > 0) %}
+          <div class="bg-white/40 dark:bg-gray-900/40 px-3 py-3 space-y-2 border-t border-white/30 dark:border-white/10">
+
+            {% for b in brands %}
+              {% set is_active_brand = (active_brand and (active_brand|trim|lower == b|trim|lower)) %}
+              <a href="/designuri?category={{ c|urlencode }}&brand={{ b|urlencode }}"
+                 class="block px-3 py-2 rounded-xl text-sm font-semibold transition
+                 {% if is_active_brand %}
+                  bg-accent text-white shadow-md
+                {% else %}
+                  bg-white/60 dark:bg-gray-900/60 hover:bg-white/80 dark:hover:bg-gray-900/80
+                {% endif %}">
+                {{ b|capitalize }}
+              </a>
+            {% endfor %}
+
+          </div>
+        {% endif %}
+
       </div>
+    {% endfor %}
+  </div>
+
+  {% if active_category %}
+    <div class="mt-4 text-sm text-gray-500">
+      Filtru:
+      <span class="font-bold">{{ active_category|capitalize }}</span>
+      {% if active_brand and (active_brand|trim|length > 0) %}
+        → <span class="font-bold">{{ active_brand|capitalize }}</span>
       {% endif %}
-    </aside>
+    </div>
+  {% endif %}
+</aside>
+
 
     <!-- LIST -->
     <section class="flex-1">

@@ -397,7 +397,7 @@ export async function initThermos() {
   DOM.size500.checked = true;
   state.selectedColor = 'black-matte';
   DOM.termosText.value = 'Numele tau';
-  DOM.fontSelector.value = 'Montserrat, sans-serif';
+  DOM.fontSelector.value = 'Russo One, sans-serif';
 
   // ✅ дефолтный цвет зависит от темы
   DOM.textColor.value = document.documentElement.classList.contains('dark') ? '#ffffff' : '#111827';
