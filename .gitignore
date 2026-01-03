@@ -27,3 +27,6 @@ dockerized_app/__pycache__/
 .vscode/
 
 /uploads/
+
+node_modules/
+
