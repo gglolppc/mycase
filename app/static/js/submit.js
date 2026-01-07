@@ -8,7 +8,7 @@ export function setupOrderForm({ DOM, state, canvas, showToast, exportCanvasPng,
   DOM.form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    if (!state.currentOverlay) {
+    if (!state.currentOverlayObj) {
       showToast('Creează designul mai întâi!', 'error');
       return;
     }

@@ -250,9 +250,18 @@ export function init() {
   };
 
   const handleOrder = () => {
-    if (!state.currentOverlay) return showToast('Creează designul mai întâi!', 'error');
-    DOM.orderFormModal.classList.remove('hidden');
+      if (!state.currentOverlayObj) {
+        return showToast('Alege modelul telefonului mai întâi!', 'error');
+      }
+
+      const objects = canvas.getObjects().filter((o) => o !== state.currentOverlayObj && o !== state.defaultText);
+      if (objects.length === 0) {
+        return showToast('Adaugă o poză sau text pe husă!', 'error');
+      }
+
+      DOM.orderFormModal.classList.remove('hidden');
   };
+
 
   DOM.clearCanvasBtn.addEventListener('click', handleClear);
   DOM.saveBtn.addEventListener('click', handleSave);
