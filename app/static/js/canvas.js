@@ -71,7 +71,7 @@ export function addImageToCanvas(canvas, dataURL) {
   fabric.Image.fromURL(
     dataURL,
     (img) => {
-      const scale = Math.min((canvas.width * 0.85) / img.width, (canvas.height * 0.85) / img.height);
+      const scale = Math.min((canvas.width * 0.87) / img.width, (canvas.height * 0.85) / img.height);
       img.scale(scale);
       img.set({
         left: canvas.width / 2,
@@ -94,11 +94,19 @@ export function addImageToCanvas(canvas, dataURL) {
  * Устанавливает или удаляет изображение оверлея (макет телефона).
  */
 export function setPhoneOverlay({ canvas, state, brand, model, STATIC_BASE }) {
-  canvas.clear();
+  // НЕ clear(), иначе ты убиваешь все фото/текст при смене модели
+  // Если тебе реально нужно чистить — ок, но тогда UX хуже.
+  // Я бы чистил только макет + дефолтный текст.
+  if (state.currentOverlayObj) {
+    canvas.remove(state.currentOverlayObj);
+    state.currentOverlayObj = null;
+  }
 
   if (!brand || !model) {
-    canvas.add(state.defaultText);
-    state.currentOverlay = null;
+    // макета нет — верни дефолтный текст если пусто
+    if (state.defaultText && !canvas.getObjects().includes(state.defaultText)) {
+      canvas.add(state.defaultText);
+    }
     canvas.renderAll();
     return;
   }
@@ -114,23 +122,33 @@ export function setPhoneOverlay({ canvas, state, brand, model, STATIC_BASE }) {
       const imgHeight = img.height;
 
       img.set({
-        selectable: false,
-        evented: false,
         left: 0,
         top: 0,
-        scaleX: canvas.width / imgWidth,
-        scaleY: canvas.height / imgHeight,
+        originX: 'left',
+        originY: 'top',
+        selectable: false,
+        evented: false,
+        hoverCursor: 'default',
+        excludeFromExport: false, // оставляем, чтобы макет попадал в PNG
         originalWidth: imgWidth,
         originalHeight: imgHeight,
-        excludeFromExport: false, // 🔥 ВАЖНО
       });
 
-      canvas.setOverlayImage(img, canvas.renderAll.bind(canvas));
-      state.currentOverlay = img;
+      img.scaleX = canvas.width / imgWidth;
+      img.scaleY = canvas.height / imgHeight;
+
+      canvas.add(img);
+      // держим макет самым верхним среди объектов
+      img.moveTo(999999);
+
+      state.currentOverlayObj = img;
+
+      canvas.requestRenderAll();
     },
     { crossOrigin: 'anonymous' },
   );
 }
+
 
 /**
  * Очищает дизайн (все объекты, кроме дефолтного текста).

@@ -45,15 +45,51 @@ export function init() {
     themeIcon: document.getElementById('theme-icon'),
   };
 
-  const { canvas, defaultText } = createCanvas();
+    const { canvas, defaultText } = createCanvas();
 
-  const state = {
-    uploadedFiles: [],
-    currentOverlay: null,
-    selectedText: null,
-    defaultText,
-  };
-  setupFabricControls(canvas, DOM, state);
+    const state = {
+      uploadedFiles: [],
+      currentOverlayObj: null, // ⬅️ ВАЖНО: обычный объект, не overlayImage
+      selectedText: null,
+      defaultText,
+    };
+
+    setupFabricControls(canvas, DOM, state);
+
+    /* ----------------- overlay всегда сверху фото ----------------- */
+    function keepOverlayOnTop() {
+      if (state.currentOverlayObj) {
+        state.currentOverlayObj.moveTo(999999);
+      }
+    }
+
+    canvas.on('object:added', keepOverlayOnTop);
+    canvas.on('selection:created', keepOverlayOnTop);
+    canvas.on('selection:updated', keepOverlayOnTop);
+    canvas.on('object:modified', keepOverlayOnTop);
+    /* -------------------------------------------------------------- */
+
+    // responsive
+    if (DOM.canvasContainerSource) {
+      setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
+    } else {
+      console.error('Контейнер #canvas-container-source не найден. Адаптивность не работает.');
+      setupResponsiveCanvas(canvas, state);
+    }
+
+    /* ----------------- синхронизация темы ----------------- */
+    function syncThemeToCanvas() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setCanvasTheme(canvas, state, isDark);
+    }
+
+    // применить при старте
+    syncThemeToCanvas();
+
+    // реагировать на смену темы
+    window.addEventListener('theme:changed', syncThemeToCanvas);
+    /* ------------------------------------------------------ */
+
   // responsive
   if (DOM.canvasContainerSource) {
     setupResponsiveCanvas(canvas, state, DOM.canvasContainerSource);
@@ -127,7 +163,11 @@ export function init() {
       const reader = new FileReader();
       reader.onload = (ev) => {
         const fileId = Date.now() + Math.random().toString(16).slice(2);
+        const isFirstImage = state.uploadedFiles.length === 0;
         state.uploadedFiles.push({ fileId, file });
+        if (isFirstImage) {
+          addImageToCanvas(canvas, ev.target.result, true);
+        }
 
         const wrapper = document.createElement('div');
         wrapper.className = 'relative aspect-square rounded-xl overflow-hidden shadow-md';
