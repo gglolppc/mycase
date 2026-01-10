@@ -14,10 +14,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 # поменяй импорты под свои пути:
 from app.db.database import get_async_session  # должна возвращать AsyncSession
 from app.db.database import Order, Designs  # твоя модель Order
-
+from app.core.render import render
+from app.core.templates import templates
 
 router = APIRouter(prefix="/admin", tags=["admin"])
-templates = Jinja2Templates(directory="app/templates/admin")
+
 
 
 def _admin_password() -> str:
@@ -39,13 +40,13 @@ async def admin_home(request: Request):
     # если уже залогинен — на список
     if request.session.get("is_admin") is True:
         return RedirectResponse(url="/admin/orders", status_code=303)
-    return templates.TemplateResponse("admin_login.html", {"request": request, "error": None})
+    return render(request, "admin/admin_login.html", {"error": None})
 
 
 @router.post("/login", include_in_schema=False)
 async def admin_login(request: Request, password: str = Form(...)):
     if password != _admin_password():
-        return templates.TemplateResponse("admin_login.html", {"request": request, "error": "Wrong password"})
+        return render(request, "admin/admin_login.html", {"error": "Wrong password"})
     request.session["is_admin"] = True
     return RedirectResponse(url="/admin/orders", status_code=303)
 
@@ -79,10 +80,8 @@ async def admin_orders(
     )
     orders = (await session.execute(orders_stmt)).scalars().all()
 
-    return templates.TemplateResponse(
-        "admin_orders.html",
+    return render(request,"admin/admin_orders.html",
         {
-            "request": request,
             "orders": orders,
             "page": page,
             "pages": pages,
@@ -104,10 +103,8 @@ async def admin_order_detail(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return templates.TemplateResponse(
-        "admin_order_detail.html",
+    return render(request,"admin/admin_order_detail.html",
         {
-            "request": request,
             "order": order,
             "active_page": "orders",
         },
@@ -122,10 +119,9 @@ async def admin_designs(
     stmt = select(Designs).order_by(Designs.created_at.desc(), Designs.id.desc())
     items = (await session.execute(stmt)).scalars().all()
 
-    return templates.TemplateResponse(
-        "admin_designs.html",
+    return render(request,
+        "admin/admin_designs.html",
         {
-            "request": request,
             "items": items,
             "active_page": "designs",
         },
@@ -136,10 +132,8 @@ async def admin_design_new_page(
     request: Request,
     _=Depends(require_admin),
 ):
-    return templates.TemplateResponse(
-        "admin_design_form.html",
+    return render(request, "admin/admin_design_form.html",
         {
-            "request": request,
             "active_page": "designs",
             "mode": "new",
             "design": None,
@@ -171,10 +165,8 @@ async def admin_design_new(
     exists_stmt = select(Designs.id).where(Designs.slug == slug)
     exists = (await session.execute(exists_stmt)).scalar_one_or_none()
     if exists:
-        return templates.TemplateResponse(
-            "admin_design_form.html",
+        return render(request, "admin/admin_design_form.html",
             {
-                "request": request,
                 "active_page": "designs",
                 "mode": "new",
                 "design": None,
@@ -209,10 +201,8 @@ async def admin_design_edit_page(
     if not design:
         raise HTTPException(status_code=404, detail="Design not found")
 
-    return templates.TemplateResponse(
-        "admin_design_form.html",
+    return render(request, "admin/admin_design_form.html",
         {
-            "request": request,
             "active_page": "designs",
             "mode": "edit",
             "design": design,
@@ -249,10 +239,8 @@ async def admin_design_edit(
     exists_stmt = select(Designs.id).where(Designs.slug == slug, Designs.id != design_id)
     exists = (await session.execute(exists_stmt)).scalar_one_or_none()
     if exists:
-        return templates.TemplateResponse(
-            "admin_design_form.html",
+        return render(request, "admin/admin_design_form.html",
             {
-                "request": request,
                 "active_page": "designs",
                 "mode": "edit",
                 "design": design,
