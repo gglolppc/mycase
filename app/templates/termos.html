@@ -2,19 +2,19 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Termos personalizat în Chișinău | MYCASE</title>
+<title>{{ t('termos.meta.title') }}</title>
 {% endblock %}
 
 {% block meta %}
-<meta name="description" content="Creează termos personalizat cu text și poză. Calitate premium, livrare rapidă în Moldova." />
-<meta name="keywords" content="termos personalizat, termos cu poză, mycase, Chișinău, Moldova" />
+<meta name="description" content="{{ t('termos.meta.description') }}" />
+<meta name="keywords" content="{{ t('termos.meta.keywords') }}" />
 {% endblock %}
 
 {% block extra_fonts %}
 <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Amatic+SC:wght@400;700&family=Caveat:wght@400..700&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Great+Vibes&family=Marck+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Pacifico&family=Rampart+One&family=Roboto+Slab:wght@100..900&family=Rubik+Dirt&family=Russo+One&display=swap" rel="stylesheet">
 {% endblock %}
 
-{% block header_subtitle %}Termosuri premium la comandă{% endblock %}
+{% block header_subtitle %}{{ t('termos.header.subtitle') }}{% endblock %}
 
 {% block main %}
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
@@ -24,18 +24,18 @@
     <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96">
 
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">🧴 Alege termosul</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ t('termos.left.title') }}</h2>
 
         <!-- size radio -->
         <div class="space-y-3">
           <label class="flex items-center gap-3 p-4 rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10 cursor-pointer">
             <input id="termos-500" type="radio" name="termos-size" class="w-4 h-4" checked />
-            <span class="text-gray-900 dark:text-gray-100 font-semibold">500 ml cu LED temp.</span>
+            <span class="text-gray-900 dark:text-gray-100 font-semibold">{{ t('termos.size.500') }}</span>
           </label>
 
           <label class="flex items-center gap-3 p-4 rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10 cursor-pointer">
             <input id="termos-750" type="radio" name="termos-size" class="w-4 h-4" />
-            <span class="text-gray-900 dark:text-gray-100 font-semibold">750 ml</span>
+            <span class="text-gray-900 dark:text-gray-100 font-semibold">{{ t('termos.size.750') }}</span>
           </label>
         </div>
 
@@ -43,31 +43,30 @@
         <div class="rounded-2xl overflow-hidden bg-white/70 dark:bg-gray-900/60 border border-gray-200 dark:border-white/10">
           <img id="termos-preview"
                src="{{ request.url_for('static', path='assets/termos-previews/500.png') }}"
-               alt="Termos preview"
+               alt="{{ t('termos.preview.alt') }}"
                class="w-full h-44 object-contain p-4">
         </div>
 
         <!-- colors -->
         <div>
           <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">🎨 Culoare</h3>
-
+            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">{{ t('termos.color.title') }}</h3>
           </div>
           <div id="termos-colors" class="flex flex-wrap gap-3 mt-3"></div>
         </div>
 
         <!-- text + font + color -->
         <div class="space-y-3">
-          <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">🔤 Text pe termos</h3>
+          <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">{{ t('termos.text.title') }}</h3>
 
           <input id="termos-text"
                  type="text"
-                 value="NUMELE"
+                 value="{{ t('termos.text.default_value') }}"
                  class="w-full bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
                         border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
                         text-gray-800 dark:text-gray-100
                         focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300"
-                 placeholder="NUMELE" />
+                 placeholder="{{ t('termos.text.placeholder') }}" />
 
           <div class="flex items-center gap-4">
             <select id="font-selector-termos"
@@ -82,7 +81,7 @@
           </div>
 
           <p class="text-xs text-gray-500 dark:text-gray-400">
-            Textul apare automat pe termos (vertical) și rămâne deasupra imaginilor.
+            {{ t('termos.text.hint') }}
           </p>
         </div>
       </div>
@@ -91,7 +90,7 @@
       <input type="file" id="upload-termos" multiple accept="image/*" class="hidden"/>
       <label for="upload-termos"
              class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
-        <i class="fas fa-cloud-upload-alt mr-3"></i>Încarcă foto
+        <i class="fas fa-cloud-upload-alt mr-3"></i>{{ t('termos.upload') }}
       </label>
 
       <div id="thumbnails-container-termos" class="max-h-96 overflow-y-auto px-2">
@@ -99,7 +98,7 @@
       </div>
 
       <p class="text-xs text-gray-500 dark:text-gray-400">
-        Click pe miniatură → adaugă pe canvas.
+        {{ t('termos.thumbs.hint') }}
       </p>
     </aside>
 
@@ -118,7 +117,7 @@
       <div class="flex gap-6 w-full max-w-lg">
         <button id="clear-canvas-termos" data-action="clear"
                 class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold">
-          <i class="fas fa-trash mr-2"></i>Șterge tot
+          <i class="fas fa-trash mr-2"></i>{{ t('termos.actions.clear_all') }}
         </button>
       </div>
     </section>
@@ -126,41 +125,42 @@
     <!-- Правая панель цены -->
     <aside class="glass neumorphic rounded-3xl p-8 lg:w-80">
       <div class="text-center py-8 border-b border-gray-200 dark:border-white/10">
-        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Preț</p>
+        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">{{ t('termos.price.label') }}</p>
         <div class="text-6xl font-bold text-accent">
-          <span id="price-value-termos">380</span>
-          <span class="text-3xl text-gray-600 dark:text-gray-300">Lei</span>
+          <span id="price-value-termos">{{ t('termos.price.value') }}</span>
+          <span class="text-3xl text-gray-600 dark:text-gray-300">{{ t('termos.price.currency') }}</span>
         </div>
       </div>
 
       <button data-action="order" id="order-btn-termos"
               class="w-full bg-accent text-white py-6 rounded-2xl mt-8 font-bold text-xl hover:bg-indigo-700 transition shadow-lg">
-        Comandă acum →
+        {{ t('btn.order') }} →
       </button>
 
       <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-        <i class="fas fa-lock mr-1"></i>Fără plată în avans
+        <i class="fas fa-lock mr-1"></i>{{ t('termos.order.no_prepay') }}
       </p>
 
       <div class="grid grid-cols-2 gap-4 mt-8">
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-shipping-fast text-2xl text-blue-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Livrare 1-3 zile</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('termos.benefit.delivery') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-gem text-2xl text-purple-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Termos premium</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('termos.benefit.premium') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-paint-brush text-2xl text-orange-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Print UV</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('termos.benefit.print') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-temperature-low text-2xl text-green-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Păstrează cald/rece</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('termos.benefit.temp') }}</p>
         </div>
       </div>
     </aside>
+
   </div>
 </main>
 {% endblock %}
@@ -168,14 +168,14 @@
 {% block examples %}
 <section class="py-16 px-6 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-950">
   <div class="max-w-7xl mx-auto">
-    <h2 class="text-4xl font-bold text-center text-accent mb-12">✨ Exemple</h2>
+    <h2 class="text-4xl font-bold text-center text-accent mb-12">{{ t('termos.examples.title') }}</h2>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
       {% for i in range(1, 6) %}
       <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
         <img
           src="{{ request.url_for('static', path='assets/examples-termos/' ~ i ~ '.jpg') }}"
-          alt="Exemplu termos {{ i }}"
+          alt="{{ t('termos.examples.item_alt') }} {{ i }}"
           class="w-full h-44 object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
         />
@@ -184,20 +184,20 @@
       {% endfor %}
     </div>
 
-    <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">Și a tău va arăta la fel de bine ✨</p>
+    <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">{{ t('termos.examples.footer_line') }}</p>
   </div>
 </section>
 {% endblock %}
 
 {% block mobile_bar %}
 <div class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-white/10 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
-  <button data-action="clear" id="mobile-clear-termos" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
-  <button data-action="order" id="mobile-order-termos" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
+  <button data-action="clear" id="mobile-clear-termos" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">{{ t('termos.mobile.clear') }}</button>
+  <button data-action="order" id="mobile-order-termos" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">{{ t('btn.order') }}</button>
 </div>
 {% endblock %}
 
 {% block order_form_extra %}
-<textarea name="comment" placeholder="Comentariu (opțional)"
+<textarea name="comment" placeholder="{{ t('form.comment') }}"
           class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                  text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                  focus:ring-4 focus:ring-accent/30 focus:border-accent transition"></textarea>
@@ -207,4 +207,4 @@
 <script type="module" src="{{ request.url_for('static', path='js/termos/main.js') }}"></script>
 {% endblock %}
 
-{% block footer_subtitle %}Termosuri premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}
+{% block footer_subtitle %}{{ t('termos.footer.subtitle') | safe }}{% endblock %}

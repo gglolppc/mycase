@@ -134,7 +134,7 @@ export function init() {
 
     canvas.clear();
     canvas.add(defaultText);
-    state.currentOverlay = null;
+    state.currentOverlayObj = null;
 
     // вернуть корректный фон канваса после clear()
     const isDark = document.documentElement.classList.contains('dark');
@@ -239,7 +239,7 @@ export function init() {
   };
 
   const handleSave = async () => {
-    if (!DOM.modelSelect.value) return showToast('Alege modelul telefonului!', 'error');
+    if (!DOM.modelSelect.value) return showToast(window.__t('toast.choose_phone_model'), 'error');
 
     const dataURL = await exportCanvasPng(canvas, state, { outWidth: 420 });
 
@@ -251,12 +251,12 @@ export function init() {
 
   const handleOrder = () => {
       if (!state.currentOverlayObj) {
-        return showToast('Alege modelul telefonului mai întâi!', 'error');
+        return showToast(window.__t('toast.choose_phone_model_first'), 'error');
       }
 
       const objects = canvas.getObjects().filter((o) => o !== state.currentOverlayObj && o !== state.defaultText);
       if (objects.length === 0) {
-        return showToast('Adaugă o poză sau text pe husă!', 'error');
+        return showToast(window.__t('toast.add_photo_or_text_case'), 'error');
       }
 
       DOM.orderFormModal.classList.remove('hidden');
@@ -281,7 +281,7 @@ export function init() {
     DOM.thumbnails.innerHTML = '';
 
     state.uploadedFiles = [];
-    state.currentOverlay = null;
+    state.currentOverlayObj = null;
     state.selectedText = null;
 
     // фон темы после reset

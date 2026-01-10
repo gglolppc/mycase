@@ -332,7 +332,7 @@ export async function initThermos() {
     .forEach((btn) => btn.addEventListener('click', handleClear));
 
   const handleOrderOpen = () => {
-    if (!state.currentOverlay) return showToast('Alege termosul!', 'error');
+    if (!state.currentOverlay) return showToast(window.__t('toast.choose_thermos'), 'error');
     DOM.orderFormModal.classList.remove('hidden');
   };
 

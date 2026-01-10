@@ -4,7 +4,7 @@ import os
 from sqlalchemy.exc import IntegrityError, DataError
 import aiofiles
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from app.core.render import render
 from fastapi import  Request, Form, UploadFile, File, Depends, HTTPException, APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,8 +13,9 @@ from app.db.database import Order, get_session
 from app.models import OrderModel
 from typing import List
 
+from app.core.templates import templates
+
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
 
 UPLOAD_DIR = "uploads"
 
@@ -24,8 +25,11 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.get("/huse_personalizate", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("huse_personalizate.html", {"request": request})
-
+    return render(
+        request,
+        "huse_personalizate.html",
+        {}
+    )
 
 # === ЗАКАЗ ===
 @router.post("/order")

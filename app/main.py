@@ -18,7 +18,7 @@ from app.tg_bot.db.database import DbSessionMiddleware
 from app.tg_bot.handler import order, delete, start, info
 
 from app.admin.router import router as admin_router
-from app.routers import termos, huse_personalizate, designs, orders_ready
+from app.routers import termos, huse_personalizate, designs, orders_ready, router_i18n
 
 load_dotenv()
 
@@ -67,6 +67,7 @@ app.include_router(huse_personalizate.router)
 app.include_router(pages_router)
 app.include_router(designs.router)
 app.include_router(orders_ready.router)
+app.include_router(router_i18n.router)
 
 # --- WEBHOOK ---
 webhook_router = APIRouter()

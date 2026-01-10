@@ -2,15 +2,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Huse personalizate cu poză în Chișinău | MYCASE</title>
+<title>{{ t('cases.meta.title') }}</title>
 {% endblock %}
 
 {% block meta %}
-<meta name="description" content="Creează husă unică cu poză, text sau logo. Calitate premium, livrare rapidă în Moldova." />
-<meta name="keywords" content="huse personalizate, husă cu poză, mycase, Chișinău, Moldova" />
+<meta name="description" content="{{ t('cases.meta.description') }}" />
+<meta name="keywords" content="{{ t('cases.meta.keywords') }}" />
 {% endblock %}
 
-{% block header_subtitle %}Huse premium la comandă{% endblock %}
+{% block header_subtitle %}{{ t('cases.header.subtitle') }}{% endblock %}
 
 {% block main %}
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
@@ -19,7 +19,7 @@
     <!-- Левая панель -->
     <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96">
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">📱 Alege modelul</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ t('cases.left.title') }}</h2>
 
         <div class="relative">
           <select id="brand-select"
@@ -27,14 +27,14 @@
                    border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
                    text-gray-800 dark:text-gray-100
                    focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">Alege brandul</option>
-            <option value="apple">Apple</option>
-            <option value="samsungs">Samsung S</option>
-            <option value="samsunga">Samsung A</option>
-            <option value="samsungm">Samsung M</option>
-            <option value="redmi">Redmi</option>
-            <option value="oppo">Oppo</option>
-            <option value="poco">Poco</option>
+            <option value="">{{ t('cases.select.brand.placeholder') }}</option>
+            <option value="apple">{{ t('cases.brand.apple') }}</option>
+            <option value="samsungs">{{ t('cases.brand.samsung_s') }}</option>
+            <option value="samsunga">{{ t('cases.brand.samsung_a') }}</option>
+            <option value="samsungm">{{ t('cases.brand.samsung_m') }}</option>
+            <option value="redmi">{{ t('cases.brand.redmi') }}</option>
+            <option value="oppo">{{ t('cases.brand.oppo') }}</option>
+            <option value="poco">{{ t('cases.brand.poco') }}</option>
           </select>
           <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
@@ -47,7 +47,7 @@
                    border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
                    text-gray-800 dark:text-gray-100
                    focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">Alege modelul</option>
+            <option value="">{{ t('cases.select.model.placeholder') }}</option>
           </select>
           <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
             <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
@@ -57,31 +57,32 @@
 
       <input type="file" id="upload" multiple accept="image/*" class="hidden"/>
       <label for="upload" class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
-        <i class="fas fa-cloud-upload-alt mr-3"></i>Încarcă foto
+        <i class="fas fa-cloud-upload-alt mr-3"></i>{{ t('cases.upload') }}
       </label>
 
       <div id="thumbnails-container" class="max-h-96 overflow-y-auto px-2">
         <div id="thumbnails" class="grid grid-cols-3 gap-4"></div>
       </div>
-        <button id="add-text" class="w-full neumorphic-btn py-4 rounded-2xl flex items-center justify-center gap-3 text-blue-600 font-bold mb-4">
-            <i class="fas fa-plus-circle"></i> Adaugă Text
-        </button>
 
-        <div id="text-style-panel" class="hidden space-y-4 p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-white/5 mb-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Font</label>
-                <select id="font-selector" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl p-2 text-sm">
-                    <option value="Poppins, sans-serif">Poppins</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Courier New">Courier</option>
-                    <option value="Pacifico, cursive">Pacifico</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Culoare</label>
-                <input type="color" id="color-picker" class="w-full h-10 rounded-lg cursor-pointer bg-transparent">
-            </div>
+      <button id="add-text" class="w-full neumorphic-btn py-4 rounded-2xl flex items-center justify-center gap-3 text-blue-600 font-bold mb-4">
+        <i class="fas fa-plus-circle"></i> {{ t('cases.text.add') }}
+      </button>
+
+      <div id="text-style-panel" class="hidden space-y-4 p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-white/5 mb-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">{{ t('cases.text.font') }}</label>
+          <select id="font-selector" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl p-2 text-sm">
+            <option value="Poppins, sans-serif">{{ t('cases.text.font.poppins') }}</option>
+            <option value="Arial">{{ t('cases.text.font.arial') }}</option>
+            <option value="Courier New">{{ t('cases.text.font.courier') }}</option>
+            <option value="Pacifico, cursive">{{ t('cases.text.font.pacifico') }}</option>
+          </select>
         </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">{{ t('cases.text.color') }}</label>
+          <input type="color" id="color-picker" class="w-full h-10 rounded-lg cursor-pointer bg-transparent">
+        </div>
+      </div>
     </aside>
 
     <!-- Центральный canvas -->
@@ -99,11 +100,11 @@
 
       <div class="flex gap-6 w-full max-w-lg">
         <button id="clear-canvas" data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold">
-          <i class="fas fa-trash mr-2"></i>Șterge tot
+          <i class="fas fa-trash mr-2"></i>{{ t('cases.actions.clear_all') }}
         </button>
 
         <button id="save" data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition">
-          <i class="fas fa-download mr-2"></i>Salvează PNG
+          <i class="fas fa-download mr-2"></i>{{ t('cases.actions.save_png') }}
         </button>
       </div>
     </section>
@@ -111,44 +112,50 @@
     <!-- Правая панель цены -->
     <aside class="glass neumorphic rounded-3xl p-8 lg:w-80">
       <div class="text-center py-8 border-b border-gray-200 dark:border-white/10">
-        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Preț</p>
-        <div class="text-6xl font-bold text-accent">200 <span class="text-3xl text-gray-600 dark:text-gray-300">MDL</span></div>
+        <p class="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">{{ t('cases.price.label') }}</p>
+        <div class="text-6xl font-bold text-accent">
+          {{ t('cases.price.value') }}
+          <span class="text-3xl text-gray-600 dark:text-gray-300">{{ t('cases.price.currency') }}</span>
+        </div>
       </div>
 
       <button id="order-btn" class="w-full bg-accent text-white py-6 rounded-2xl mt-8 font-bold text-xl hover:bg-indigo-700 transition shadow-lg">
-        Comandă acum →
+        {{ t('btn.order') }} {{ t('cases.order.now') }} →
       </button>
 
-      <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4"><i class="fas fa-lock mr-1"></i>Fără plată în avans</p>
+      <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+        <i class="fas fa-lock mr-1"></i>{{ t('cases.order.no_prepay') }}
+      </p>
 
       <div class="grid grid-cols-2 gap-4 mt-8">
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-shipping-fast text-2xl text-blue-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Livrare 1-3 zile de la 50 lei</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('cases.benefit.delivery') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-store text-2xl text-green-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Preluare gratuit</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('cases.benefit.pickup') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-gem text-2xl text-purple-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Silicon Premium</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('cases.benefit.material') }}</p>
         </div>
         <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-xl p-4 text-center">
           <i class="fas fa-paint-brush text-2xl text-orange-500 mb-2"></i>
-          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">Print UV Garanție</p>
+          <p class="text-xs font-bold text-gray-800 dark:text-gray-100">{{ t('cases.benefit.print') }}</p>
         </div>
       </div>
     </aside>
+
   </div>
 </main>
 {% endblock %}
 
 {% block mobile_bar %}
 <div class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-white/10 p-4 flex gap-4 lg:hidden z-50 shadow-2xl">
-  <button data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">Șterge</button>
-  <button data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Salvează</button>
-  <button data-action="order" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">Comandă</button>
+  <button data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-medium">{{ t('cases.mobile.clear') }}</button>
+  <button data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">{{ t('cases.mobile.save') }}</button>
+  <button data-action="order" class="flex-1 bg-accent text-white py-4 rounded-2xl font-medium">{{ t('btn.order') }}</button>
 </div>
 {% endblock %}
 
@@ -156,4 +163,4 @@
 <script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
 {% endblock %}
 
-{% block footer_subtitle %}Huse premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}
+{% block footer_subtitle %}{{ t('cases.footer.subtitle') | safe }}{% endblock %}

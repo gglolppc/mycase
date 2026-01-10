@@ -5,10 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
 from app.db.database import get_async_session, Designs
-from fastapi.templating import Jinja2Templates
+from app.core.templates import templates
+from app.core.render import render
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/designuri", include_in_schema=False)
 async def designs_list(
@@ -63,15 +63,15 @@ async def designs_list(
     stmt = stmt.order_by(Designs.created_at.desc(), Designs.id.desc())
     items = (await session.execute(stmt)).scalars().all()
 
-    return templates.TemplateResponse(
+    return render(
+        request,
         "designs_list.html",
         {
-            "request": request,
             "items": items,
             "categories": categories,
-            "brands": brands,                 # <-- добавили
+            "brands": brands,
             "active_category": category,
-            "active_brand": active_brand,     # <-- добавили
+            "active_brand": active_brand,
         },
     )
 
@@ -97,10 +97,10 @@ async def design_detail(
             status_code=404,
         )
 
-    return templates.TemplateResponse(
+    return render(
+        request,
         "design_detail.html",
         {
-            "request": request,
             "design": design,
         },
     )

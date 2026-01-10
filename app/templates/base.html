@@ -1,14 +1,14 @@
 <!-- base.html -->
 <!DOCTYPE html>
-<html lang="ro" class="scroll-smooth">
+<html lang="{{ lang }}" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   {% block title %}<title>MYCASE</title>{% endblock %}
   {% block meta %}
-  <meta name="description" content="Creează produse personalizate. Calitate premium, livrare rapidă în Moldova." />
-  <meta name="keywords" content="personalizat, mycase, Chișinău, Moldova" />
+    <meta name="description" content="{{ t('meta.description.default') }}" />
+    <meta name="keywords" content="{{ t('meta.keywords.default') }}" />
   {% endblock %}
 
   <!-- Theme init BEFORE paint (no flash) -->
@@ -41,13 +41,17 @@
 
   <link rel="stylesheet" href="{{ request.url_for('static', path='css/output.css') }}">
 
-
   <script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/fabric.min.js"></script>
   <script>const STATIC_BASE = "{{ request.url_for('static', path='') }}";</script>
 
-
-
   {% block extra_styles %}{% endblock %}
+
+  <!-- i18n (must be available before module scripts) -->
+  <script id="i18n-data" type="application/json">{{ i18n|tojson }}</script>
+  <script>
+    window.__I18N = JSON.parse(document.getElementById('i18n-data').textContent);
+    window.__t = (k) => (window.__I18N && window.__I18N.dict && window.__I18N.dict[k]) ? window.__I18N.dict[k] : k;
+  </script>
 </head>
 
 <body class="bg-bg-light text-gray-800 dark:bg-gray-950 dark:text-gray-100 min-h-screen flex flex-col">
@@ -55,163 +59,178 @@
   {% set p = request.url.path %}
 
   <!-- Header -->
-<header class="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-3 sm:py-5 sticky top-0 z-50 border-b border-gray-100 dark:border-white/10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-3">
+  <header class="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md shadow-sm py-3 sm:py-5 sticky top-0 z-50 border-b border-gray-100 dark:border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-3">
 
-    <!-- Left: logo -->
-    <div class="flex items-center gap-3 sm:gap-8 min-w-0">
-      <a href="/" class="flex items-center gap-3 sm:gap-4 group shrink-0">
-        <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE"
-             class="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-md group-hover:scale-105 transition-transform"/>
-        <div class="hidden sm:block">
-          <h1 class="text-2xl font-bold text-accent">MYCASE</h1>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
-            {% block header_subtitle %}Produse premium la comandă{% endblock %}
-          </p>
-        </div>
-      </a>
-
-      <!-- Desktop nav -->
-      <nav class="hidden sm:flex items-center gap-6">
-        <a href="/huse_personalizate"
-           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-           {% if p.startswith('/huse_personalizate') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
-          Huse personalizate
+      <!-- Left: logo -->
+      <div class="flex items-center gap-3 sm:gap-8 min-w-0">
+        <a href="/" class="flex items-center gap-3 sm:gap-4 group shrink-0">
+          <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE"
+               class="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-md group-hover:scale-105 transition-transform"/>
+          <div class="hidden sm:block">
+            <h1 class="text-2xl font-bold text-accent">MYCASE</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {% block header_subtitle %}{{ t('header.subtitle') }}{% endblock %}
+            </p>
+          </div>
         </a>
 
-        <a href="/termos"
-           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-           {% if p.startswith('/termos') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
-          Termosuri personalizate
-        </a>
-
-        <a href="/designuri"
-           class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
-           {% if p.startswith('/designuri') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
-          Designurile noastre
-        </a>
-      </nav>
-    </div>
-
-    <!-- Right: actions -->
-    <div class="flex items-center gap-3 sm:gap-4 shrink-0">
-
-      <!-- Mobile burger -->
-      <button
-        id="mobile-menu-btn"
-        class="sm:hidden neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center justify-center"
-        type="button"
-        aria-label="Open menu"
-        aria-expanded="false"
-      >
-        <i id="mobile-menu-icon" class="fas fa-bars"></i>
-      </button>
-
-      <button
-        id="theme-toggle"
-        class="neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2"
-        type="button"
-        aria-label="Toggle theme"
-        title="Theme"
-      >
-        <i id="theme-icon" class="fas fa-moon"></i>
-      </button>
-
-      <div class="hidden sm:flex items-center gap-4">
-        <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-          <i class="fab fa-telegram text-xl"></i>
-        </a>
-        <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-          <i class="fab fa-viber text-xl"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile dropdown -->
-  <div id="mobile-menu-overlay" class="sm:hidden fixed inset-0 bg-black/40 hidden z-40"></div>
-
-  <div id="mobile-menu" class="sm:hidden hidden relative z-50">
-    <div class="px-4 pb-4">
-      <div class="glass rounded-3xl p-4 border border-white/30 dark:border-white/10 shadow-xl">
-        <div class="flex flex-col gap-2">
+        <!-- Desktop nav -->
+        <nav class="hidden sm:flex items-center gap-6">
           <a href="/huse_personalizate"
-             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
-             {% if p.startswith('/huse_personalizate') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
-            Huse personalizate
+             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+             {% if p.startswith('/huse_personalizate') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+            {{ t('nav.cases') }}
           </a>
 
           <a href="/termos"
-             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
-             {% if p.startswith('/termos') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
-            Termosuri personalizate
+             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+             {% if p.startswith('/termos') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+            {{ t('nav.thermos') }}
           </a>
 
           <a href="/designuri"
-             class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
-             {% if p.startswith('/designuri') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
-            Designurile noastre
+             class="text-sm font-bold uppercase tracking-wide hover:text-accent transition-colors
+             {% if p.startswith('/designuri') %}text-accent border-b-2 border-accent{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+            {{ t('nav.designs') }}
           </a>
+        </nav>
+      </div>
 
-          <div class="h-px bg-gray-200/70 dark:bg-white/10 my-2"></div>
+      <!-- Right: actions -->
+      <div class="flex items-center gap-3 sm:gap-4 shrink-0">
 
-          <div class="flex items-center gap-4 px-2">
-            <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-              <i class="fab fa-telegram text-2xl"></i>
+        <!-- Mobile burger -->
+        <button
+          id="mobile-menu-btn"
+          class="sm:hidden neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center justify-center"
+          type="button"
+          aria-label="{{ t('btn.menu.open') }}"
+          aria-expanded="false"
+          title="{{ t('btn.menu.open') }}"
+        >
+          <i id="mobile-menu-icon" class="fas fa-bars"></i>
+        </button>
+
+        <button
+          id="theme-toggle"
+          class="neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2"
+          type="button"
+          aria-label="{{ t('btn.theme') }}"
+          title="{{ t('btn.theme') }}"
+        >
+          <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
+
+        <!-- Language -->
+        <details class="relative">
+          <summary class="list-none cursor-pointer neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2" title="{{ t('btn.language') }}">
+            <i class="fas fa-language"></i>
+            <span class="text-sm">{{ lang|upper }}</span>
+          </summary>
+          <div class="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-900 border border-gray-100 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden">
+            <a href="/set-lang/ro?next={{ request.url.path }}" class="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 {% if lang=='ro' %}text-accent font-semibold{% endif %}">{{ t('lang.ro') }}</a>
+            <a href="/set-lang/ru?next={{ request.url.path }}" class="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 {% if lang=='ru' %}text-accent font-semibold{% endif %}">{{ t('lang.ru') }}</a>
+          </div>
+        </details>
+
+        <div class="hidden sm:flex items-center gap-4">
+          <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition" aria-label="{{ t('contact.telegram') }}" title="{{ t('contact.telegram') }}">
+            <i class="fab fa-telegram text-xl"></i>
+          </a>
+          <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition" aria-label="{{ t('contact.viber') }}" title="{{ t('contact.viber') }}">
+            <i class="fab fa-viber text-xl"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobile-menu-overlay" class="sm:hidden fixed inset-0 bg-black/40 hidden z-40" aria-label="{{ t('btn.menu.overlay') }}"></div>
+
+    <div id="mobile-menu" class="sm:hidden hidden relative z-50">
+      <div class="px-4 pb-4">
+        <div class="glass rounded-3xl p-4 border border-white/30 dark:border-white/10 shadow-xl">
+          <div class="flex flex-col gap-2">
+            <a href="/huse_personalizate"
+               class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+               {% if p.startswith('/huse_personalizate') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
+              {{ t('nav.cases') }}
             </a>
-            <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-              <i class="fab fa-viber text-2xl"></i>
+
+            <a href="/termos"
+               class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+               {% if p.startswith('/termos') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
+              {{ t('nav.thermos') }}
             </a>
-            <a href="tel:+373 69 214 888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
-              <i class="fas fa-phone text-2xl"></i>
+
+            <a href="/designuri"
+               class="px-4 py-3 rounded-2xl font-bold uppercase tracking-wide hover:bg-black/5 dark:hover:bg-white/5 transition
+               {% if p.startswith('/designuri') %}text-accent{% else %}text-gray-700 dark:text-gray-200{% endif %}">
+              {{ t('nav.designs') }}
             </a>
+
+            <div class="h-px bg-gray-200/70 dark:bg-white/10 my-2"></div>
+
+            <div class="flex items-center gap-4 px-2">
+              <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition" aria-label="{{ t('contact.telegram') }}" title="{{ t('contact.telegram') }}">
+                <i class="fab fa-telegram text-2xl"></i>
+              </a>
+              <a href="viber://chat?number=%2B37369214888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition" aria-label="{{ t('contact.viber') }}" title="{{ t('contact.viber') }}">
+                <i class="fab fa-viber text-2xl"></i>
+              </a>
+              <a href="tel:+373 69 214 888" class="text-gray-700 dark:text-gray-200 hover:text-accent transition" aria-label="{{ t('contact.phone') }}" title="{{ t('contact.phone') }}">
+                <i class="fas fa-phone text-2xl"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</header>
-
+  </header>
 
   {% block main %}{% endblock %}
 
   {% block examples %}
   <section class="py-16 px-6 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-950">
     <div class="max-w-7xl mx-auto">
-      <h2 class="text-4xl font-bold text-center text-accent mb-12">✨ Exemplele lucrărilor noastre</h2>
+      <h2 class="text-4xl font-bold text-center text-accent mb-12">{{ t('examples.title') }}</h2>
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {% for i in range(1, 6) %}
         <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
           <img src="{{ request.url_for('static', path='assets/examples/' ~ i ~ '.jpg') }}"
-               alt="Exemplu personalizat"
+               alt="{{ t('examples.alt') }}"
                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         </div>
         {% endfor %}
       </div>
 
-      <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">Și a ta va fi la fel de frumoasă ✨</p>
+      <p class="text-center text-gray-600 dark:text-gray-300 mt-10 text-lg">{{ t('examples.note') }}</p>
     </div>
   </section>
   {% endblock %}
 
   {% block mobile_bar %}{% endblock %}
 
-  <!-- Модальное окно заказа -->
+  <!-- Order modal -->
   <div id="order-form" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center hidden z-50 transition-all duration-300">
     <div class="bg-white dark:bg-gray-900 rounded-3xl p-10 max-w-md w-full mx-6 shadow-2xl border border-gray-100 dark:border-white/10">
-      <h2 class="text-3xl font-bold text-accent mb-8 text-center">Finalizare comandă</h2>
+      <h2 class="text-3xl font-bold text-accent mb-8 text-center">{{ t('order.title') }}</h2>
+
       <form id="order-form-el" class="space-y-6">
-        <input type="text" name="name" placeholder="Numele tău" required
+        <input type="text" name="name" placeholder="{{ t('order.name.placeholder') }}" required
                class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                       text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                       focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
-        <input type="text" name="phone" placeholder="Telefon" required
+
+        <input type="text" name="phone" placeholder="{{ t('order.phone.placeholder') }}" required
                class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                       text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                       focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
-        <input type="text" name="address" placeholder="Adresa de livrare" required
+
+        <input type="text" name="address" placeholder="{{ t('order.address.placeholder') }}" required
                class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                       text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                       focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
@@ -221,18 +240,18 @@
         <div class="flex justify-end gap-4 mt-10">
           <button type="button" id="cancel-order"
                   class="px-8 py-4 rounded-2xl border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-100 font-semibold hover:bg-gray-100 dark:hover:bg-white/5 transition">
-            Anulare
+            {{ t('order.cancel') }}
           </button>
 
           <button type="submit" id="submit-order-btn"
                   class="relative px-10 py-4 rounded-2xl bg-accent text-white font-bold hover:bg-indigo-700 transition shadow-lg w-full">
-            <span id="submit-text">Comandă acum</span>
+            <span id="submit-text">{{ t('order.submit') }}</span>
             <span id="loading-text" class="hidden flex items-center justify-center">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Se trimite ordine...
+              {{ t('order.sending') }}
             </span>
           </button>
         </div>
@@ -242,7 +261,7 @@
 
   <!-- Toast -->
   <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 px-8 py-4 rounded-2xl shadow-2xl border-t-4 border-green-500 opacity-0 pointer-events-none transition-opacity duration-300 z-50 font-bold">
-    Comandă primită! Te vom contacta în curând 📞
+    {{ t('toast.order_received') }}
   </div>
 
   {% block scripts %}{% endblock %}
@@ -251,38 +270,42 @@
   <footer class="bg-white/70 dark:bg-gray-900/60 backdrop-blur-md border-t border-gray-200 dark:border-white/10 mt-20">
     <div class="max-w-7xl mx-auto px-6 py-10">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+
         <div class="flex flex-col items-center md:items-start">
           <div class="flex items-center gap-3 mb-4">
             <img src="{{ request.url_for('static', path='assets/logo.png') }}" alt="MYCASE" class="w-10 h-10 rounded-full shadow-md"/>
             <h3 class="text-2xl font-bold text-accent">MYCASE</h3>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300">{% block footer_subtitle %}Produse premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            {% block footer_subtitle %}{{ t('footer.subtitle') }}{% endblock %}
+          </p>
         </div>
 
         <div class="space-y-3">
-          <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Contact</p>
+          <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">{{ t('footer.contact.title') }}</p>
           <div class="space-y-2 text-gray-600 dark:text-gray-300">
             <p class="flex items-center justify-center md:justify-start gap-2">
-              <i class="fab fa-telegram text-accent"></i> @mycasemd
+              <i class="fab fa-telegram text-accent"></i> {{ t('footer.contact.telegram') }}
             </p>
             <p class="flex items-center justify-center md:justify-start gap-2">
-              <i class="fab fa-viber text-accent"></i> +373 69 214 888
+              <i class="fab fa-viber text-accent"></i> {{ t('footer.contact.viber') }}
             </p>
             <p class="flex items-center justify-center md:justify-start gap-2">
-              <i class="fas fa-map-marker-alt text-accent"></i> bd. Moscova 11, Rîșcani
+              <i class="fas fa-map-marker-alt text-accent"></i> {{ t('footer.contact.address') }}
             </p>
           </div>
         </div>
 
         <div class="space-y-3">
-          <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Info</p>
+          <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">{{ t('footer.info.title') }}</p>
           <div class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-            <p>Livrare în toată Moldova (de la 50 lei)</p>
-            <p>Plata la primire (ramburs)</p>
-            <p>Garanție calitate print UV</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">© 2025 MYCASE. Toate drepturile rezervate.</p>
+            <p>{{ t('footer.info.delivery') }}</p>
+            <p>{{ t('footer.info.payment') }}</p>
+            <p>{{ t('footer.info.warranty') }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">{{ t('footer.info.copyright') }}</p>
           </div>
         </div>
+
       </div>
     </div>
   </footer>
@@ -290,21 +313,32 @@
   <!-- Floating Contact Button -->
   <div id="floating-contact" class="fixed bottom-28 right-4 z-40 flex flex-col items-end gap-4">
     <div id="contact-buttons" class="flex flex-col items-end gap-3 opacity-0 scale-0 transition-all duration-300 origin-bottom-right">
-      <a href="https://t.me/mycasemd" target="_blank" class="bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <a href="https://t.me/mycasemd" target="_blank"
+         class="bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform"
+         aria-label="{{ t('contact.telegram') }}" title="{{ t('contact.telegram') }}">
         <i class="fab fa-telegram text-2xl"></i>
       </a>
-      <a href="viber://chat?number=%2B37369214888" class="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <a href="viber://chat?number=%2B37369214888"
+         class="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform"
+         aria-label="{{ t('contact.viber') }}" title="{{ t('contact.viber') }}">
         <i class="fab fa-viber text-2xl"></i>
       </a>
-      <a href="tel:+373 69 214 888" class="bg-green-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <a href="tel:+373 69 214 888"
+         class="bg-green-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform"
+         aria-label="{{ t('contact.phone') }}" title="{{ t('contact.phone') }}">
         <i class="fas fa-phone text-2xl"></i>
       </a>
-      <button onclick="document.querySelector('footer').scrollIntoView({behavior: 'smooth'})" class="bg-accent text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform">
+      <button onclick="document.querySelector('footer').scrollIntoView({behavior: 'smooth'})"
+              class="bg-accent text-white p-4 rounded-full shadow-2xl hover:scale-110 transition transform"
+              aria-label="{{ t('btn.scroll_to_footer') }}" title="{{ t('btn.scroll_to_footer') }}">
         <i class="fas fa-arrow-down text-2xl"></i>
       </button>
     </div>
 
-    <button id="toggle-contact" class="bg-accent text-white p-5 rounded-full shadow-2xl hover:scale-110 transition transform pulse-animation">
+    <button id="toggle-contact"
+            class="bg-accent text-white p-5 rounded-full shadow-2xl hover:scale-110 transition transform pulse-animation"
+            aria-label="{{ t('btn.contact.open') }}"
+            title="{{ t('btn.contact.open') }}">
       <i id="toggle-icon" class="fas fa-comment-dots text-3xl"></i>
     </button>
   </div>
@@ -312,7 +346,6 @@
   <style>
     #phone-canvas, #canvas-container, canvas { touch-action: none; }
     body { overflow-x: hidden; }
-
     .pulse-animation { animation: pulse 2s infinite; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
@@ -342,46 +375,49 @@
         toggleIcon.classList.toggle('fa-times', closed);
       });
     }
-      (function () {
-    const btn = document.getElementById('mobile-menu-btn');
-    const icon = document.getElementById('mobile-menu-icon');
-    const menu = document.getElementById('mobile-menu');
-    const overlay = document.getElementById('mobile-menu-overlay');
 
-    if (!btn || !menu || !overlay || !icon) return;
+    (function () {
+      const btn = document.getElementById('mobile-menu-btn');
+      const icon = document.getElementById('mobile-menu-icon');
+      const menu = document.getElementById('mobile-menu');
+      const overlay = document.getElementById('mobile-menu-overlay');
 
-    function openMenu() {
-      menu.classList.remove('hidden');
-      overlay.classList.remove('hidden');
-      btn.setAttribute('aria-expanded', 'true');
-      icon.classList.remove('fa-bars');
-      icon.classList.add('fa-times');
-    }
+      if (!btn || !menu || !overlay || !icon) return;
 
-    function closeMenu() {
-      menu.classList.add('hidden');
-      overlay.classList.add('hidden');
-      btn.setAttribute('aria-expanded', 'false');
-      icon.classList.add('fa-bars');
-      icon.classList.remove('fa-times');
-    }
+      function openMenu() {
+        menu.classList.remove('hidden');
+        overlay.classList.remove('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+        btn.setAttribute('aria-label', "{{ t('btn.menu.close') }}");
+        btn.setAttribute('title', "{{ t('btn.menu.close') }}");
+      }
 
-    function toggleMenu() {
-      const isOpen = !menu.classList.contains('hidden');
-      isOpen ? closeMenu() : openMenu();
-    }
+      function closeMenu() {
+        menu.classList.add('hidden');
+        overlay.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+        btn.setAttribute('aria-label', "{{ t('btn.menu.open') }}");
+        btn.setAttribute('title', "{{ t('btn.menu.open') }}");
+      }
 
-    btn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', closeMenu);
+      function toggleMenu() {
+        const isOpen = !menu.classList.contains('hidden');
+        isOpen ? closeMenu() : openMenu();
+      }
 
-    // Закрывать по Esc
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMenu();
-    });
+      btn.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', closeMenu);
 
-    // Закрывать после клика по ссылке
-    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-  })();
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+      });
+
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    })();
   </script>
 
 </body>

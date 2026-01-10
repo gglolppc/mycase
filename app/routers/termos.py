@@ -12,9 +12,9 @@ from app.bot import send_order_to_telegram
 from app.db.database import Order, get_session
 from app.models import OrderModel
 from typing import List
-
+from app.core.templates import templates
+from app.core.render import render
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
 
 UPLOAD_DIR = "uploads"
 
@@ -24,7 +24,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.get("/termos", response_class=HTMLResponse)
 async def termos_page(request: Request):
-    return templates.TemplateResponse("termos.html", {"request": request})
+    return render(request,
+                  "termos.html", {})
 
 
 @router.post("/order-termos")

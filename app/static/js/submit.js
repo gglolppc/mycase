@@ -9,7 +9,7 @@ export function setupOrderForm({ DOM, state, canvas, showToast, exportCanvasPng,
     e.preventDefault();
 
     if (!state.currentOverlayObj) {
-      showToast('Creează designul mai întâi!', 'error');
+      showToast(window.__t('toast.create_first'), 'error');
       return;
     }
 
@@ -38,14 +38,14 @@ export function setupOrderForm({ DOM, state, canvas, showToast, exportCanvasPng,
       const res = await fetch('/order', { method: 'POST', body: formData });
 
       if (res.ok) {
-        showToast('Comandă primită! Te vom contacta în curând 📞', 'success');
+        showToast(window.__t('toast.order_received'), 'success');
         resetApp();
       } else {
-        showToast('Eroare la trimitere. Încearcă din nou.', 'error');
+        showToast(window.__t('toast.send_error'), 'error');
       }
     } catch (err) {
       console.error(err);
-      showToast('Eroare rețea. Verifică conexiunea.', 'error');
+      showToast(window.__t('toast.network_error'), 'error');
     } finally {
       submitBtn.disabled = false;
       submitText.classList.remove('hidden');

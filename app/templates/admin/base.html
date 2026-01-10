@@ -1,6 +1,6 @@
 <!-- base.html -->
 <!DOCTYPE html>
-<html lang="ro" class="scroll-smooth">
+<html lang="{{ lang }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -19,7 +19,14 @@
     </script>
     <link rel="stylesheet" href="{{ request.url_for('static', path='css/output.css') }}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <!-- i18n -->
+    <script id="i18n-data" type="application/json">{{ i18n|tojson }}</script>
+    <script>
+      window.__I18N = JSON.parse(document.getElementById('i18n-data').textContent);
+      window.__t = (k) => (window.__I18N && window.__I18N.dict && window.__I18N.dict[k]) ? window.__I18N.dict[k] : k;
+    </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
     {% block extra_fonts %}{% endblock %}
@@ -66,10 +73,22 @@
           class="neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2"
           type="button"
           aria-label="Toggle theme"
-          title="Theme"
+          title="{{ t('btn.theme') }}"
         >
           <i id="theme-icon" class="fas fa-moon"></i>
         </button>
+    <!-- Language -->
+    <details class="relative">
+      <summary class="list-none cursor-pointer neumorphic-btn px-4 py-3 rounded-2xl font-semibold flex items-center gap-2" title="{{ t('btn.language') }}">
+        <i class="fas fa-language"></i>
+        <span class="text-sm">{{ lang|upper }}</span>
+      </summary>
+      <div class="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-900 border border-gray-100 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden">
+        <a href="/set-lang/ro?next={{ request.url.path }}" class="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 {% if lang=='ro' %}text-accent font-semibold{% endif %}">{{ t('lang.ro') }}</a>
+        <a href="/set-lang/ru?next={{ request.url.path }}" class="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 {% if lang=='ru' %}text-accent font-semibold{% endif %}">{{ t('lang.ru') }}</a>
+      </div>
+    </details>
+
 
         <div class="hidden sm:flex items-center gap-4">
           <a href="https://t.me/mycasemd" class="text-gray-700 dark:text-gray-200 hover:text-accent transition">
@@ -136,11 +155,11 @@
     <div class="bg-white dark:bg-gray-900 rounded-3xl p-10 max-w-md w-full mx-6 shadow-2xl border border-gray-100 dark:border-white/10">
       <h2 class="text-3xl font-bold text-accent mb-8 text-center">Finalizare comandă</h2>
       <form id="order-form-el" class="space-y-6">
-        <input type="text" name="name" placeholder="Numele tău" required
+        <input type="text" name="name" placeholder="{{ t('form.name') }}le tău" required
                class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                       text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                       focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
-        <input type="text" name="phone" placeholder="Telefon" required
+        <input type="text" name="phone" placeholder="{{ t('form.phone') }}" required
                class="w-full p-5 rounded-2xl border border-gray-300 dark:border-white/10 bg-gray-50 dark:bg-gray-950/40
                       text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                       focus:ring-4 focus:ring-accent/30 focus:border-accent transition" />
@@ -159,7 +178,7 @@
 
           <button type="submit" id="submit-order-btn"
                   class="relative px-10 py-4 rounded-2xl bg-accent text-white font-bold hover:bg-indigo-700 transition shadow-lg w-full">
-            <span id="submit-text">Comandă acum</span>
+            <span id="submit-text">{{ t('btn.order') }} acum</span>
             <span id="loading-text" class="hidden flex items-center justify-center">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -175,7 +194,7 @@
 
   <!-- Toast -->
   <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 px-8 py-4 rounded-2xl shadow-2xl border-t-4 border-green-500 opacity-0 pointer-events-none transition-opacity duration-300 z-50 font-bold">
-    Comandă primită! Te vom contacta în curând 📞
+    {{ t('btn.order') }} primită! Te vom contacta în curând 📞
   </div>
 
   {% block scripts %}{% endblock %}

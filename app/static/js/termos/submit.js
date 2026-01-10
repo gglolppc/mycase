@@ -5,7 +5,7 @@ export function setupThermosOrderForm({ DOM, state, canvas, showToast, exportCan
     e.preventDefault();
 
     if (!state.currentOverlay) {
-      showToast('Alege termosul mai întâi!', 'error');
+      showToast(window.__t('toast.choose_thermos_first'), 'error');
       return;
     }
 
@@ -35,14 +35,14 @@ export function setupThermosOrderForm({ DOM, state, canvas, showToast, exportCan
       const res = await fetch('/order-termos', { method: 'POST', body: formData });
 
       if (res.ok) {
-        showToast('Comandă primită! 📦', 'success');
+        showToast(window.__t('toast.thermos_order_received'), 'success');
         resetApp();
       } else {
-        showToast('Eroare la trimitere. Încearcă din nou.', 'error');
+        showToast(window.__t('toast.send_error'), 'error');
       }
     } catch (err) {
       console.error(err);
-      showToast('Eroare rețea. Verifică internetul.', 'error');
+      showToast(window.__t('toast.network_error_internet'), 'error');
     } finally {
       DOM.submitOrderBtn.disabled = false;
       DOM.submitText.classList.remove('hidden');

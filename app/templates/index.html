@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>MYCASE — Huse premium personalizate în Moldova</title>
+<title>{{ t('home.meta.title') }}</title>
 {% endblock %}
 
 {% block meta %}
-<meta name="description" content="Huse premium personalizate în Moldova. Alege un design gata sau personalizează cu poză și text. Print UV, livrare rapidă." />
-<meta name="keywords" content="huse personalizate, husă cu poză, husă cu nume, designuri, mycase, Moldova, Chișinău" />
+<meta name="description" content="{{ t('home.meta.description') }}" />
+<meta name="keywords" content="{{ t('home.meta.keywords') }}" />
 {% endblock %}
 
-{% block header_subtitle %}Huse premium · Design curat · Print UV{% endblock %}
+{% block header_subtitle %}{{ t('home.header.subtitle') }}{% endblock %}
 
 {% block main %}
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
@@ -23,59 +23,57 @@
       <div class="space-y-6">
         <div class="inline-flex items-center gap-2 bg-white/60 dark:bg-gray-900/50 border border-white/30 dark:border-white/10 px-4 py-2 rounded-2xl">
           <i class="fas fa-gem text-accent"></i>
-          <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">Premium look, fără bătaie de cap</span>
+          <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ t('home.hero.badge') }}</span>
         </div>
 
         <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-          Huse personalizate cu un look
-          <span class="text-accent">premium</span>.
+          {{ t('home.hero.title_1') }}
+          <span class="text-accent">{{ t('home.hero.title_2') }}</span>.
         </h1>
 
-        <!-- micro vibe line (коротко и “вкусно”, не перегружает) -->
+        <!-- micro vibe line -->
         <p class="text-sm md:text-base text-gray-500 dark:text-gray-400 -mt-2">
-          Minimalist. Fără kitsch. Fără compromisuri.
+          {{ t('home.hero.micro') }}
         </p>
 
         <p class="text-lg text-gray-600 dark:text-gray-300 max-w-xl">
-          Alege un design gata (cu nume) sau creează al tău cu poză și text.
-          Print UV, culori puternice, și livrare rapidă în Moldova.
+          {{ t('home.hero.description') }}
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4">
-          <!-- IMPORTANT: пока ведем на твою текущую страницу конструктора -->
           <a href="/huse_personalizate"
              class="bg-accent text-white px-8 py-5 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-3">
-            <i class="fas fa-magic"></i> Personalizează (Constructor)
+            <i class="fas fa-magic"></i> {{ t('home.hero.btn_customize') }}
           </a>
 
           <a href="/designuri"
              class="neumorphic-btn px-8 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3">
-            <i class="fas fa-layer-group text-accent"></i> Vezi designurile
+            <i class="fas fa-layer-group text-accent"></i> {{ t('home.hero.btn_designs') }}
           </a>
         </div>
 
-        <!-- social proof (одна строка, без “маркетплейса”) -->
+        <!-- social proof -->
         <div class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
           <i class="fas fa-star text-accent"></i>
-          <span><b>+5 000</b> huse create în Moldova</span>
+          <span>{{ t('home.hero.social_proof') | safe }}</span>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
           <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
-            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Print</p>
-            <p class="font-extrabold text-gray-900 dark:text-white">UV</p>
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('home.hero.feature.print.label') }}</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.feature.print.value') }}</p>
           </div>
           <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
-            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Livrare</p>
-            <p class="font-extrabold text-gray-900 dark:text-white">1–3 zile</p>
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('home.hero.feature.delivery.label') }}</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.feature.delivery.value') }}</p>
           </div>
           <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
-            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Plată</p>
-            <p class="font-extrabold text-gray-900 dark:text-white">la primire</p>
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('home.hero.feature.payment.label') }}</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.feature.payment.value') }}</p>
           </div>
           <div class="bg-white/60 dark:bg-gray-900/60 border border-transparent dark:border-white/10 rounded-2xl p-4">
-            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Calitate</p>
-            <p class="font-extrabold text-gray-900 dark:text-white">Premium</p>
+            <p class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('home.hero.feature.quality.label') }}</p>
+            <p class="font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.feature.quality.value') }}</p>
           </div>
         </div>
       </div>
@@ -86,38 +84,31 @@
 
           <div class="rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-gray-900/40 relative">
 
-            <!-- overlay badge (дорого выглядит, не кричит) -->
             <div class="absolute top-4 right-4 z-20">
               <div class="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-accent/10 border border-accent/20 backdrop-blur-md">
                 <i class="fas fa-star text-accent"></i>
-                <span class="font-bold text-accent">Best seller</span>
+                <span class="font-bold text-accent">{{ t('home.hero.best_seller') }}</span>
               </div>
             </div>
 
-            <!-- 3D card wrapper -->
             <div class="hero-tilt aspect-[9/16] bg-cover bg-center flex items-center justify-center relative"
                  style="background-image: url('{{ request.url_for('static', path='assets/images/img.png') }}');">
 
-              <!-- soft vignette (делает предмет “дороже”) -->
               <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/25 pointer-events-none"></div>
 
               <div class="relative text-center px-8 z-10">
 
-
-                <!-- animated name + cursor -->
                 <p class="text-2xl font-extrabold text-white dark:text-white">
                   <span id="heroPreviewName" class="hero-name">Ivan3321</span><span class="hero-cursor">|</span>
                 </p>
 
-                <!-- contextual line -->
                 <p class="text-white dark:text-white mt-2">
-                  Limited Edition · <span class="font-semibold">Nume personalizat</span>
+                  {{ t('home.hero.limited') }} · <span class="font-semibold">{{ t('home.hero.custom_name') }}</span>
                 </p>
 
-                <!-- tiny “why premium” hint -->
                 <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/55 dark:bg-gray-900/45 border border-white/30 dark:border-white/10 backdrop-blur-md">
                   <i class="fas fa-lock text-accent"></i>
-                  <span class="text-sm font-semibold text-gray-800 dark:text-gray-100">Print UV · nu se șterge</span>
+                  <span class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ t('home.hero.uv_hint') }}</span>
                 </div>
               </div>
             </div>
@@ -125,12 +116,12 @@
 
           <div class="mt-5 flex gap-3">
             <div class="flex-1 bg-white/60 dark:bg-gray-900/60 rounded-2xl p-4 border border-transparent dark:border-white/10">
-              <p class="text-xs text-gray-500 dark:text-gray-400">De la</p>
-              <p class="text-xl font-extrabold text-gray-900 dark:text-white">200 MDL</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('home.hero.price_from') }}</p>
+              <p class="text-xl font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.price_value') }}</p>
             </div>
             <div class="flex-1 bg-white/60 dark:bg-gray-900/60 rounded-2xl p-4 border border-transparent dark:border-white/10">
-              <p class="text-xs text-gray-500 dark:text-gray-400">Nume</p>
-              <p class="text-xl font-extrabold text-gray-900 dark:text-white">inclus</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('home.hero.name_label') }}</p>
+              <p class="text-xl font-extrabold text-gray-900 dark:text-white">{{ t('home.hero.name_value') }}</p>
             </div>
           </div>
         </div>
@@ -139,73 +130,72 @@
     </div>
   </section>
 
-      <!-- DESIGNURI (каталог-тизер) -->
-    <section id="designuri" class="mt-14">
-      <div class="flex items-end justify-between gap-6 mb-8">
-        <div>
-          <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Designurile noastre</h2>
-          <p class="text-gray-600 dark:text-gray-300 mt-2">Alegi un design gata → introduci numele → alegi modelul → comandă.</p>
+  <!-- DESIGNURI -->
+  <section id="designuri" class="mt-14">
+    <div class="flex items-end justify-between gap-6 mb-8">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">{{ t('home.designs.title') }}</h2>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ t('home.designs.subtitle') }}</p>
+      </div>
+      <a href="/designuri" class="neumorphic-btn px-5 py-3 rounded-2xl font-semibold hidden sm:inline-flex items-center gap-2">
+        <i class="fas fa-layer-group text-accent"></i> {{ t('home.designs.view_all') }}
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for d in featured_designs %}
+      <div class="group glass neumorphic rounded-3xl p-6 border border-white/20 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-accent/15 text-accent border border-accent/20">
+            {{ d.price_mdl }} {{ t('home.currency.mdl') }}
+          </span>
+          <i class="fas fa-arrow-right text-gray-400 group-hover:text-accent transition"></i>
         </div>
-        <a href="/designuri" class="neumorphic-btn px-5 py-3 rounded-2xl font-semibold hidden sm:inline-flex items-center gap-2">
-          <i class="fas fa-layer-group text-accent"></i> Vezi toate
+
+        <a href="{{ request.url_for('design_detail', slug=d.slug) }}"
+           class="block rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-gray-900/40">
+          <div class="aspect-[4/5] bg-cover bg-center"
+               style="background-image: url('{{ d.image_url }}');">
+          </div>
+        </a>
+
+        <h3 class="mt-5 text-xl font-extrabold text-gray-900 dark:text-white line-clamp-2">
+          {{ d.title }}
+        </h3>
+
+        <a href="{{ request.url_for('design_detail', slug=d.slug) }}"
+           class="mt-5 inline-flex w-full items-center justify-center gap-2 bg-accent text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition">
+          {{ t('home.designs.view_details') }}
         </a>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {% for d in featured_designs %}
-        <div class="group glass neumorphic rounded-3xl p-6 border border-white/20 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-accent/15 text-accent border border-accent/20">
-              {{ d.price_mdl }} MDL
-            </span>
-            <i class="fas fa-arrow-right text-gray-400 group-hover:text-accent transition"></i>
-          </div>
-
-          <a href="{{ request.url_for('design_detail', slug=d.slug) }}"
-             class="block rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-gray-900/40">
-            <div class="aspect-[4/5] bg-cover bg-center"
-                 style="background-image: url('{{ d.image_url }}');">
-            </div>
-          </a>
-
-          <h3 class="mt-5 text-xl font-extrabold text-gray-900 dark:text-white line-clamp-2">
-            {{ d.title }}
-          </h3>
-
-          <a href="{{ request.url_for('design_detail', slug=d.slug) }}"
-             class="mt-5 inline-flex w-full items-center justify-center gap-2 bg-accent text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition">
-            Vezi detalii
-          </a>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-
+      {% endfor %}
+    </div>
+  </section>
 
   <!-- CUM FUNCTIONEAZA -->
   <section class="mt-14 glass neumorphic rounded-3xl p-8 md:p-10">
-    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Cum funcționează</h2>
+    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">{{ t('home.how.title') }}</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
         <i class="fas fa-layer-group text-2xl text-accent"></i>
-        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Alegi</p>
-        <p class="text-gray-600 dark:text-gray-300 mt-2">Design gata sau personalizare completă.</p>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">{{ t('home.how.step1.title') }}</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ t('home.how.step1.desc') }}</p>
       </div>
       <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
         <i class="fas fa-font text-2xl text-accent"></i>
-        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Introduci numele</p>
-        <p class="text-gray-600 dark:text-gray-300 mt-2">Simplu. Fără setări inutile.</p>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">{{ t('home.how.step2.title') }}</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ t('home.how.step2.desc') }}</p>
       </div>
       <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
         <i class="fas fa-mobile-screen text-2xl text-accent"></i>
-        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Alegi modelul</p>
-        <p class="text-gray-600 dark:text-gray-300 mt-2">Apple, Samsung, Redmi etc.</p>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">{{ t('home.how.step3.title') }}</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ t('home.how.step3.desc') }}</p>
       </div>
       <div class="bg-white/60 dark:bg-gray-900/60 rounded-3xl p-6 border border-transparent dark:border-white/10">
         <i class="fas fa-truck-fast text-2xl text-accent"></i>
-        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">Primești</p>
-        <p class="text-gray-600 dark:text-gray-300 mt-2">1–3 zile, plata la primire.</p>
+        <p class="mt-4 font-extrabold text-gray-900 dark:text-white">{{ t('home.how.step4.title') }}</p>
+        <p class="text-gray-600 dark:text-gray-300 mt-2">{{ t('home.how.step4.desc') }}</p>
       </div>
     </div>
   </section>
@@ -215,7 +205,6 @@
 
 {% block scripts %}
 <style>
-  /* 3D tilt + “предметность” */
   .hero-tilt {
     transform: perspective(1000px) rotateY(-6deg) rotateX(2deg);
     transition: transform .6s ease, filter .6s ease;
@@ -227,7 +216,6 @@
     filter: drop-shadow(0 40px 90px rgba(0,0,0,.30));
   }
 
-  /* cursor blink */
   .hero-cursor {
     display: inline-block;
     margin-left: 2px;
@@ -239,18 +227,10 @@
     25%, 75% { opacity: 0; }
   }
 
-  /* name fade */
-  .hero-name {
-    transition: opacity .28s ease;
-  }
-  .hero-name.is-fading {
-    opacity: 0;
-  }
+  .hero-name { transition: opacity .28s ease; }
+  .hero-name.is-fading { opacity: 0; }
 
-  /* badge subtle pulse (очень аккуратно) */
-  .hero-badge {
-    animation: heroBadge 2.6s ease-in-out infinite;
-  }
+  .hero-badge { animation: heroBadge 2.6s ease-in-out infinite; }
   @keyframes heroBadge {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-2px); }
@@ -262,7 +242,6 @@
     const el = document.getElementById('heroPreviewName');
     if (!el) return;
 
-    // подставь свои варианты — можно реальные имена из Молдовы + “Karim” :))
     const names = ['Alexandr', 'Andrei', 'Cristina', 'Ecaterina'];
     let i = 0;
 
@@ -278,4 +257,4 @@
 </script>
 {% endblock %}
 
-{% block footer_subtitle %}Huse premium personalizate<br>Chișinău · Moldova · 2025{% endblock %}
+{% block footer_subtitle %}{{ t('home.footer.subtitle') | safe }}{% endblock %}
