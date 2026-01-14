@@ -2,8 +2,8 @@
   "lang.ro": "RO",
   "lang.ru": "RU",
   "header.subtitle_default": "Премиум‑продукты на заказ",
-  "nav.cases": "Персонализированные чехлы",
-  "nav.thermos": "Персонализированные термосы",
+  "nav.cases": "Чехол с фото",
+  "nav.thermos": "Персональный термос",
   "nav.designs": "Наши дизайны",
   "nav.admin": "Админ",
   "mobile.menu": "Меню",
@@ -252,7 +252,7 @@
   "designs.ready_desc": "Готовый дизайн. Можно добавить имя (по желанию).",
   "designs.select_brand": "Выбери бренд",
   "designs.select_phone_model": "Выбери модель",
-  "designs.personal_text_placeholder": "Имя на чехле (необязательно)",
+  "designs.personal_text_placeholder": "Текст на чехле",
 
   "order.model_label": "Модель:",
 

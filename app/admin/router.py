@@ -15,7 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.database import get_async_session  # должна возвращать AsyncSession
 from app.db.database import Order, Designs  # твоя модель Order
 from app.core.render import render
-from app.core.templates import templates
+
+from app.core.limiter import limiter
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -44,6 +45,7 @@ async def admin_home(request: Request):
 
 
 @router.post("/login", include_in_schema=False)
+@limiter.limit("5/minute")
 async def admin_login(request: Request, password: str = Form(...)):
     if password != _admin_password():
         return render(request, "admin/admin_login.html", {"error": "Wrong password"})

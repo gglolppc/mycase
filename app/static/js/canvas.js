@@ -19,9 +19,9 @@ export function createCanvas() {
   });
 
   // дефолтный фон (светлая тема по умолчанию)
-  canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+  canvas.setBackgroundColor('#2f2f2f', canvas.renderAll.bind(canvas));
 
-  const defaultText = new fabric.Text('Alege modelul telefonului', {
+  const defaultText = new fabric.Text('Select model.', {
     left: BASE_W / 2,
     top: BASE_H / 2,
     originX: 'center',
@@ -38,10 +38,10 @@ export function createCanvas() {
 
 /**
  * Тема канваса: фон + дефолтный текст.
- * В dark — фон темно-серый (как ты просил).
+ * В dark — фон темно-серый
  */
 export function setCanvasTheme(canvas, state, isDark) {
-  const bg = isDark ? '#2f2f2f' : '#ffffff';
+  const bg = isDark ? '#2f2f2f' : '#2f2f2f';
   canvas.setBackgroundColor(bg, canvas.renderAll.bind(canvas));
 
   if (state?.defaultText) {

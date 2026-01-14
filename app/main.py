@@ -20,6 +20,11 @@ from app.tg_bot.handler import order, delete, start, info
 from app.admin.router import router as admin_router
 from app.routers import termos, huse_personalizate, designs, orders_ready, router_i18n
 
+from fastapi import FastAPI
+
+from slowapi.errors import RateLimitExceeded
+from app.core.limiter import limiter, custom_rate_limit_handler
+
 load_dotenv()
 
 # Настройка логирования
@@ -54,11 +59,16 @@ templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
+app.state.limiter = limiter # noqa
+# Добавляем обработчик ошибки "Too Many Requests" (429)
+app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
+
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SESSION_SECRET", "dev_only_change_me"),
-    same_site="lax",
-    https_only=True,   # если у тебя HTTPS (на проде да). Если пока нет — поставь False.
+    session_cookie="my_session", # лучше переименовать, чтобы не палить стандарт
+    same_site="lax",             # защита от CSRF
+    https_only=True,            # кука только через HTTPS
 )
 
 app.include_router(admin_router)
