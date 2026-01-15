@@ -155,7 +155,7 @@ export async function initThermos() {
 
   function updatePreviewThumb() {
     const size = currentSize();
-    DOM.termosPreview.src = `${STATIC_BASE}assets/termos-previews/${size}.png`;
+    DOM.termosPreview.src = `${STATIC_BASE}assets/termos-previews/${size}.webp`;
   }
 
   function renderColors() {

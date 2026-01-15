@@ -199,7 +199,7 @@
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {% for i in range(1, 6) %}
         <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-          <img src="{{ request.url_for('static', path='assets/examples/' ~ i ~ '.jpg') }}"
+          <img src="{{ request.url_for('static', path='assets/examples/' ~ i ~ '.webp') }}"
                alt="{{ t('examples.alt') }}"
                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
