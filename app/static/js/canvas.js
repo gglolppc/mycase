@@ -71,11 +71,18 @@ export function addImageToCanvas(canvas, dataURL) {
   fabric.Image.fromURL(
     dataURL,
     (img) => {
-      const scale = Math.min((canvas.width * 0.87) / img.width, (canvas.height * 0.85) / img.height);
-      img.scale(scale);
+      const scale = Math.max(
+      (canvas.width * 0.95) / img.width,
+      (canvas.height * 0.95) / img.height
+    );
+
+    img.scale(scale);
       img.set({
         left: canvas.width / 2,
         top: canvas.height / 2,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockUniScaling: true,
         originX: 'center',
         originY: 'center',
         selectable: true,
@@ -84,6 +91,12 @@ export function addImageToCanvas(canvas, dataURL) {
         cornerSize: 12,
         transparentCorners: false,
       });
+      img.setControlsVisibility({
+          tl: false, tr: false, bl: false, br: false,
+          ml: false, mt: false, mr: false, mb: false,
+          mtr: true, // rotate
+        });
+      img.myBaseScale = img.scaleX;
       addWithAnimation(canvas, img);
     },
     { crossOrigin: 'anonymous' },
@@ -141,7 +154,11 @@ export function setPhoneOverlay({ canvas, state, brand, model, STATIC_BASE }) {
       // держим макет самым верхним среди объектов
       img.moveTo(999999);
 
+
       state.currentOverlayObj = img;
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
+      canvas.fire('selection:cleared');
 
       canvas.requestRenderAll();
     },

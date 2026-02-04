@@ -1,7 +1,60 @@
 // static/js/controls.js
+const rotateImg = new Image();
+rotateImg.src = '/static/icons/rotate.png';
+
+fabric.Object.prototype.controls.mtr = new fabric.Control({
+  x: 0,
+  y: -0.5,
+  offsetY: -32,      // отодвигаем от объекта
+  cursorStyle: 'crosshair',
+
+  actionHandler: fabric.controlsUtils.rotationWithSnapping,
+
+  render: function (ctx, left, top, styleOverride, fabricObject) {
+    const size = 28;
+
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    ctx.drawImage(rotateImg, -size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
+});
 
 export function setupFabricControls(canvas, DOM, state) {
-  // ---------- DELETE CONTROL (X) ----------
+  if (!canvas) throw new Error('setupFabricControls: canvas is required');
+
+  fabric.Object.prototype.controls.mtr.withConnection = false;
+  fabric.Object.prototype.controls.mtr.cursorStyle = 'grab';
+  fabric.Object.prototype.controls.mtr.touchSizeX = 44;
+  fabric.Object.prototype.controls.mtr.touchSizeY = 44;
+
+  // ---------------- Helpers ----------------
+  const isTextObject = (obj) =>
+    !!obj && (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'text');
+
+  const getIsDark = () => document.documentElement.classList.contains('dark');
+
+  const syncUiFromSelectedText = () => {
+    const obj = canvas.getActiveObject();
+    if (!isTextObject(obj)) {
+      state.selectedText = null;
+      return;
+    }
+
+    state.selectedText = obj;
+    if (DOM.fontSelector) DOM.fontSelector.value = obj.fontFamily || 'Poppins, sans-serif';
+    if (DOM.colorPicker) DOM.colorPicker.value = obj.fill || '#000000';
+  };
+
+  const ensureDeleteControl = (obj) => {
+    if (!obj) return;
+    if (!obj.controls) obj.controls = {};
+    obj.controls.deleteControl = deleteControl;
+    if (isTextObject(obj)) obj.set({ padding: obj.padding ?? 12 });
+  };
+
+  // ---------------- Delete Control (X) ----------------
   const deleteControl = new fabric.Control({
     x: 0.5,
     y: -0.5,
@@ -9,13 +62,12 @@ export function setupFabricControls(canvas, DOM, state) {
     offsetX: 20,
     cursorStyle: 'pointer',
     mouseUpHandler: (_eventData, transform) => {
-      const target = transform.target;
+      const target = transform?.target;
       if (!target) return;
 
       canvas.remove(target);
 
-      if (target.type === 'textbox' || target.type === 'i-text' || target.type === 'text') {
-        DOM.stylePanel?.classList.add('hidden');
+      if (isTextObject(target)) {
         state.selectedText = null;
       }
 
@@ -25,6 +77,7 @@ export function setupFabricControls(canvas, DOM, state) {
     render: (ctx, left, top) => {
       ctx.save();
       ctx.translate(left, top);
+
       ctx.beginPath();
       ctx.arc(0, 0, 12, 0, Math.PI * 2);
       ctx.fillStyle = '#ef4444';
@@ -38,81 +91,69 @@ export function setupFabricControls(canvas, DOM, state) {
       ctx.moveTo(6, -6);
       ctx.lineTo(-6, 6);
       ctx.stroke();
+
       ctx.restore();
     },
     cornerSize: 28,
   });
 
-  // 1) Прописали в базовый Object
+  // Прописываем deleteControl в базовые прототипы (важно для текста)
   fabric.Object.prototype.controls.deleteControl = deleteControl;
-
-  // 2) ВАЖНО: текстовые прототипы часто имеют свои controls и не берут из Object
   if (fabric.Text?.prototype?.controls) fabric.Text.prototype.controls.deleteControl = deleteControl;
   if (fabric.IText?.prototype?.controls) fabric.IText.prototype.controls.deleteControl = deleteControl;
   if (fabric.Textbox?.prototype?.controls) fabric.Textbox.prototype.controls.deleteControl = deleteControl;
 
-  // 3) На всякий: применим к уже существующим объектам на канвасе
-  canvas.getObjects().forEach((obj) => {
-    if (obj && obj.controls) obj.controls.deleteControl = deleteControl;
-    if (obj && (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'text')) {
-      obj.set({ padding: obj.padding ?? 12 });
-    }
-  });
+  // Для уже существующих объектов
+  canvas.getObjects().forEach(ensureDeleteControl);
   canvas.requestRenderAll();
 
-  // ---------- TEXT STYLE PANEL ----------
-  function isTextObject(obj) {
-    return obj && (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'text');
-  }
+  // И для новых объектов тоже
+  canvas.on('object:added', (opt) => ensureDeleteControl(opt?.target));
 
-  function updateTextControls() {
-    const obj = canvas.getActiveObject();
+  // ---------------- Selection sync ----------------
+  canvas.on('selection:created', syncUiFromSelectedText);
+  canvas.on('selection:updated', syncUiFromSelectedText);
+  canvas.on('selection:cleared', syncUiFromSelectedText);
 
-    if (isTextObject(obj)) {
-      state.selectedText = obj;
-
-      if (DOM.fontSelector) DOM.fontSelector.value = obj.fontFamily || 'Poppins, sans-serif';
-      if (DOM.colorPicker) DOM.colorPicker.value = obj.fill || '#000000';
-      DOM.stylePanel?.classList.remove('hidden');
-    } else {
-      DOM.stylePanel?.classList.add('hidden');
-      state.selectedText = null;
-    }
-  }
-
-  canvas.on('selection:created', updateTextControls);
-  canvas.on('selection:updated', updateTextControls);
-  canvas.on('selection:cleared', updateTextControls);
-
-  // Чтобы при клике на объект заново пересчитались контролы (иногда нужно для текста)
+  // Иногда при клике Fabric может “переиспользовать” controls — подстрахуем
   canvas.on('mouse:down', (opt) => {
     const t = opt?.target;
     if (!t) return;
-
-    if (t.controls) t.controls.deleteControl = deleteControl;
-    if (isTextObject(t)) t.set({ padding: t.padding ?? 12 });
-
+    ensureDeleteControl(t);
     canvas.requestRenderAll();
   });
 
-  // ---------- ADD TEXT ----------
+  // ---------------- Add Text (from input) ----------------
   if (DOM.addTextBtn) {
     DOM.addTextBtn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
+      const txt = (DOM.textInput?.value || 'Scrie textul aici').trim() || 'Scrie textul aici';
 
-      const text = new fabric.Textbox('Scrie textul aici', {
-        left: canvas.width / 2,
-        top: 150,
-        originX: 'center',
-        fontSize: 40,
-        fill: isDark ? '#ffffff' : '#000000',
-        fontFamily: 'Poppins, sans-serif',
-        width: 300,
-        padding: 12, // место под крестик
-      });
+      const chosenFont = DOM.fontSelector?.value || 'Poppins, sans-serif';
+      const chosenColor =
+        DOM.colorPicker?.value ||
+        (getIsDark() ? '#ffffff' : '#000000');
 
-      // Гарантируем, что именно этот текст точно имеет deleteControl
-      if (text.controls) text.controls.deleteControl = deleteControl;
+      const text = new fabric.Textbox(txt, {
+          left: canvas.width / 2,
+          top: 150,
+          originX: 'center',
+          fontSize: 40,
+          fill: chosenColor,
+          fontFamily: chosenFont,
+          width: 300,
+          padding: 12,
+
+          // Курсор при наведении (когда не выбран)
+          hoverCursor: 'pointer',
+
+          // Курсор при наведении на уже выделенный объект
+          moveCursor: 'grab',
+
+          hasControls: false,
+          hasBorders: false,
+        });
+
+      ensureDeleteControl(text);
 
       text.set({ hoverCursor: 'text' });
       text.on('changed', () => canvas.requestRenderAll());
@@ -126,33 +167,36 @@ export function setupFabricControls(canvas, DOM, state) {
       });
 
       canvas.setActiveObject(text);
-      updateTextControls();
+      syncUiFromSelectedText();
     });
   }
 
-  // ---------- FONT / COLOR ----------
+  // ---------------- Font / Color change ----------------
   if (DOM.fontSelector) {
     DOM.fontSelector.addEventListener('change', () => {
-      if (state.selectedText) {
-        state.selectedText.set('fontFamily', DOM.fontSelector.value);
-        canvas.requestRenderAll();
-      }
+      if (!state.selectedText) return;
+      state.selectedText.set('fontFamily', DOM.fontSelector.value);
+      canvas.requestRenderAll();
     });
   }
 
   if (DOM.colorPicker) {
     DOM.colorPicker.addEventListener('input', () => {
-      if (state.selectedText) {
-        state.selectedText.set('fill', DOM.colorPicker.value);
-        canvas.requestRenderAll();
-      }
+      if (!state.selectedText) return;
+      state.selectedText.set('fill', DOM.colorPicker.value);
+      canvas.requestRenderAll();
     });
   }
-    // ---------- DELETE KEY ----------
-  function isTextEditing() {
+
+  // Иконки (приятный UX): палитра открывает color picker, шрифт — фокус на селект
+  DOM.colorBtn?.addEventListener('click', () => DOM.colorPicker?.click());
+  DOM.fontBtn?.addEventListener('click', () => DOM.fontSelector?.focus());
+
+  // ---------------- Delete key ----------------
+  const isTextEditing = () => {
     const obj = canvas.getActiveObject();
-    return obj && obj.isEditing === true;
-  }
+    return !!obj && obj.isEditing === true;
+  };
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Delete' && e.key !== 'Backspace') return;
@@ -164,69 +208,59 @@ export function setupFabricControls(canvas, DOM, state) {
     if (!active) return;
 
     e.preventDefault();
-
     canvas.remove(active);
 
-    if (active.type === 'textbox' || active.type === 'i-text' || active.type === 'text') {
-      DOM.stylePanel?.classList.add('hidden');
-      state.selectedText = null;
-    }
+    if (isTextObject(active)) state.selectedText = null;
 
     canvas.discardActiveObject();
     canvas.requestRenderAll();
   });
 
-    let lastTouchDistance = null;
-    let lastTouchAngle = null;
+  // ---------------- Touch gestures (pinch scale + rotate) ----------------
+  let lastTouchDistance = null;
+  let lastTouchAngle = null;
 
-    canvas.on('touch:gesture', function (opt) {
-      const e = opt.e;
-      const target = canvas.getActiveObject();
+  canvas.on('touch:gesture', (opt) => {
+    const e = opt?.e;
+    const target = canvas.getActiveObject();
+    if (!target || !e || !e.touches || e.touches.length !== 2) return;
 
-      if (!target || e.touches.length !== 2) return;
+    e.preventDefault();
 
-      e.preventDefault();
+    const t1 = e.touches[0];
+    const t2 = e.touches[1];
 
-      const t1 = e.touches[0];
-      const t2 = e.touches[1];
+    const dx = t2.clientX - t1.clientX;
+    const dy = t2.clientY - t1.clientY;
 
-      const dx = t2.clientX - t1.clientX;
-      const dy = t2.clientY - t1.clientY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
 
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const angle = Math.atan2(dy, dx);
+    // SCALE
+    if (lastTouchDistance) {
+      let scale = target.scaleX * (distance / lastTouchDistance);
+      scale = Math.max(0.1, Math.min(scale, 10));
+      target.scale(scale);
+    }
 
-      // SCALE
-      if (lastTouchDistance) {
-        let scale = target.scaleX * (distance / lastTouchDistance);
+    // ROTATE
+    if (lastTouchAngle !== null) {
+      const delta = angle - lastTouchAngle;
+      target.rotate((target.angle || 0) + (delta * 180) / Math.PI);
+    }
 
-        // ограничения
-        scale = Math.max(0.1, Math.min(scale, 10));
+    lastTouchDistance = distance;
+    lastTouchAngle = angle;
 
-        target.scale(scale);
-      }
+    target.setCoords();
+    canvas.requestRenderAll();
+  });
 
-      // ROTATE
-      if (lastTouchAngle !== null) {
-        const delta = angle - lastTouchAngle;
-        target.rotate((target.angle || 0) + delta * (180 / Math.PI));
-      }
+  const resetTouch = () => {
+    lastTouchDistance = null;
+    lastTouchAngle = null;
+  };
 
-      lastTouchDistance = distance;
-      lastTouchAngle = angle;
-
-      target.setCoords();
-      canvas.requestRenderAll();
-    });
-
-    canvas.on('touch:drag', function () {
-      lastTouchDistance = null;
-      lastTouchAngle = null;
-    });
-
-    canvas.on('touch:orientation', function () {
-      lastTouchDistance = null;
-      lastTouchAngle = null;
-    });
-
+  canvas.on('touch:drag', resetTouch);
+  canvas.on('touch:orientation', resetTouch);
 }

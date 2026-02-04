@@ -164,8 +164,8 @@
   "cases.header.subtitle": "Премиум чехлы на заказ",
 
   "cases.left.title": "📱 Выбери модель",
-  "cases.select.brand.placeholder": "Выбери бренд",
-  "cases.select.model.placeholder": "Выбери модель",
+  "cases.select.brand.placeholder": "Модель",
+  "cases.select.model.placeholder": "Телефон",
 
   "cases.brand.apple": "Apple",
   "cases.brand.samsung_s": "Samsung S",
@@ -178,6 +178,9 @@
   "cases.upload": "Загрузить фото",
 
   "cases.text.add": "Добавить текст",
+  "cases.text.title": "Текст",
+  "cases.text.placeholder": "Напиши что-нибудь",
+
   "cases.text.font": "Шрифт",
   "cases.text.color": "Цвет",
   "cases.text.font.poppins": "Poppins",

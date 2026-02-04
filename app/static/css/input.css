@@ -3,14 +3,17 @@
 @tailwind utilities;
 
 .glass {
-  @apply bg-white/70 dark:bg-gray-900/60
+  @apply bg-white/80 dark:bg-gray-900/60
          backdrop-blur-md
-         border border-white/30 dark:border-white/10;
+         border border-gray-200 dark:border-white/10;
 }
 
 .neumorphic {
-  @apply bg-white/80 dark:bg-gray-900/60
-         shadow-xl shadow-black/5 dark:shadow-black/40;
+  @apply bg-white
+         dark:bg-gray-900/60
+         border border-gray-200 dark:border-white/10
+         shadow-[0_8px_24px_rgba(0,0,0,0.06)]
+         dark:shadow-black/40;
 }
 
 .neumorphic-btn {
@@ -20,6 +23,12 @@
          hover:shadow-md dark:hover:shadow-black/60
          hover:-translate-y-0.5 transition-all duration-300
          border border-transparent dark:border-white/10;
+}
+
+.neumorphic-danger {
+  @apply bg-red-600 text-white
+         hover:bg-red-700 active:bg-red-800
+         shadow-inner shadow-red-700/40;
 }
 
 .fade-in {
@@ -73,4 +82,17 @@
 @keyframes ringPulse{
   0%,100% { transform: scale(1); opacity: .45; }
   50%     { transform: scale(1.03); opacity: .9; }
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 9999px;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 9999px;
+}
+input[type="color"] {
+  border-radius: 9999px;
+  overflow: hidden;
 }

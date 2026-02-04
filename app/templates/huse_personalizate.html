@@ -17,97 +17,219 @@
   <div class="flex flex-col lg:flex-row gap-8">
 
     <!-- Левая панель -->
-    <aside class="glass neumorphic rounded-3xl p-8 flex flex-col gap-8 lg:w-96">
-      <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">{{ t('cases.left.title') }}</h2>
+    <aside class="glass neumorphic rounded-3xl p-6 flex flex-col gap-6 lg:w-96">
 
-        <div class="relative">
-          <select id="brand-select"
-            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
-                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
-                   text-gray-800 dark:text-gray-100
-                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">{{ t('cases.select.brand.placeholder') }}</option>
-            <option value="apple">{{ t('cases.brand.apple') }}</option>
-            <option value="samsungs">{{ t('cases.brand.samsung_s') }}</option>
-            <option value="samsunga">{{ t('cases.brand.samsung_a') }}</option>
-            <option value="samsungm">{{ t('cases.brand.samsung_m') }}</option>
-            <option value="redmi">{{ t('cases.brand.redmi') }}</option>
-            <option value="oppo">{{ t('cases.brand.oppo') }}</option>
-            <option value="poco">{{ t('cases.brand.poco') }}</option>
-          </select>
-          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </div>
-        </div>
+  <!-- TITLE -->
+  <div class="space-y-3">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+      {{ t('cases.left.title') }}
+    </h2>
 
-        <div class="relative">
-          <select id="model-select"
-            class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
-                   border border-gray-200 dark:border-white/10 rounded-2xl px-6 py-5 text-lg
-                   text-gray-800 dark:text-gray-100
-                   focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent transition-all duration-300 cursor-pointer">
-            <option value="">{{ t('cases.select.model.placeholder') }}</option>
-          </select>
-          <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-            <i class="fas fa-chevron-down text-gray-400 text-lg"></i>
-          </div>
+    <!-- BRAND + MODEL in one row -->
+    <div class="grid grid-cols-2 gap-3">
+      <div class="relative">
+        <select
+          id="brand-select"
+          class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
+                 border border-gray-200 dark:border-white/10 rounded-2xl
+                 px-4 py-3 text-sm md:text-base
+                 text-gray-800 dark:text-gray-100
+                 focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent
+                 transition-all duration-300 cursor-pointer"
+        >
+          <option value="">{{ t('cases.select.brand.placeholder') }}</option>
+          <option value="apple">{{ t('cases.brand.apple') }}</option>
+          <option value="samsungs">{{ t('cases.brand.samsung_s') }}</option>
+          <option value="samsunga">{{ t('cases.brand.samsung_a') }}</option>
+          <option value="samsungm">{{ t('cases.brand.samsung_m') }}</option>
+          <option value="redmi">{{ t('cases.brand.redmi') }}</option>
+          <option value="oppo">{{ t('cases.brand.oppo') }}</option>
+          <option value="poco">{{ t('cases.brand.poco') }}</option>
+        </select>
+        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+          <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
         </div>
       </div>
 
-      <input type="file" id="upload" multiple accept="image/*" class="hidden"/>
-      <label for="upload" class="neumorphic-btn text-center py-5 rounded-2xl font-semibold cursor-pointer text-accent text-lg">
-        <i class="fas fa-cloud-upload-alt mr-3"></i>{{ t('cases.upload') }}
+      <div class="relative">
+        <select
+          id="model-select"
+          class="w-full appearance-none bg-white/70 dark:bg-gray-900/60 backdrop-blur-md
+                 border border-gray-200 dark:border-white/10 rounded-2xl
+                 px-4 py-3 text-sm md:text-base
+                 text-gray-800 dark:text-gray-100
+                 focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent
+                 transition-all duration-300 cursor-pointer"
+        >
+          <option value="">{{ t('cases.select.model.placeholder') }}</option>
+        </select>
+        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+          <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPLOAD: drag&drop zone (visual only for now) -->
+  <input type="file" id="upload" multiple accept="image/*" class="hidden"/>
+
+  <label
+    for="upload"
+    id="upload-dropzone"
+    class="group glass rounded-3xl border border-dashed border-gray-400 dark:border-white/15
+            bg-white/60 dark:bg-gray-900/40
+           p-5 cursor-pointer select-none
+           hover:bg-white/90 dark:hover:bg-gray-900/70
+            hover:border-accent/60
+           transition-all duration-300"
+  >
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center
+                  bg-white/80 dark:bg-gray-950/40 border border-gray-200 dark:border-white/10">
+        <i class="fas fa-cloud-upload-alt text-accent text-lg"></i>
+      </div>
+
+      <div class="flex-1">
+        <div class="font-semibold text-gray-800 dark:text-gray-100 leading-tight">
+          {{ t('cases.upload') }}
+        </div>
+<!--        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">-->
+<!--          Drag & drop sau click-->
+<!--        </div>-->
+      </div>
+    </div>
+  </label>
+
+  <!-- THUMBNAILS -->
+  <div id="thumbnails-container" class="max-h-96 overflow-y-auto pr-1">
+    <div id="thumbnails" class="grid grid-cols-3 gap-3"></div>
+  </div>
+
+  <!-- ADD TEXT -->
+ <!-- TEXT ADD (inline) -->
+<div class="glass rounded-3xl p-4 border border-gray-200/70 dark:border-white/10">
+  <div class="flex items-start gap-3">
+    <!-- input -->
+    <div class="flex-1">
+      <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+        {{ t('cases.text.title') }}
       </label>
 
-      <div id="thumbnails-container" class="max-h-96 overflow-y-auto px-2">
-        <div id="thumbnails" class="grid grid-cols-3 gap-4"></div>
-      </div>
+      <input
+        id="text-input"
+        type="text"
+        placeholder="{{ t('cases.text.placeholder') }}"
+        class="w-full bg-white/80 dark:bg-gray-900/60
+               border border-gray-200 dark:border-white/10
+               rounded-2xl px-4 py-3 text-sm md:text-base
+               text-gray-900 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500
+               focus:outline-none focus:ring-4 focus:ring-accent/30 focus:border-accent
+               transition"
+      />
+    </div>
 
-      <button id="add-text" class="w-full neumorphic-btn py-4 rounded-2xl flex items-center justify-center gap-3 text-blue-600 font-bold mb-4">
-        <i class="fas fa-plus-circle"></i> {{ t('cases.text.add') }}
-      </button>
+    <!-- tools -->
 
-      <div id="text-style-panel" class="hidden space-y-4 p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-white/5 mb-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">{{ t('cases.text.font') }}</label>
-          <select id="font-selector" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl p-2 text-sm">
-            <option value="Poppins, sans-serif">{{ t('cases.text.font.poppins') }}</option>
-            <option value="Arial">{{ t('cases.text.font.arial') }}</option>
-            <option value="Courier New">{{ t('cases.text.font.courier') }}</option>
-            <option value="Pacifico, cursive">{{ t('cases.text.font.pacifico') }}</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">{{ t('cases.text.color') }}</label>
-          <input type="color" id="color-picker" class="w-full h-10 rounded-lg cursor-pointer bg-transparent">
-        </div>
-      </div>
-    </aside>
+  </div>
+
+  <!-- compact controls row -->
+  <div class="mt-3 flex items-center gap-3">
+    <select
+      id="font-selector"
+      class="flex-1 bg-white/80 dark:bg-gray-900/60
+             border border-gray-200 dark:border-white/10
+             rounded-2xl px-3 py-2 text-sm
+             text-gray-900 dark:text-gray-100"
+    >
+      <option value="Poppins, sans-serif">{{ t('cases.text.font.poppins') }}</option>
+      <option value="Arial">{{ t('cases.text.font.arial') }}</option>
+      <option value="Courier New">{{ t('cases.text.font.courier') }}</option>
+      <option value="Pacifico, cursive">{{ t('cases.text.font.pacifico') }}</option>
+    </select>
+
+    <div class="relative w-12 h-12">
+      <input
+        id="color-picker"
+        type="color"
+        value="#000000"
+        class="absolute inset-0 w-full h-full cursor-pointer
+               rounded-full border-0 p-0
+               appearance-none bg-transparent"
+      />
+    </div>
+
+
+  </div>
+</div>
+<button
+      id="add-text"
+      type="button"
+      class="bg-accent text-white px-4 py-3 rounded-2xl font-semibold
+             hover:opacity-95 transition flex items-center gap-2 transition flex items-center justify-center gap-2"
+    >
+      <i class="fas fa-plus-circle"></i>
+      {{ t('cases.text.add') }}
+    </button>
+
+  <!-- CLEAR (red) -->
+     <button
+      id="clear-canvas"
+      data-action="clear"
+      type="button"
+      class="w-full py-3 rounded-2xl font-semibold
+             bg-red-600 text-white
+             hover:bg-red-700 active:bg-red-800
+             transition flex items-center justify-center gap-2
+             shadow-lg shadow-red-600/20"
+    >
+      <i class="fas fa-trash"></i>{{ t('cases.actions.clear_all') }}
+    </button>
+
+</aside>
+
 
     <!-- Центральный canvas -->
-    <section class="flex-1 flex flex-col items-center gap-6">
-      <div class="glass neumorphic rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl max-w-full overflow-hidden">
-        <div id="canvas-container-source" class="w-full h-full flex justify-center items-center">
-          <canvas
-            id="phone-canvas"
-            width="360"
-            height="670"
-            class="rounded-3xl shadow-2xl border border-gray-200 dark:border-white/10 block"
-            style="max-width: 100%; height: auto;"></canvas>
-        </div>
+    <!-- Центральный canvas -->
+<section class="flex-1 flex flex-col items-center gap-6">
+  <div class="glass neumorphic rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl max-w-full overflow-hidden">
+    <!-- ВАЖНО: relative -->
+    <div id="canvas-wrap" class="relative w-full h-full">
+
+      <div id="canvas-container-source" class="w-full h-full flex justify-center items-center">
+        <canvas
+          id="phone-canvas"
+          width="360"
+          height="670"
+          class="rounded-3xl shadow-2xl border border-gray-200 dark:border-white/10 block"
+          style="max-width: 100%; height: auto;"></canvas>
       </div>
 
-      <div class="flex gap-6 w-full max-w-lg">
-        <button id="clear-canvas" data-action="clear" class="flex-1 neumorphic-btn py-4 rounded-2xl font-semibold">
-          <i class="fas fa-trash mr-2"></i>{{ t('cases.actions.clear_all') }}
-        </button>
-
-        <button id="save" data-action="save" class="flex-1 bg-accent text-white py-4 rounded-2xl font-semibold hover:bg-indigo-700 transition">
-          <i class="fas fa-download mr-2"></i>{{ t('cases.actions.save_png') }}
-        </button>
+      <!-- SCALE OVERLAY (на самом канвасе) -->
+      <div
+        id="scale-panel"
+        class="hidden absolute left-1/2 -translate-x-1/2 bottom-3 z-50
+               w-[85%] max-w-[420px]
+               px-3 py-2 rounded-2xl
+               bg-white/60 dark:bg-black/40
+               backdrop-blur-md shadow-lg
+               pointer-events-auto"
+      >
+        <input
+          id="scale-slider"
+          type="range"
+          min="1"
+          max="300"
+          value="100"
+          step="1"
+          class="w-full"
+        />
       </div>
-    </section>
+
+    </div>
+  </div>
+</section>
+
 
     <!-- Правая панель цены -->
     <aside class="glass neumorphic rounded-3xl p-8 lg:w-80">

@@ -13,7 +13,7 @@
   "toast.network_error": "Eroare rețea. Verifică conexiunea.",
   "toast.select_model": "Alege modelul telefonului.",
   "toast.add_photo": "Încarcă o poză.",
-  "btn.order": "Comandă acum",
+  "btn.order": "Comandă",
   "btn.cancel": "Anulează",
   "btn.clear": "Șterge",
   "btn.save": "Salvează",
@@ -163,8 +163,8 @@
   "cases.header.subtitle": "Huse premium la comandă",
 
   "cases.left.title": "📱 Alege modelul",
-  "cases.select.brand.placeholder": "Alege brandul",
-  "cases.select.model.placeholder": "Alege modelul",
+  "cases.select.brand.placeholder": "Model",
+  "cases.select.model.placeholder": "Telefon",
 
   "cases.brand.apple": "Apple",
   "cases.brand.samsung_s": "Samsung S",
@@ -176,8 +176,10 @@
 
   "cases.upload": "Încarcă foto",
 
-  "cases.text.add": "Adaugă Text",
+  "cases.text.add": "Adaugă text",
   "cases.text.font": "Font",
+  "cases.text.title": "Text",
+  "cases.text.placeholder": "Scrie text aici",
   "cases.text.color": "Culoare",
   "cases.text.font.poppins": "Poppins",
   "cases.text.font.arial": "Arial",
