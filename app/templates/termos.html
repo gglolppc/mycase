@@ -205,6 +205,11 @@
 
 {% block scripts %}
 <script type="module" src="{{ request.url_for('static', path='js/termos/main.js') }}"></script>
+<script>
+  fbq('track', 'ViewContent', {
+    content_category: 'custom_thermos'
+  });
+</script>
 {% endblock %}
 
 {% block footer_subtitle %}{{ t('termos.footer.subtitle') | safe }}{% endblock %}

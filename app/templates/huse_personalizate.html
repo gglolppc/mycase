@@ -161,6 +161,11 @@
 
 {% block scripts %}
 <script type="module" src="{{ request.url_for('static', path='js/main.js') }}"></script>
+<script>
+  fbq('track', 'ViewContent', {
+    content_category: 'custom_case'
+  });
+</script>
 {% endblock %}
 
 {% block footer_subtitle %}{{ t('cases.footer.subtitle') | safe }}{% endblock %}

@@ -162,4 +162,22 @@
 
 {% block scripts %}
 <script type="module" src="{{ request.url_for('static', path='js/design_detail.js') }}"></script>
+<script>
+  fbq('track', 'ViewContent', {
+    content_category: 'designs'
+  });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('open-order-modal');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout');
+    }
+  });
+});
+</script>
+
 {% endblock %}
