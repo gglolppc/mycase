@@ -106,7 +106,8 @@ export function init() {
     // 1) применить при старте
     syncThemeToCanvas();
 
-    // 2) реагировать на клик по глобальной кнопке
+    // 2) реагировать на клик по глобальной
+    кнопке
     window.addEventListener('theme:changed', syncThemeToCanvas);
 
   // -------- toast --------
