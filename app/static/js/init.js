@@ -107,7 +107,7 @@ export function init() {
     syncThemeToCanvas();
 
     // 2) реагировать на клик по глобальной
-    кнопке
+
     window.addEventListener('theme:changed', syncThemeToCanvas);
 
   // -------- toast --------

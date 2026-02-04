@@ -210,6 +210,18 @@
     content_category: 'custom_thermos'
   });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('order-btn-termos');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout');
+    }
+  });
+});
+</script>
 {% endblock %}
 
 {% block footer_subtitle %}{{ t('termos.footer.subtitle') | safe }}{% endblock %}

@@ -166,6 +166,19 @@
     content_category: 'custom_case'
   });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('order-btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout');
+    }
+  });
+});
+</script>
 {% endblock %}
 
 {% block footer_subtitle %}{{ t('cases.footer.subtitle') | safe }}{% endblock %}
