@@ -36,6 +36,13 @@ export function setupThermosOrderForm({ DOM, state, canvas, showToast, exportCan
 
       if (res.ok) {
         showToast(window.__t('toast.thermos_order_received'), 'success');
+        if (typeof fbq === 'function') {
+          fbq('track', 'Purchase', {
+            value: 300,
+            currency: 'MDL'
+          });
+        }
+
         resetApp();
       } else {
         showToast(window.__t('toast.send_error'), 'error');

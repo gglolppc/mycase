@@ -37,9 +37,17 @@ export function setupOrderForm({ DOM, state, canvas, showToast, exportCanvasPng,
     try {
       const res = await fetch('/order', { method: 'POST', body: formData });
 
-      if (res.ok) {
-        showToast(window.__t('toast.order_received'), 'success');
+    if (res.ok) {
+      showToast(window.__t('toast.order_received'), 'success');
+
+      if (typeof fbq === 'function') {
+        fbq('track', 'Purchase', {
+          value: 200,
+          currency: 'MDL'
+        });
+      }
         resetApp();
+
       } else {
         showToast(window.__t('toast.send_error'), 'error');
       }
